@@ -1,0 +1,30 @@
+package bg.acs.acs_lms_backend_resource.repository;
+
+import bg.acs.acs_lms_backend_resource.model.entity.Book;
+import bg.acs.acs_lms_backend_resource.model.entity.BookCopy;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import java.awt.print.Pageable;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+@Repository
+public interface BookCopyRepository extends JpaRepository<BookCopy, Long> {
+    @Query("SELECT bc.book.id AS bookId, COUNT(co) AS checkoutCount " +
+            "FROM BookCopy bc " +
+            "INNER JOIN bc.checkouts co " +
+            "GROUP BY bc.book.id " +
+            "ORDER BY checkoutCount DESC")
+    List<Map<String, Object>> findTopNBestSellers(PageRequest pageRequest);
+
+    Optional<BookCopy> findFirstByBook(Book book);
+
+    Optional<BookCopy> findByBookAndId(Book book, Long id);
+
+    List<BookCopy> findAllByBookTitle(String title);
+}

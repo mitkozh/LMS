@@ -1,0 +1,62 @@
+.stat-box-card {
+  padding: 16px; /* Decrease the padding */
+  border-radius: 12px; /* Decrease the border radius */
+  display: flex;
+  align-items: center;
+  grid-gap: 16px; /* Decrease the grid gap */
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  max-width: 250px; /* Decrease the max-width */
+}
+
+.stat-box-icon {
+  width: 60px; /* Decrease the width */
+  height: 60px; /* Decrease the height */
+  border-radius: 8px; /* Decrease the border radius */
+  font-size: 28px; /* Decrease the font size */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-right: 3px;
+}
+
+.stat-box-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-box-label {
+  font-size: 16px; /* Decrease the font size */
+  font-weight: bold;
+  margin-bottom: 4px; /* Decrease the margin */
+}
+
+.stat-box-stat-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-box-stat,
+.stat-box-change {
+  font-size: 12px; /* Decrease the font size */
+  margin: 1px 0; /* Decrease the margin */
+}
+
+.stat-box-change {
+  display: flex;
+  align-items: center;
+  font-size: 12px; /* Decrease the font size */
+  margin-top: 4px; /* Decrease the margin */
+
+  .change-icon {
+    font-size: 14px; /* Decrease the font size */
+    margin-right: 4px; /* Decrease the margin */
+  }
+
+  .positive-change {
+    color: green;
+  }
+
+  .negative-change {
+    color: red;
+  }
+}

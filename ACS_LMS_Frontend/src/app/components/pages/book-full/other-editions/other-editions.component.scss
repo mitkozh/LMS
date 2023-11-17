@@ -1,0 +1,11 @@
+.books{
+    display: flex;
+    gap: 10px;
+    app-book-card-medium {
+        flex: 1;
+        display: block;
+        // width: max(600px, 60%); 
+    }
+    
+}
+

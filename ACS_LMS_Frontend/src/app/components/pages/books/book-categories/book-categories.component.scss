@@ -1,0 +1,24 @@
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  max-width: 1190px;
+  margin: 0 100px auto;
+}
+
+.category {
+  margin: 8px 0;
+  padding: 4px;
+}
+
+.category a {
+  text-align: start;
+  text-decoration: none;
+  color: #00acb4;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.category a:hover {
+  opacity: 0.8;
+}

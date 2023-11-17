@@ -1,0 +1,32 @@
+<div class="stat-box-card" [style.background-color]="statBoxData.bgColor">
+  <div
+    class="stat-box-icon"
+    [style.color]="statBoxData.iconColor"
+    [style.background-color]="statBoxData.iconBgColor"
+  >
+    <i class="material-icons" [ngClass]="statBoxData.icon"></i>
+  </div>
+  <div class="stat-box-content">
+    <h3 class="stat-box-label">{{ statBoxData.label }}</h3>
+    <div class="stat-box-stat-container">
+      <p class="stat-box-stat">{{ statBoxData.stat }}</p>
+      <div class="stat-box-change">
+        <i
+          class="material-icons change-icon"
+          [ngClass]="
+            statBoxData.change > 0 ? 'fas fa-arrow-up' : 'fas fa-arrow-down'
+          "
+        >
+        </i>
+        <span
+          [ngClass]="{
+            'positive-change': statBoxData.change > 0,
+            'negative-change': statBoxData.change < 0
+          }"
+        >
+          {{ statBoxData.change > 0 ? "+" : "" }}{{ statBoxData.change + "%" }}
+        </span>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,67 @@
+:host {
+  ::ng-deep {
+    .card-wrapper {
+        display: flex;
+      p-card {
+        flex: 1;
+        width: 100%;
+        // padding: 0 5%;
+
+        .above {
+          display: flex;
+          flex-direction: row;
+          flex-wrap: wrap;
+          justify-content: space-between;
+
+          .p-datatable-sm {
+            flex: 1 1;
+            margin-bottom: 20px;
+
+            td {
+              a {
+                color: #007bff;
+                text-decoration: none;
+
+                &:hover {
+                  text-decoration: underline;
+                }
+              }
+
+              border: none;
+              padding: 10px;
+            }
+          }
+        }
+
+        .p-divider {
+          margin: 20px 0;
+        }
+
+        .description {
+          p {
+            &.short-description {
+              font-size: 16px;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              display: -webkit-box;
+              -webkit-line-clamp: 3;
+              -webkit-box-orient: vertical;
+            }
+          }
+        }
+
+        .read-more {
+          margin-top: 20px;
+          font-size: 16px;
+          cursor: pointer;
+
+          p-button {
+            &:hover {
+              color: #0056b3;
+            }
+          }
+        }
+      }
+    }
+  }
+}

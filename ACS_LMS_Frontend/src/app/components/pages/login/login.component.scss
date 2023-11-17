@@ -1,0 +1,93 @@
+.login-page-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f0f0f0;
+  padding: 15px;
+  flex-direction: column;
+}
+
+.login-form-wrapper {
+  width: 450px;
+  flex: 1 0;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 3px 20px 0 rgba(0, 0, 0, 0.1);
+}
+
+.login-form {
+  padding: 80px 55px 30px 55px;
+  text-align: center;
+}
+
+.title {
+  font-size: 40px;
+  margin-bottom: 37px;
+}
+
+.form-control {
+  margin-bottom: 50px;
+  border-radius: 20px;
+  box-shadow: 0 5px 30px 0 rgba(250, 66, 81, 0.1);
+
+  label {
+    display: block;
+    font-weight: bold;
+  }
+
+  input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 26px;
+    outline: none;
+    border: none;
+  }
+}
+
+button[type="submit"] {
+  padding: 0 20px;
+  min-width: 160px;
+  height: 50px;
+  background-color: #bd59d4;
+  border-radius: 25px;
+  border-width: 0px;
+  justify-self: center;
+  // font-family: SourceSansPro-SemiBold;
+  font-size: 14px;
+  color: #fff;
+  line-height: 1.2;
+  text-transform: uppercase;
+  transition: all 0.4s;
+  box-shadow: 0 10px 30px 0 rgba(189, 89, 212, 0.5);
+
+  &:hover {
+    background-color: #4b2354;
+    box-shadow: 0 10px 30px 0 rgba(189, 89, 212, 0.8);
+    cursor: pointer;
+  }
+}
+
+.alt-login {
+  margin-top: 20px;
+  font-size: 16px;
+  color: #555;
+}
+
+.google-login-wrapper {
+  margin-top: 10px;
+
+  .google {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    //   background-image: url('your-google-icon.png'); /* Replace with your Google icon URL */
+    background-size: cover;
+    text-indent: -9999px;
+    overflow: hidden;
+    cursor: pointer;
+  }
+}

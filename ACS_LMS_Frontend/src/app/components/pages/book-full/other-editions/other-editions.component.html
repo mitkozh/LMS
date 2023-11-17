@@ -1,0 +1,8 @@
+<div class="books" *ngIf="bookCopies && bookCopies.length > 0">
+  <div *ngFor="let copyId of bookCopies">
+    <app-book-card-medium
+      [title]="title"
+      [edition]="copyId"
+    ></app-book-card-medium>
+  </div>
+</div>

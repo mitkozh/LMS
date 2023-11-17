@@ -1,0 +1,61 @@
+.labeled-input {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+
+  label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    transition: color 0.3s;
+  }
+
+  input,
+  app-search-input,
+  p-autoComplete,
+  p-calendar {
+    flex: 1;
+    display: flex;
+
+    &.coverPhoto {
+      width: 50px;
+      height: 50px;
+    }
+
+    &.author {
+      display: flex;
+      align-items: center;
+
+      .profilePicMini {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        margin-right: 10px;
+      }
+    }
+  }
+
+  .error-message {
+    font-size: 14px;
+    margin-top: 5px;
+    color: red;
+    opacity: 0.7;
+    transition: opacity 0.3s;
+  }
+
+  &.has-error {
+    label {
+      color: red;
+    }
+  }
+}
+
+:host {
+  ::ng-deep .p-autoComplete-override {
+    flex: 1 1;
+
+    .p-autocomplete-multiple-container,
+    .p-inputtext {
+      flex: 1;
+    }
+  }
+}

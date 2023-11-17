@@ -1,0 +1,58 @@
+.add-book-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.form-wrapper {
+  padding: 20px;
+  border-radius: 5px;
+  width: 100%;
+  max-width: 600px;
+  transition: border-color 0.3s;
+
+  form {
+    app-labeled-input {
+      &.coverPhoto {
+        width: 50px;
+        height: 50px;
+      }
+    }
+
+    .labeled-input {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 20px;
+
+      label {
+        font-weight: bold;
+        margin-bottom: 5px;
+        transition: color 0.3s;
+      }
+    }
+
+    a {
+      color: #007bff;
+      text-decoration: none;
+      cursor: pointer;
+      transition: text-decoration 0.3s;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+.author {
+  display: flex;
+  align-items: center;
+
+  .profilePicMini {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+}

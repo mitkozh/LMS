@@ -1,0 +1,66 @@
+:host ::ng-deep .p-inputtext {
+  color: green;
+  border: 2px solid green;
+  border-radius: 10px;
+  width: 100%;
+}
+
+.add-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+
+  .form-wrapper {
+    background-color: #f0f0f0;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    width: 400px;
+    display: grid;
+    gap: 20px;
+    grid-template-columns: 1fr;
+
+    form {
+      display: grid;
+      gap: 10px;
+
+      .labeled-input {
+        display: grid;
+        grid-template-columns: minmax(100px, 150px) 1fr;
+        align-items: center;
+
+        label {
+          font-weight: bold;
+          margin-bottom: 5px;
+        }
+
+        input {
+          width: 100%;
+          padding: 8px;
+          border: 1px solid #ccc;
+          border-radius: 3px;
+          transition: border-color 0.3s;
+
+          &:focus {
+            border-color: #007bff;
+          }
+        }
+      }
+
+      button {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 3px;
+        padding: 10px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+
+        &:hover {
+          background-color: #0056b3;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,47 @@
+<div class="card-wrapper">
+  <p-card t header="About this edition">
+    <div class="above">
+      <p-table
+        [styleClass]="'p-datatable-sm'"
+        [value]="bookInfo!.slice(0, bookInfo!.length / 2)"
+      >
+        <ng-template pTemplate="body" let-rowData>
+          <tr>
+            <td>{{ rowData.property + ":" }}</td>
+            <td>{{ rowData.value }}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+      <p-table
+        [styleClass]="'p-datatable-sm'"
+        [value]="bookInfo!.slice(bookInfo!.length / 2)"
+      >
+        <ng-template pTemplate="body" let-rowData>
+          <tr>
+            <td>{{ rowData.property + ":" }}</td>
+            <td [innerHTML]="rowData.value">{{ rowData.value }}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+    <p-divider></p-divider>
+    <div class="description">
+      <p [class.short-description]="!showFullDescription">
+        {{ showFullDescription ? bookDescription : bookShortDescription }}
+      </p>
+    </div>
+    <p-divider></p-divider>
+    <div class="read-more">
+      <p-button
+        (click)="toggleDescription()"
+        [label]="showFullDescription ? 'Read Less' : 'Read More'"
+        [icon]="
+          showFullDescription
+            ? 'fa-solid fa-angle-up'
+            : 'fa-solid fa-angle-down'
+        "
+        iconPos="right"
+      ></p-button>
+    </div>
+  </p-card>
+</div>

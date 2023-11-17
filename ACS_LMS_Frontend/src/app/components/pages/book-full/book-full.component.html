@@ -1,0 +1,32 @@
+<div class="book-wrapper">
+  <div class="book">
+    <div class="image-wrapper">
+      <img [src]="bookPhoto" alt="Book Cover" />
+    </div>
+    <div class="right">
+      <div class="heading">
+        <h1 class="book-title">{{ book?.title }}</h1>
+        <p class="book-background-info">
+          By
+          <ng-container *ngFor="let author of book?.authors; let last = last">
+            <a [href]="'/author/' + author.id">{{ author.name }}</a
+            >{{ !last ? ", " : "" }}
+          </ng-container>
+        </p>
+        <p class="year">{{ book?.publicationDate }}</p>
+        <p-tabMenu (activeItemChange)="onActiveItemChange($event)" [model]="items" [activeItem]="activeItem"></p-tabMenu>
+        <div class="card">
+          <div *ngIf="activeItem?.label === 'Overview' && title">
+            <app-overview [book]="book" [title]="title"></app-overview>
+          </div>
+          <div *ngIf="activeItem?.label === 'Other editions' && title">
+            <app-other-editions [title]="title" [book]="book"></app-other-editions>
+          </div>
+          <div *ngIf="activeItem?.label === 'More by authors' && authors && authors.length>0">
+            <app-more-by-author [authors]="authors"></app-more-by-author>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

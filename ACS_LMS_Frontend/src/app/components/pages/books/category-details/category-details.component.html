@@ -1,0 +1,4 @@
+<div class="book-library" *ngIf="books">
+
+  <app-book-row *ngIf="books.books.length>0" [books]="books.books"></app-book-row>
+</div>

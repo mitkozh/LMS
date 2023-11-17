@@ -1,0 +1,19 @@
+<div>
+  <select [(ngModel)]="selectedOption" (change)="onChange()">
+    <option value="week">Week</option>
+    <option value="month">Month</option>
+    <option value="year">Year</option>
+    <option value="from-to">From-To</option>
+  </select>
+</div>
+
+<div class="chart">
+  <canvas
+    baseChart
+    [datasets]="barChartData"
+    [labels]="barChartLabels"
+    [options]="barChartOptions"
+    [type]="barChartType"
+    [legend]="barChartLegend"
+  ></canvas>
+</div>

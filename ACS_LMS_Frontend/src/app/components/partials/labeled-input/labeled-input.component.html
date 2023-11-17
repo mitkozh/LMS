@@ -1,0 +1,74 @@
+<div class="labeled-input" [ngClass]="{ 'has-error': shouldShowError() }">
+  <label *ngIf="required" [for]="fieldId">{{ label + " *" }}</label>
+  <label *ngIf="!required" [for]="fieldId">{{ label }}</label>
+  <ng-container [ngSwitch]="inputType">
+    <input
+      pInputText
+      *ngSwitchCase="'input'"
+      [id]="fieldId"
+      [formControl]="inputControl"
+      [ngClass]="{ 'ng-dirty': shouldShowError() }"
+    />
+    <p-autoComplete
+      [formControl]="inputControl"
+      *ngSwitchCase="'autocomplete'"
+      [suggestions]="suggestions"
+      (completeMethod)="completeMethod.emit($event)"
+      [field]="field"
+      [styleClass]="'p-autoComplete-override'"
+      [ngClass]="{ 'ng-dirty': shouldShowError() }"
+      [multiple]="multiple"
+      [forceSelection]="forceSelection"
+      [type]="type"
+      [dropdown]="dropdown"
+    >
+    </p-autoComplete>
+    <app-search-input
+      *ngSwitchCase="'app-search-input'"
+      [inputControl]="inputControl"
+      [searchResults]="suggestionsDynamic"
+      [loading]="loading"
+      (search)="completeMethod.emit($event)"
+      [ngClass]="{ 'ng-dirty': shouldShowError() }"
+      [optionTemplate]="optionTemplate"
+      [dataKey]="dataKey"
+      [multiple]="multiple"
+      [field]="field"
+    >
+    </app-search-input>
+
+    <textarea
+      *ngSwitchCase="'textarea'"
+      pInputTextarea
+      [id]="fieldId"
+      cols="30"
+      rows="10"
+      [formControl]="inputControl"
+      [ngClass]="{ 'ng-dirty': shouldShowError() }"
+    ></textarea>
+    <p-calendar
+      *ngSwitchCase="'calendar'"
+      [id]="fieldId"
+      [formControl]="inputControl"
+      [ngClass]="{ 'ng-dirty': shouldShowError() }"
+      [styleClass]="'p-autoComplete-override'"
+    ></p-calendar>
+    <div *ngSwitchCase="'file-upload'">
+      <p-fileUpload
+        id="image"
+        [url]="imageService.getUploadImageUrl()"
+        name="image"
+        accept="image/*"
+        (onUpload)="onUpload($event)"
+        method="post"
+        [multiple]="false"
+      ></p-fileUpload>
+      <img *ngIf="photo" [src]="photo" class="photo" />
+    </div>
+  </ng-container>
+  <div class="error-wrapper" *ngFor="let validation of validationMessages">
+    <div class="error-message" *ngIf="shouldDisplayError(validation.type)">
+      {{ validation.message }}
+    </div>
+  </div>
+</div>

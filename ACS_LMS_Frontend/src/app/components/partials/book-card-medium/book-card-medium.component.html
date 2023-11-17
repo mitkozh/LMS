@@ -1,0 +1,34 @@
+<p-card [header]="book?.title">
+  <div class="small-image-wrapper">
+    <img [src]="bookPhoto" alt="Book Cover" />
+  </div>
+  <div class="heading">
+    <p class="year">{{ book?.publicationDate }}</p>
+  </div>
+
+  <div class="above">
+    <div class="description">
+      <p class="short-description">
+        {{ bookShortDescription }}
+      </p>
+    </div>
+    <div class="bellow">
+      <p-table [styleClass]="'p-datatable-sm'" [value]="firstHalf">
+        <ng-template pTemplate="body" let-rowData>
+          <tr>
+            <td>{{ rowData.property + ":" }}</td>
+            <td>{{ rowData.value }}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+      <p-table [styleClass]="'p-datatable-sm'" [value]="secondHalf">
+        <ng-template pTemplate="body" let-rowData>
+          <tr>
+            <td>{{ rowData.property + ":" }}</td>
+            <td [innerHTML]="rowData.value">{{ rowData.value }}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</p-card>

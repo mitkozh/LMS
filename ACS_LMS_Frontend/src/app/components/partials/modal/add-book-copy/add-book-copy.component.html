@@ -1,0 +1,183 @@
+<div class="add-book-container">
+  <div class="form-wrapper">
+    <form [formGroup]="form">
+      <app-labeled-input
+        [label]="'Book'"
+        [fieldId]="'book'"
+        [inputType]="'app-search-input'"
+        [validationMessages]="bookValidationMessages['book']"
+        [inputControl]="getFormControlByName('book')!"
+        [suggestionsDynamic]="booksSearchResults"
+        [optionTemplate]="optionTemplate"
+        (completeMethod)="onBooksTextChange($event)"
+        [multiple]="false"
+        [field]="'title'"
+      ></app-labeled-input>
+      <ng-template #optionTemplate let-book>
+        <div class="book">
+          <app-book-card-mini [book]="book"></app-book-card-mini>
+        </div>
+      </ng-template>
+      <div *ngIf="noBooksResultMessage.length > 0" #noAuthor>
+        <p>
+          {{ noBooksResultMessage }}
+        </p>
+      </div>
+
+      <app-labeled-input
+        [label]="'ISBN'"
+        [fieldId]="'isbn'"
+        [fieldName]="'isbn'"
+        [inputType]="'input'"
+        [validationMessages]="bookValidationMessages['isbn']"
+        [inputControl]="getFormControlByName('isbn')!"
+      ></app-labeled-input>
+
+      <app-labeled-input
+        [label]="'Call Number'"
+        [fieldId]="'callNumber'"
+        [fieldName]="'callNumber'"
+        [inputType]="'input'"
+        [validationMessages]="bookValidationMessages['callNumber']"
+        [inputControl]="getFormControlByName('callNumber')!"
+      ></app-labeled-input>
+
+      <app-labeled-input
+        [label]="'Inventory Number'"
+        [fieldId]="'inventoryNumber'"
+        [fieldName]="'inventoryNumber'"
+        [inputType]="'input'"
+        [validationMessages]="bookValidationMessages['inventoryNumber']"
+        [inputControl]="getFormControlByName('inventoryNumber')!"
+      ></app-labeled-input>
+
+      <app-labeled-input
+        [label]="'Price'"
+        [fieldId]="'price'"
+        [fieldName]="'price'"
+        [inputType]="'input'"
+        [validationMessages]="bookValidationMessages['price']"
+        [inputControl]="getFormControlByName('price')!"
+        [type]="'number'"
+        [required]="false"
+      ></app-labeled-input>
+
+      <app-labeled-input
+        [label]="'School Inventory Number'"
+        [fieldId]="'schoolInventoryNumber'"
+        [fieldName]="'schoolInventoryNumber'"
+        [inputType]="'input'"
+        [validationMessages]="bookValidationMessages['schoolInventoryNumber']"
+        [inputControl]="getFormControlByName('schoolInventoryNumber')!"
+      ></app-labeled-input>
+
+      <app-labeled-input
+        [label]="'Language'"
+        [fieldId]="'language'"
+        [fieldName]="'language'"
+        [inputType]="'autocomplete'"
+        [validationMessages]="bookValidationMessages['language']"
+        [inputControl]="getFormControlByName('language')!"
+        (completeMethod)="filterLanguages($event)"
+        [suggestions]="filteredLanguages"
+        [multiple]="false"
+      ></app-labeled-input>
+      <div *ngIf="noLanguageResultMessage.length > 0">
+        <p>
+          {{ noLanguageResultMessage }}
+          <a (click)="openLanguageAddModal()">Do you want to add one?</a>
+        </p>
+      </div>
+
+      <app-labeled-input
+        [label]="'Publisher'"
+        [fieldId]="'publisher'"
+        [inputType]="'app-search-input'"
+        [validationMessages]="bookValidationMessages['publisher']"
+        [inputControl]="getFormControlByName('publisher')!"
+        [suggestionsDynamic]="publisherSearchResults"
+        [optionTemplate]="optionTemplate2"
+        [multiple]="false"
+        (completeMethod)="onPublisherTextChange($event)"
+        [dataKey]="'name'"
+        [field]="'name'"
+      ></app-labeled-input>
+      <ng-template #optionTemplate2 let-publisher>
+        <div class="publisher">
+          <div>{{ publisher.name }}</div>
+        </div>
+      </ng-template>
+      <div *ngIf="noPublisherResultMessage.length > 0">
+        <p>
+          {{ noPublisherResultMessage }}
+          <a (click)="openPublisherAddModal()">Do you want to add one?</a>
+        </p>
+      </div>
+
+      <app-labeled-input
+        [label]="'Binding'"
+        [fieldId]="'binding'"
+        [fieldName]="'binding'"
+        [inputType]="'autocomplete'"
+        [validationMessages]="bookValidationMessages['binding']"
+        [inputControl]="getFormControlByName('binding')!"
+        (completeMethod)="filterBinding($event)"
+        [suggestions]="filteredBindings"
+        [dropdown]="true"
+        [multiple]="false"
+      ></app-labeled-input>
+
+      <app-labeled-input
+        [label]="'Size'"
+        [fieldId]="'size'"
+        [fieldName]="'size'"
+        [inputType]="'input'"
+        [validationMessages]="bookValidationMessages['size']"
+        [inputControl]="getFormControlByName('size')!"
+      ></app-labeled-input>
+
+      <app-labeled-input
+        [label]="'Publication Date'"
+        [fieldId]="'publicationDate'"
+        [fieldName]="'publicationDate'"
+        [inputType]="'calendar'"
+        [validationMessages]="bookValidationMessages['publicationDate']"
+        [inputControl]="getFormControlByName('publicationDate')!"
+      ></app-labeled-input>
+
+      <app-labeled-input
+        [label]="'Edition'"
+        [fieldId]="'edition'"
+        [fieldName]="'edition'"
+        [inputType]="'input'"
+        [validationMessages]="bookValidationMessages['edition']"
+        [inputControl]="getFormControlByName('edition')!"
+      ></app-labeled-input>
+
+      <app-labeled-input
+        [label]="'Notes'"
+        [fieldId]="'notes'"
+        [fieldName]="'notes'"
+        [inputType]="'input'"
+        [validationMessages]="bookValidationMessages['notes']"
+        [inputControl]="getFormControlByName('notes')!"
+        [required]="false"
+      ></app-labeled-input>
+
+      <app-labeled-input
+        [label]="'Acquisition Document'"
+        [fieldId]="'acquisitionDocumentEnum'"
+        [fieldName]="'acquisitionDocumentEnum'"
+        [inputType]="'autocomplete'"
+        [validationMessages]="bookValidationMessages['acquisitionDocumentEnum']"
+        [inputControl]="getFormControlByName('acquisitionDocumentEnum')!"
+        (completeMethod)="filterAquistion($event)"
+        [suggestions]="filteredAcquisitions"
+        [dropdown]="true"
+        [multiple]="false"
+      ></app-labeled-input>
+
+      <button (click)="onSubmit()">Submit</button>
+    </form>
+  </div>
+</div>

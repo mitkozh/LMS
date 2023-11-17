@@ -1,0 +1,13 @@
+p-autoComplete{
+    flex: 1;
+    display: flex;
+}
+:host {
+  ::ng-deep .p-autoComplete-override {
+    flex: 1 0 100%;
+
+    .p-autocomplete-multiple-container {
+      flex: 1;
+    }
+  }
+}

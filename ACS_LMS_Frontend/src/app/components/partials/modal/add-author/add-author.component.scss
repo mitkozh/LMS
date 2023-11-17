@@ -1,0 +1,76 @@
+.add-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .form-wrapper {
+    padding: 20px;
+    border-radius: 5px;
+    width: 100%;
+    max-width: 400px;
+
+    form {
+      .labeled-input {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 20px;
+
+        label {
+          font-weight: bold;
+          margin-bottom: 5px;
+        }
+
+        input,
+        app-search-input,
+        p-autoComplete,
+        p-calendar {
+          flex: 1;
+          display: flex;
+        }
+        
+        .profilePicMini {
+          width: 30px;
+          height: 30px;
+          border-radius: 50%;
+          margin-right: 10px;
+        }
+      }
+
+      button {
+        background-color: #007bff;
+        color: #fff;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        font-size: 18px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+  
+        &:hover {
+          background-color: #0056b3;
+        }
+      }
+  
+      a {
+        color: #007bff;
+        text-decoration: none;
+        cursor: pointer;
+  
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}
+
+
+:host {
+  ::ng-deep .p-autoComplete-override {
+    flex: 1 1;
+
+    .p-autocomplete-multiple-container {
+      flex: 1;
+    }
+  }
+}

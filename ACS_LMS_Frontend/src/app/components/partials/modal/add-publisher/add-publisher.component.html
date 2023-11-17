@@ -1,0 +1,12 @@
+<div class="add-container">
+    <div class="form-wrapper">
+      <form [formGroup]="form">
+        <div class="labeled-input">
+          <label for="name">Name</label>
+          <input pInputText id="name" formControlName="name" />
+        </div>      
+        <button (click)="onSubmitPublisher()">Submit</button>
+      </form>
+    </div>
+  </div>
+  

@@ -1,0 +1,12 @@
+<div class="add-container">
+    <div class="form-wrapper">
+      <form [formGroup]="form">
+        <div class="labeled-input">
+          <label for="languageCode">Language Code</label>
+          <input pInputText id="languageCode" formControlName="languageCode" />
+        </div>      
+        <button (click)="onSubmitLanguage()">Submit</button>
+      </form>
+    </div>
+  </div>
+  

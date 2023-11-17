@@ -1,0 +1,14 @@
+<p-carousel
+  [value]="books"
+  [numVisible]="5"
+  [numScroll]="1"
+  [circular]="true"
+  [showIndicators]="false"
+  [showNavigators]="true"
+>
+  <ng-template let-book pTemplate="item">
+    <div class="book-cards-wrapper">
+      <app-book-card-mini [book]="book"></app-book-card-mini>
+    </div>
+  </ng-template>
+</p-carousel>

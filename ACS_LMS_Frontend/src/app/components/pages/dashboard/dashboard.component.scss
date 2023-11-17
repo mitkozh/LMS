@@ -1,0 +1,35 @@
+.dashboard {
+  background-color: #f2f2f2;
+  padding: 5%;
+}
+
+.dashboard-title {
+  color: #333;
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.stats-up-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  gap: 30px;
+}
+
+.stat-box-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 10px;
+  border: solid;
+}
+
+.diagram {
+  flex: 1 1 0;
+  padding-left: 20px;
+  border-left: 1px solid rgba(0, 0, 0, 0.1); /* Add a transparent thin line */
+  display: flex;
+  width: fit-content;
+  border: solid;
+}
