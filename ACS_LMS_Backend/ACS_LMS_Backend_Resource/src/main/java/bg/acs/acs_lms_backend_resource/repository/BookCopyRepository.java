@@ -27,4 +27,6 @@ public interface BookCopyRepository extends JpaRepository<BookCopy, Long> {
     Optional<BookCopy> findByBookAndId(Book book, Long id);
 
     List<BookCopy> findAllByBookTitle(String title);
+
+    boolean existsByCallNumber(String callNumber);
 }

@@ -279,10 +279,10 @@ export class AddBookCopyComponent implements OnInit {
     }
   }
 
-  getProfilePhoto(profilePicName: string): Observable<SafeUrl> {
-    if (profilePicName) {
+  getProfilePhoto(imageId: number): Observable<SafeUrl> {
+    if (imageId) {
       return this.imageService
-        .getImage(profilePicName)
+        .getImage(imageId)
         .pipe(
           map((res) =>
             this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(res))

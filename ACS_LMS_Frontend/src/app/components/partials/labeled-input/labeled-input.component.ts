@@ -26,6 +26,7 @@ import {
   noop,
   takeUntil,
 } from 'rxjs';
+import { callNumberExistsValidator } from '../modal/book-add/call-number-exists-validator';
 
 @Component({
   selector: 'app-labeled-input',
@@ -80,7 +81,7 @@ export class LabeledInputComponent implements ControlValueAccessor {
   @Input() dropdown = false;
   @Output() completeMethod = new EventEmitter<any>();
   @Output()
-  public coverPhotoNameChange = new EventEmitter<string>();
+  public coverPhotoNameChange = new EventEmitter<number>();
   photo: any | undefined;
 
   constructor(
@@ -144,14 +145,14 @@ export class LabeledInputComponent implements ControlValueAccessor {
   }
 
   onUpload(fileEvent: any): void {
-    let coverPhotoName: string = '';
+    let imageId: number = 0;
     if (fileEvent.originalEvent instanceof HttpResponse) {
       let serverResponse = fileEvent.originalEvent.body;
-      coverPhotoName = serverResponse.name;
-      this.coverPhotoNameChange.emit(coverPhotoName); // Emit the new coverPhotoName
+      imageId = serverResponse.id;
+      this.coverPhotoNameChange.emit(imageId); // Emit the new coverPhotoName
     }
-    if (coverPhotoName) {
-      this.imageService.getImage(coverPhotoName).subscribe((profilePic) => {
+    if (imageId) {
+      this.imageService.getImage(imageId).subscribe((profilePic) => {
         this.photo = this.sanitizer.bypassSecurityTrustUrl(
           URL.createObjectURL(profilePic)
         );
@@ -161,6 +162,7 @@ export class LabeledInputComponent implements ControlValueAccessor {
 
   shouldDisplayError(validationType: string): boolean {
     const control = this.inputControl;
+    
     return (
       control.hasError(validationType) && (control.dirty || control.touched)
     );

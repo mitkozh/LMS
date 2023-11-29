@@ -9,7 +9,7 @@ import { Publisher } from "app/shared/publisher";
 export interface BookAddDto {
   title: string;
   description: string;
-  coverPhotoName: string;
+  imageId: number | undefined;
   volume: number;
   authors: number[];
   categories: string[];

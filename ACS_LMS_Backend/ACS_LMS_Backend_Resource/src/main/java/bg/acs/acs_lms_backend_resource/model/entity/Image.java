@@ -21,7 +21,7 @@ public class Image extends BaseEntity {
     @Column(name = "content_type", length = 100, nullable = false)
     private String contentType;
 
-    @Column(name = "data", columnDefinition = "LONGBLOB", nullable = false)
+    @Column(name = "data", columnDefinition = "BYTEA", nullable = false)
     private byte[] data;
 
     @OneToOne(mappedBy = "profilePhoto")

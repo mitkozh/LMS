@@ -1,8 +1,15 @@
-import { Directive, Input, OnChanges, TemplateRef, ViewContainerRef } from '@angular/core';
+import {
+  Directive,
+  Input,
+  OnChanges,
+  TemplateRef,
+  ViewContainerRef,
+} from '@angular/core';
+import { UserRole } from 'app/shared/user-role';
 import { KeycloakService } from 'keycloak-angular';
 
 @Directive({
-  selector: '[hasRoles]'
+  selector: '[hasRoles]',
 })
 export class HasRolesDirective implements OnChanges {
   private visible: boolean | undefined;
@@ -27,7 +34,9 @@ export class HasRolesDirective implements OnChanges {
       return;
     }
 
-    const hasRole = this.roles.some(role => this.keycloakService.getUserRoles().includes(role));
+    const hasRole = this.roles.some((role) =>
+      this.keycloakService.getUserRoles().includes(role)
+    );
     console.log(this.keycloakService.getUserRoles());
     if (hasRole) {
       this.viewContainer.clear();

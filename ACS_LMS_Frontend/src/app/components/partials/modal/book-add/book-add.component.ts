@@ -17,12 +17,7 @@ import {
 } from '@angular/forms';
 import { BookAddDto } from './book-add-dto';
 import { Publisher } from 'app/shared/publisher';
-import { GenericService, SERVICE_CONFIG } from 'app/core/generic.service';
-import { HttpClient, HttpResponse } from '@angular/common/http';
 import { BookBindingEnum } from 'app/shared/book-binding-enum';
-import { Category } from 'app/shared/category';
-import { Author } from 'app/shared/author';
-import { Book } from 'app/shared/book';
 import { AcquisitionDocumentEnum } from 'app/shared/acquasition-document-enum';
 import { CategoryWithBooks } from 'app/shared/category-with-books';
 import { CategoryAddDto } from 'app/shared/category-add-dto';
@@ -58,6 +53,7 @@ import { LanguageService } from 'app/core/language.service';
 import { AuthorService } from 'app/core/author.service';
 import { CategoryService } from 'app/core/category.service';
 import { PublisherService } from 'app/core/publisher.service';
+import { callNumberExistsValidator } from './call-number-exists-validator';
 
 interface AutoCompleteCompleteEvent {
   originalEvent: Event;
@@ -87,7 +83,7 @@ export class BookAddComponent implements OnInit {
   public publisherSearchResults = this._publisherSearchResults$.asObservable();
   private _publisherLoading$ = new BehaviorSubject<boolean>(false);
   public publisherLoading$ = this._publisherLoading$.asObservable();
-  coverPhotoName: string | undefined;
+  imageId: number | undefined;
   bookValidationMessages: ValidationMessages = bookValidationMessages;
   form: FormGroup;
   constructor(
@@ -101,7 +97,6 @@ export class BookAddComponent implements OnInit {
     private categoryService: CategoryService,
     private publisherService: PublisherService,
     public bookConfig: DynamicDialogConfig
-
   ) {
     this.form = this.fb.group({
       title: [
@@ -134,6 +129,7 @@ export class BookAddComponent implements OnInit {
         null,
         {
           validators: [Validators.required, Validators.maxLength(50)],
+          asyncValidators: [callNumberExistsValidator(bookService)],
           updateOn: 'blur',
         },
       ],
@@ -248,7 +244,7 @@ export class BookAddComponent implements OnInit {
     return {
       title: formValue.title?.trim() || '',
       description: formValue.description?.trim() || '',
-      coverPhotoName: this.coverPhotoName || '',
+      imageId: this.imageId,
       volume: formValue.volume || null,
       authors: this.getEntitiesById(formValue.authors) || [],
       categories: formValue.categories || [],
@@ -343,12 +339,10 @@ export class BookAddComponent implements OnInit {
     this.filteredCategories = filtered;
   }
 
-
-
-  getProfilePhoto(profilePicName: string): Observable<SafeUrl> {
-    if (profilePicName) {
+  getProfilePhoto(imageId: number): Observable<SafeUrl> {
+    if (imageId) {
       return this.imageService
-        .getImage(profilePicName)
+        .getImage(imageId)
         .pipe(
           map((res) =>
             this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(res))
@@ -450,7 +444,7 @@ export class BookAddComponent implements OnInit {
 
   private fetchProfilePhotos(authors: AuthorShortDto[]): Observable<any[]> {
     const profilePhotoObservables = authors.map((author) =>
-      this.getProfilePhoto(author.profilePicName)
+      this.getProfilePhoto(author.imageId)
     );
 
     return forkJoin(profilePhotoObservables).pipe(
@@ -550,8 +544,8 @@ export class BookAddComponent implements OnInit {
   //     });
   // }
 
-  handleCoverPhotoNameChange(newCoverPhotoName: string) {
-    this.coverPhotoName  = newCoverPhotoName;
+  handleCoverPhotoNameChange(newImageId: number) {
+    this.imageId = newImageId;
   }
 
   closeAuthorModalOnSubmitted() {

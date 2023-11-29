@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,16 +30,17 @@ public class ImageController {
                 .body(image);
     }
 
-    @GetMapping("/info/{name}")
-    public ResponseEntity<ImageDto> getImageDetails(@PathVariable("name") String name) throws IOException {
-        ImageDto image = imageService.getImageDetails(name);
+    @GetMapping("/info/{id}")
+    public ResponseEntity<ImageDto> getImageDetails(@PathVariable("id") Long id) throws IOException {
+        ImageDto image = imageService.getImageDetails(id);
         return ResponseEntity.ok(image);
     }
 
-    @GetMapping("/{name}")
-    public ResponseEntity<byte[]> getImage(@PathVariable("name") String name) throws IOException {
-            byte[] imageData = imageService.getImageData(name);
-        ImageDto imageDto =  imageService.getImageDetails(name);
+    @GetMapping("/{id}")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<byte[]> getImage(@PathVariable("id") Long id) throws IOException {
+            byte[] imageData = imageService.getImageData(id);
+        ImageDto imageDto =  imageService.getImageDetails(id);
 
         MediaType contentType;
         if (imageDto.getType().equalsIgnoreCase("jpeg")) {

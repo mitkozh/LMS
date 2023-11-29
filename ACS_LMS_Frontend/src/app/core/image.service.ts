@@ -23,12 +23,12 @@ export class ImageService {
     return (`${this.apiUrl}images/upload`);
   }
 
-  getImageDetails(name: string): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}images/info/${name}`);
+  getImageDetails(id: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}images/info/${id}`);
   }
 
-  getImage(name: string): Observable<Blob> {
-    return this.http.get(`${this.apiUrl}images/${name}`, {
+  getImage(id: number): Observable<Blob> {
+    return this.http.get(`${this.apiUrl}images/${id}`, {
       responseType: 'blob',
     });
   }

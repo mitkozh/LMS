@@ -29,7 +29,8 @@ import { InputTextModule } from 'primeng/inputtext';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { CalendarModule } from 'primeng/calendar';
 import { FileUploadModule } from 'primeng/fileupload';
-
+import { ToolbarModule } from 'primeng/toolbar';
+import { SplitButtonModule } from 'primeng/splitbutton';
 import { LoginModalComponent } from './components/partials/modal/login/login-modal/login-modal.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
@@ -48,6 +49,7 @@ import { AddAuthorComponent } from './components/partials/modal/add-author/add-a
 import { NgOnDestroyService } from './core/ng-on-destroy.service';
 import { ChipsModule } from 'primeng/chips';
 import { DividerModule } from 'primeng/divider';
+import { AvatarModule } from 'primeng/avatar';
 
 import { TabMenuModule } from 'primeng/tabmenu';
 import { CardModule } from 'primeng/card';
@@ -60,7 +62,6 @@ import {
 import { NgChartsModule } from 'ng2-charts';
 import { AddPublisherComponent } from './components/partials/modal/add-publisher/add-publisher.component';
 import { AddLanguageComponent } from './components/partials/modal/add-language/add-language.component';
-import { CommonModule } from '@angular/common';
 import { LabeledInputComponent } from './components/partials/labeled-input/labeled-input.component';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { BOOK_SERVICE_CONFIG, BookService } from './core/book.service';
@@ -68,10 +69,8 @@ import { BookFullComponent } from './components/pages/book-full/book-full.compon
 import { BookCardMediumComponent } from './components/partials/book-card-medium/book-card-medium.component';
 import { OverviewComponent } from './components/pages/book-full/overview/overview.component';
 import { OtherEditionsComponent } from './components/pages/book-full/other-editions/other-editions.component';
-import { StoreModule } from '@ngrx/store';
+import { Store, StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
-import { bookReducer } from './feature-module/reducers/book.reducer';
-import { BookEffects } from './feature-module/effects/book.effects';
 import { AddBookCopyComponent } from './components/partials/modal/add-book-copy/add-book-copy.component';
 import {
   LANGUAGE_SERVICE_CONFIG,
@@ -87,8 +86,18 @@ import {
 } from './core/category.service';
 import { AUTHOR_SERVICE_CONFIG, AuthorService } from './core/author.service';
 import { MoreByAuthorComponent } from './components/pages/book-full/more-by-author/more-by-author.component';
+import { AdvancedSearchComponent } from './components/pages/advanced-search/advanced-search.component';
+import { SearchComponent } from './components/partials/search/search.component';
+import { HeaderComponent } from './components/partials/header/header.component';
+import { authReducer } from './feature-module/reducers/auth/auth.reducer';
+import { AuthState } from './feature-module/reducers/auth/auth.state';
+import { login, logout } from './feature-module/reducers/auth/auth.actions';
+import { AuthEffects } from './feature-module/reducers/auth/auth.effects';
 
-export function initializeKeycloak(keycloak: KeycloakService) {
+export function initializeKeycloak(
+  keycloak: KeycloakService,
+  store: Store<AuthState>
+) {
   return () =>
     keycloak.init({
       config: {
@@ -144,6 +153,9 @@ export function initializeKeycloak(keycloak: KeycloakService) {
     OtherEditionsComponent,
     AddBookCopyComponent,
     MoreByAuthorComponent,
+    AdvancedSearchComponent,
+    SearchComponent,
+    HeaderComponent
   ],
 
   imports: [
@@ -155,6 +167,7 @@ export function initializeKeycloak(keycloak: KeycloakService) {
     InputTextareaModule,
     CarouselModule,
     ButtonModule,
+    AvatarModule,
     HttpClientModule,
     ReactiveFormsModule,
     AuthConfigModule,
@@ -167,12 +180,14 @@ export function initializeKeycloak(keycloak: KeycloakService) {
     ListboxModule,
     ChipsModule,
     FileUploadModule,
+    SplitButtonModule,
     TabMenuModule,
     CardModule,
+    ToolbarModule,
     TableModule,
     DividerModule,
-    StoreModule.forRoot({ book: bookReducer }),
-    EffectsModule.forRoot([BookEffects]),
+    StoreModule.forRoot({ auth: authReducer }),
+    EffectsModule.forRoot([AuthEffects]),
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },

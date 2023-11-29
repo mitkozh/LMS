@@ -23,7 +23,7 @@ public class AuthorService {
 
     public AuthorShortDto mapAuthorToAuthorShortDto(Author author){
         AuthorShortDto authorShortDto = modelMapper.map(author, AuthorShortDto.class);
-        authorShortDto.setProfilePicName(author.getProfilePhoto().getFileName());
+        authorShortDto.setImageId(author.getProfilePhoto().getId());
         return authorShortDto;
     }
     public Author mapAuthorNameToAuthor(String authorName) {
@@ -34,7 +34,7 @@ public class AuthorService {
 
     public Author mapAuthorShortDtoToAuthor(AuthorShortDto authorShortDto){
         Author author = modelMapper.map(authorShortDto, Author.class);
-        author.setProfilePhoto(imageRepository.findByFileName(authorShortDto.getProfilePicName()).orElseThrow(EntityNotFoundException::new));
+        author.setProfilePhoto(imageRepository.findById(authorShortDto.getImageId()).orElseThrow(EntityNotFoundException::new));
         return author;
     }
 

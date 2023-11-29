@@ -63,7 +63,7 @@ export class BookCardMediumComponent implements OnInit {
         ];
         this.bookDescription = book.description;
         this.bookShortDescription = this.bookDescription.substring(0, 300);
-        this.getPhoto(book.coverPhotoUrl).subscribe((photoUrl) => {
+        this.getPhoto(book.imageId).subscribe((photoUrl) => {
           this.bookPhoto = photoUrl;
         });
         const middleIndex = Math.ceil(this.bookInfo.length / 2);
@@ -72,10 +72,10 @@ export class BookCardMediumComponent implements OnInit {
       });
   }
 
-  getPhoto(profilePicName: string): Observable<SafeUrl> {
-    console.log(profilePicName);
-    if (profilePicName) {
-      return this.imageService.getImage(profilePicName).pipe(
+  getPhoto(imageId: number): Observable<SafeUrl> {
+    console.log(imageId);
+    if (imageId) {
+      return this.imageService.getImage(imageId).pipe(
         map((res) => {
           console.log(res);
           return this.sanitizer.bypassSecurityTrustUrl(

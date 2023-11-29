@@ -38,30 +38,30 @@ public class ImageService {
                 .data(ImageUtility.compressImage(file.getBytes()))
                 .build());
 
-        return new ImageDto(savedImage.getFileName(), savedImage.getContentType());
+        return new ImageDto(savedImage.getId(), savedImage.getFileName(), savedImage.getContentType());
     }
 
-    public ImageDto getImageDetails(String name) throws IOException {
-        Optional<Image> dbImage = imageRepository.findByFileName(name);
+    public ImageDto getImageDetails(Long id) throws IOException {
+        Optional<Image> dbImage = imageRepository.findById(id);
         if (dbImage.isPresent()) {
-            return new ImageDto(dbImage.get().getFileName(), dbImage.get().getContentType());
+            return new ImageDto(dbImage.get().getId(), dbImage.get().getFileName(), dbImage.get().getContentType());
         } else {
-            throw new EntityNotFoundException("Image not found with name: " + name);
+            throw new EntityNotFoundException("Image not found with id: " + id);
         }
     }
 
-    public byte[] getImageData(String name) throws IOException {
-        Optional<Image> dbImage = imageRepository.findByFileName(name);
+    public byte[] getImageData(Long id) throws IOException {
+        Optional<Image> dbImage = imageRepository.findById(id);
         if (dbImage.isPresent()) {
             return ImageUtility.decompressImage(dbImage.get().getData());
         } else {
-            throw new EntityNotFoundException("Image not found with name: " + name);
+            throw new EntityNotFoundException("Image not found with id: " + id);
         }
     }
 
+
     private String generateUniqueFileName(String originalFileName) {
-        long timestamp = System.currentTimeMillis();
-        return timestamp + "_" + originalFileName;
+        return ((Long) System.currentTimeMillis()).toString();
     }
 
     @Scheduled(cron = "0 44 21 * * ?")

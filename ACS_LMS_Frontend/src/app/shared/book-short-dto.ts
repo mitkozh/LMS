@@ -5,7 +5,7 @@ import { BookBindingEnum } from "./book-binding-enum";
 export interface BookShortDto {
     id: number;
     title: string;
-    coverPhotoName: string;
+    imageId: number;
     authors: AuthorShortDto[];
     coverPhoto?: SafeUrl;
   }

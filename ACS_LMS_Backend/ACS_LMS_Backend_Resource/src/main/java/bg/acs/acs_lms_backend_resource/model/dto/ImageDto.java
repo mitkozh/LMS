@@ -8,6 +8,8 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class ImageDto {
+
+    private Long id;
     private String name;
     private String type;
 
