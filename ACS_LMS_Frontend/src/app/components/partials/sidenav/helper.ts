@@ -1,4 +1,5 @@
 import { animate, style, transition, trigger } from "@angular/animations";
+import { UserRole } from "app/shared/user-role";
 
 export interface INavbarData {
     routeLink: string;
@@ -6,6 +7,7 @@ export interface INavbarData {
     label: string;
     expanded?: boolean;
     items?: INavbarData[];
+    requiredRoles?: UserRole[]
 }
 
 export const fadeInOut = trigger('fadeInOut', [

@@ -95,13 +95,20 @@ public class BookController {
 
 
     @PostMapping("authors")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_LIBRARIAN')")
     public ResponseEntity<Set<BookShortDto>> getBooksByAuthorsIds(@RequestBody List<Long> ids) {
         Set<BookShortDto> books = bookService.getBooksByAuthorsIds(ids);
         if (books.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(books);
+    }
+
+
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_LIBRARIAN')")
+    @GetMapping("check-call-number/{callNumber}")
+    public ResponseEntity<Boolean> checkForCallNumber(@PathVariable String callNumber) {
+        boolean exists = bookService.checkForCallNumber(callNumber);
+        return ResponseEntity.ok(exists);
     }
 
 

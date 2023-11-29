@@ -1,17 +1,17 @@
 <article class="book-card-wrapper">
-  <a [href]="generateBookLink(book.title)" class="card-link"></a>
+  <a [href]="generateBookLink(book?.title)" class="card-link"></a>
   <div class="upper">
     <div class="colored-container"></div>
     <div class="image-wrapper">
-      <img [src]="book.coverPhoto"/>
+      <img [src]="book?.coverPhoto" />
     </div>
   </div>
   <div class="middle">
     <p class="book-title">
-      {{ book.title }}
+      {{ book?.title }}
     </p>
     <a class="author-link">
-      {{ book.authors[0].name }}
+      {{ book?.authors?.[0]?.name }}
     </a>
   </div>
   <div class="lower"></div>

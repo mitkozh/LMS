@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -16,7 +18,6 @@ import java.util.Set;
 public class Book extends BaseEntity{
     @Column(name = "title", length = 100, nullable = false)
     private String title;
-
 
     @Column(length = 3000, nullable = false)
     private String description;
@@ -43,11 +44,14 @@ public class Book extends BaseEntity{
     @JsonIgnore
     private Set<Category> categories = new HashSet<>();
 
-
     @JsonIgnore
     @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
     private List<BookCopy> bookCopies;
 
+    @Column(name = "deleted", nullable = false)
+    private boolean deleted = false;
 
-
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private Date updatedAt;
 }

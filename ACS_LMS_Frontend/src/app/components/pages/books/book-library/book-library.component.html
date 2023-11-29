@@ -1,7 +1,7 @@
 <div class="book-library">
   <p-button *hasRoles="[roles.ROLE_ADMIN, roles.ROLE_LIBRARIAN]" (click)="openBookAddModal()" class="admin-button">Add Book</p-button>
   <p-button *hasRoles="[roles.ROLE_ADMIN, roles.ROLE_LIBRARIAN]" (click)="openBookCopyAddModal()" class="admin-button">Add Book Copy</p-button>
-  <app-book-row [books]="bestSellers"></app-book-row>
+  <app-book-row *ngIf="bestSellers.length>0" [books]="bestSellers"></app-book-row>
 </div>
 
   <!-- <div class="book-grid">

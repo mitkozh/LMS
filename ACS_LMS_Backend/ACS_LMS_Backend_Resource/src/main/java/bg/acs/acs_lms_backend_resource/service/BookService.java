@@ -49,6 +49,7 @@ public class BookService {
         Book book = bookRepository.findByTitle(bookAddDto.getTitle())
                 .orElse(mapBookAddDtoToBook(bookAddDto));
         BookCopy bookCopy = mapBookAddDtoToBookCopy(bookAddDto);
+        bookCopy.setPublicationDate(bookAddDto.getPublicationDate());
         bookCopy.setBook(book);
         bookCopy.setPublisher(publisherService.getPublisherById(bookAddDto.getPublisher()));
         bookCopy.setLanguage(languageService.mapLanguageDtoToLanguage(bookAddDto.getLanguage()));
@@ -80,7 +81,7 @@ public class BookService {
         BookShortDto bookShortDto = modelMapper.map(book, BookShortDto.class);
         bookShortDto.setAuthors(book.getAuthors().stream().map(authorService::mapAuthorToAuthorShortDto)
                 .collect(Collectors.toSet()));
-        bookShortDto.setCoverPhotoName(book.getCoverPhoto().getFileName());
+        bookShortDto.setImageId(book.getCoverPhoto().getId());
 
         return bookShortDto;
     }
@@ -89,7 +90,7 @@ public class BookService {
         Book book = modelMapper.map(bookAddDto, Book.class);
         book.setAuthors(authorService.getAuthorsByIds(bookAddDto.getAuthors()));
         book.setCategories(mapCategoryNamesToCategories(bookAddDto.getCategories()));
-        book.setCoverPhoto(imageRepository.findByFileName(bookAddDto.getCoverPhotoName()).orElseThrow(EntityNotFoundException::new));
+        book.setCoverPhoto(imageRepository.findById(bookAddDto.getImageId()).orElseThrow(EntityNotFoundException::new));
         return book;
     }
 
@@ -195,4 +196,9 @@ public class BookService {
                 .map(this::mapBookToBookShortDto)
                 .collect(Collectors.toSet());
     }
+
+    public boolean checkForCallNumber(String callNumber) {
+        return bookCopyRepository.existsByCallNumber(callNumber);
+    }
+
 }

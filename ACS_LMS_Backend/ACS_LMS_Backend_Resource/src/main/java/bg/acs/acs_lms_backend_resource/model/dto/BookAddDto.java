@@ -23,7 +23,7 @@ public class BookAddDto {
     @Size(max = 3000, message = "Description must not exceed 3000 characters")
     private String description;
 
-    private String coverPhotoName;
+    private Long imageId;
 
 
 

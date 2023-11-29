@@ -16,6 +16,6 @@ public class AuthorShortDto {
 
     private String description;
 
-    private String profilePicName;
+    private Long imageId;
 
 }

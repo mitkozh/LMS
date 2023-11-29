@@ -33,6 +33,14 @@ export class BookService extends GenericService<
   BookAddDto,
   BookShortDto
 > {
+
+  
+  checkForCallNumber(callNumber: string): Observable<boolean> {
+    return this.httpClient.get<boolean>(
+      `${this.baseUrl}${this.resourceEndpoint}/check-call-number/${callNumber}`
+    );
+  }
+
   getBooksByAuthorsIds(ids: number[]) {
     return this.httpClient.post<BookShortDto[]>(
       `${this.baseUrl}${this.resourceEndpoint}/authors`,

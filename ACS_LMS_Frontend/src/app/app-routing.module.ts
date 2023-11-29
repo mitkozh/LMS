@@ -9,9 +9,10 @@ import { LoginModalComponent } from './components/partials/modal/login/login-mod
 import { CategoryDetailsComponent } from './components/pages/books/category-details/category-details.component';
 import { NotFoundComponent } from './components/pages/not-found/not-found.component';
 import { BookFullComponent } from './components/pages/book-full/book-full.component';
+import { AdvancedSearchComponent } from './components/pages/advanced-search/advanced-search.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+  { path: '', redirectTo: 'books', pathMatch: 'full' },
   {
     path: 'dashboard',
     component: DashboardComponent,
@@ -22,9 +23,10 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'sign-in', redirectTo: 'login', pathMatch: 'full' },
   { path: 'categories/:category', component: CategoryDetailsComponent },
-  { path: 'books/:title', component: BookFullComponent},
-  { path: 'books/:title/:edition', component: BookFullComponent},
+  { path: 'books/:title', component: BookFullComponent },
+  { path: 'books/:title/:edition', component: BookFullComponent },
   { path: 'not-found', component: NotFoundComponent },
+  { path: 'advanced-search', component: AdvancedSearchComponent },
   { path: '**', redirectTo: 'not-found' },
 ];
 

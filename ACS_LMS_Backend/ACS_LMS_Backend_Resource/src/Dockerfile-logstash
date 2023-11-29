@@ -1,0 +1,5 @@
+FROM docker.elastic.co/logstash/logstash:7.9.3
+
+RUN curl -L --output "/usr/share/logstash/postgresql-42.2.5.jar" "https://jdbc.postgresql.org/download/postgresql-42.2.5.jar"
+
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint"]

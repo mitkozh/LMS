@@ -9,12 +9,12 @@ spring:
       max-request-size: 10MB
   application.name: backend-resources
   datasource:
-    driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/acs_library?allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true&serverTimezone=UTC
-    username: root
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5000/acs_library?allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true&serverTimezone=UTC
+    username: postgres
     password: toor
   jpa:
-    database-platform: org.hibernate.dialect.MySQL8Dialect
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
     defer-datasource-initialization: true
@@ -26,8 +26,6 @@ spring:
       resourceserver:
         jwt:
           issuer-uri:  http://localhost:8080/realms/ACS_TEST
-
-
 
 logging:
   level:

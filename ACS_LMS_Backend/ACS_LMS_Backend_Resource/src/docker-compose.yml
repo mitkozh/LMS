@@ -1,11 +1,24 @@
 version: "3"
 services:
+  postgres:
+    image: postgres:14.2
+    container_name: sem_postgres
+    restart: always
+    ports:
+      - "5000:5432"
+    environment:
+      POSTGRES_PASSWORD: toor
+      POSTGRES_DB: acs_library
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.9.3
     container_name: sem_elasticsearch
     environment:
       - discovery.type=single-node
       - bootstrap.memory_lock=true
+      - http.cors.enabled=true
+      - http.cors.allow-origin=http://localhost:4200
       - "ES_JAVA_OPTS=-Xms256m -Xmx256m"
     ulimits:
       memlock:
@@ -13,6 +26,8 @@ services:
         hard: -1
     volumes:
       - ./volumes/elasticsearch:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
     logging:
       driver: "json-file"
       options:
@@ -24,6 +39,7 @@ services:
       dockerfile: Dockerfile-logstash
     container_name: sem_logstash
     depends_on:
+      - postgres
       - elasticsearch
     volumes:
       - ./volumes/logstash/pipeline/:/usr/share/logstash/pipeline/
@@ -42,6 +58,10 @@ services:
       - "ELASTICSEARCH_URL=http://elasticsearch:9200"
       - "SERVER_NAME=127.0.0.1"
     ports:
-      - 5601:5601
+      - "5601:5601"
     depends_on:
       - elasticsearch
+
+volumes:
+  postgres-data:
+

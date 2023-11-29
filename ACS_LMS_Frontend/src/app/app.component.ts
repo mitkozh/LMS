@@ -17,13 +17,18 @@ interface SideNavToggle {
 export class AppComponent implements OnInit {
   title = 'ACS_LMS_Frontend';
   public userProfile: KeycloakProfile | null = null;
+  sideNavStatus: boolean = false; 
+  public isLoggedIn = false;
 
   constructor(
     private readonly keycloak: KeycloakService,
     private http: HttpClient
+    
   ) {}
 
   public async ngOnInit() {
+    this.isLoggedIn = await this.keycloak.isLoggedIn();
+
     this.keycloak.isLoggedIn().then((isLoggedIn) => {
       if (isLoggedIn) {
         this.sendRequestToServer();

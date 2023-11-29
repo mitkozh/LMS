@@ -60,7 +60,7 @@ export class BookFullComponent implements OnInit {
       .subscribe((book) => {
         this.book = book;
         this.authors = this.getEntitiesById(book.authors)
-        this.getPhoto(book.coverPhotoUrl).subscribe((photoUrl) => {
+        this.getPhoto(book.imageId).subscribe((photoUrl) => {
           this.bookPhoto = photoUrl;
         });
       });
@@ -137,10 +137,10 @@ export class BookFullComponent implements OnInit {
   }
   showFullDescription = false;
 
-  getPhoto(profilePicName: string): Observable<SafeUrl> {
-    console.log(profilePicName);
-    if (profilePicName) {
-      return this.imageService.getImage(profilePicName).pipe(
+  getPhoto(imageId: number): Observable<SafeUrl> {
+    console.log(imageId);
+    if (imageId) {
+      return this.imageService.getImage(imageId).pipe(
         map((res) => {
           console.log(res);
           return this.sanitizer.bypassSecurityTrustUrl(

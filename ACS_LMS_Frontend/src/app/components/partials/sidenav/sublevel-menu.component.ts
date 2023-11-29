@@ -35,46 +35,48 @@ import { KeycloakService } from 'keycloak-angular';
       "
       class="sublevel-nav"
     >
-      <li *ngFor="let item of data.items" class="sublevel-nav-item">
-        <a
-          class="sublevel-nav-link"
-          (click)="handleClick(item)"
-          *ngIf="item.items && item.items.length > 0"
-          [ngClass]="getActiveClass(item)"
-        >
-          <i class="sublevel-link-icon fa fa-circle"></i>
-          <span class="sublevel-link-text" @fadeInOut *ngIf="collapsed">{{
-            item.label
-          }}</span>
-          <i
-            *ngIf="item.items && collapsed"
-            class="menu-collapse-icon"
-            [ngClass]="
-              !item.expanded ? 'fal fa-angle-right' : 'fal fa-angle-down'
-            "
-          ></i>
-        </a>
-        <a
-          class="sublevel-nav-link"
-          *ngIf="!item.items || (item.items && item.items.length === 0)"
-          [routerLink]="[item.routeLink]"
-          routerLinkActive="active-sublevel"
-          [routerLinkActiveOptions]="{ exact: true }"
-        >
-          <i class="sublevel-link-icon fa fa-circle"></i>
-          <span class="sublevel-link-text" @fadeInOut *ngIf="collapsed">{{
-            item.label
-          }}</span>
-        </a>
-        <div *ngIf="item.items && item.items.length > 0">
-          <app-sublevel-menu
-            [data]="item"
-            [collapsed]="collapsed"
-            [multiple]="multiple"
-            [expanded]="item.expanded"
-          ></app-sublevel-menu>
-        </div>
-      </li>
+      <ng-container *ngFor="let item of data.items">
+        <li *ngIf="hasRolesCheck(item.requiredRoles)" class="sublevel-nav-item">
+          <a
+            class="sublevel-nav-link"
+            (click)="handleClick(item)"
+            *ngIf="item.items && item.items.length > 0"
+            [ngClass]="getActiveClass(item)"
+          >
+            <i class="sublevel-link-icon fa fa-circle"></i>
+            <span class="sublevel-link-text" @fadeInOut *ngIf="collapsed">{{
+              item.label
+            }}</span>
+            <i
+              *ngIf="item.items && collapsed"
+              class="menu-collapse-icon"
+              [ngClass]="
+                !item.expanded ? 'fal fa-angle-right' : 'fal fa-angle-down'
+              "
+            ></i>
+          </a>
+          <a
+            class="sublevel-nav-link"
+            *ngIf="!item.items || (item.items && item.items.length === 0)"
+            [routerLink]="[item.routeLink]"
+            routerLinkActive="active-sublevel"
+            [routerLinkActiveOptions]="{ exact: true }"
+          >
+            <i class="sublevel-link-icon fa fa-circle"></i>
+            <span class="sublevel-link-text" @fadeInOut *ngIf="collapsed">{{
+              item.label
+            }}</span>
+          </a>
+          <div *ngIf="item.items && item.items.length > 0">
+            <app-sublevel-menu
+              [data]="item"
+              [collapsed]="collapsed"
+              [multiple]="multiple"
+              [expanded]="item.expanded"
+            ></app-sublevel-menu>
+          </div>
+        </li>
+      </ng-container>
     </ul>
   `,
   styleUrls: ['./sidenav.component.scss'],
@@ -120,7 +122,7 @@ export class SublevelMenuComponent implements OnInit {
   ) {}
 
   public hasRolesCheck(roles: UserRole[] | undefined) {
-    if (roles) {
+    if (roles && roles.length > 0) {
       return roles.some((role) =>
         this.keycloakService.getUserRoles().includes(role)
       );

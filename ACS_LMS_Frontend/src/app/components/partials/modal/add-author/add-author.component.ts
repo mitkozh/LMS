@@ -30,7 +30,7 @@ import { DynamicDialogConfig } from 'primeng/dynamicdialog';
   ],
 })
 export class AddAuthorComponent implements OnInit {
-  profilePicName: string | undefined;
+  imageId: number | undefined;
   profilePic: any | undefined;
   onSubmitEntity$!: EventEmitter<AuthorShortDto>;
 
@@ -55,7 +55,7 @@ export class AddAuthorComponent implements OnInit {
     return {
       name: formValue.name || '',
       description: formValue.description || '',
-      profilePicName: this.profilePicName,
+      imageId: this.imageId,
     };
   }
 
@@ -78,10 +78,10 @@ export class AddAuthorComponent implements OnInit {
       let responseType: any;
       let file: File = fileEvent.files[0];
       this.imageService.uploadImage(file).subscribe((res) => {
-        this.profilePicName = res.name;
+        this.imageId = res.id;
         responseType = res.type;
         this.imageService
-          .getImage(this.profilePicName as string)
+          .getImage(this.imageId as number)
           .subscribe((profilePic) => {
             this.profilePic = this.sanitizer.bypassSecurityTrustUrl(
               URL.createObjectURL(profilePic)

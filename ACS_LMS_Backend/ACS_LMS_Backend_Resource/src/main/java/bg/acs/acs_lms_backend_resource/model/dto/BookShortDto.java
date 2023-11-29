@@ -16,6 +16,6 @@ import java.util.Set;
 public class BookShortDto {
     private Long id;
     private String title;
-    private String coverPhotoName;
+    private Long imageId;
     private Set<AuthorShortDto> authors;
 }

@@ -1,0 +1,49 @@
+.head {
+  width: calc(100% - 5rem);
+  margin-left: 5rem;
+  z-index: 1;
+  transition: all 0.5s ease;
+  background: #f4f7fa;
+  padding: 1rem 1.5rem 0 1.5rem;
+
+  position: fixed;
+  top: 0;
+
+  .head-content {
+    background-color: #fff;
+    border-radius: 0.625rem;
+    box-shadow: 0px 0px 10px 0 rgb(34, 41, 47 / 10%);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .head-content-Left {
+      .search-container {
+        position: relative;
+
+        .normal-search {
+          .search {
+            border: none;
+            height: 2.375rem;
+            padding-left: 2.5rem;
+            padding-right: 1.25rem;
+            background-color: #f3f3f0;
+            box-shadow: none;
+            border-radius: 1.875rem;
+            outline: 0;
+          }
+        }
+      }
+    }
+  }
+
+  .head-trimmed {
+    width: calc(100% - 15.5625rem);
+    margin-left: 16.5625rem;
+  }
+
+  .head-md-screen {
+    width: calc(100% - 5rem);
+    margin-left: 5rem;
+  }
+}

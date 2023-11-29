@@ -2,9 +2,7 @@ package bg.acs.acs_lms_backend_resource.model.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.HashSet;
@@ -27,6 +25,10 @@ public class Category extends BaseEntity{
     @ManyToMany(mappedBy = "categories")
     @JsonIgnore
     private Set<Book> books = new HashSet<>();
+
+    @ManyToOne
+    @JoinColumn(name = "parent_category_id")
+    private Category parentCategory;
 
 
 }

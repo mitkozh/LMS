@@ -12,12 +12,7 @@ import { ImageService } from 'app/core/image.service';
 })
 export class BookCardMiniComponent implements OnInit {
   @Input()
-  book: BookShortDto = {
-    id: 1,
-    title: '',
-    coverPhotoName: '',
-    authors: [],
-  };
+  book: BookShortDto | undefined;
 
   constructor(
     private imageService: ImageService,
@@ -28,17 +23,20 @@ export class BookCardMiniComponent implements OnInit {
   }
 
   loadBookImage() {
-    if (this.book.coverPhotoName) {
-      this.getPhoto(this.book.coverPhotoName).subscribe((safeUrl) => {
-        this.book.coverPhoto = safeUrl;
+    if (this.book?.imageId) {
+      this.getPhoto(this.book.imageId).subscribe((safeUrl) => {
+        if (this.book)
+        {
+          this.book.coverPhoto = safeUrl;
+        }
       });
     }
   }
 
-  getPhoto(profilePicName: string): Observable<SafeUrl> {
-    if (profilePicName) {
+  getPhoto(imageId: number): Observable<SafeUrl> {
+    if (imageId) {
       return this.imageService
-        .getImage(profilePicName)
+        .getImage(imageId)
         .pipe(
           map((res) =>
             this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(res))
@@ -50,7 +48,7 @@ export class BookCardMiniComponent implements OnInit {
       );
     }
   }
-  generateBookLink(bookTitle: string): string {
-    return `/books/${encodeURIComponent(bookTitle)}`;
+  generateBookLink(bookTitle: string | undefined): string {
+    return `/books/${encodeURIComponent(bookTitle ?? '')}`;
   }
 }
