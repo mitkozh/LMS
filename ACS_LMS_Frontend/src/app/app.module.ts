@@ -60,7 +60,6 @@ import {
 import { NgChartsModule } from 'ng2-charts';
 import { AddPublisherComponent } from './components/partials/modal/add-publisher/add-publisher.component';
 import { AddLanguageComponent } from './components/partials/modal/add-language/add-language.component';
-import { CommonModule } from '@angular/common';
 import { LabeledInputComponent } from './components/partials/labeled-input/labeled-input.component';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { BOOK_SERVICE_CONFIG, BookService } from './core/book.service';
@@ -70,8 +69,6 @@ import { OverviewComponent } from './components/pages/book-full/overview/overvie
 import { OtherEditionsComponent } from './components/pages/book-full/other-editions/other-editions.component';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
-import { bookReducer } from './feature-module/reducers/book.reducer';
-import { BookEffects } from './feature-module/effects/book.effects';
 import { AddBookCopyComponent } from './components/partials/modal/add-book-copy/add-book-copy.component';
 import {
   LANGUAGE_SERVICE_CONFIG,

@@ -17,12 +17,7 @@ import {
 } from '@angular/forms';
 import { BookAddDto } from './book-add-dto';
 import { Publisher } from 'app/shared/publisher';
-import { GenericService, SERVICE_CONFIG } from 'app/core/generic.service';
-import { HttpClient, HttpResponse } from '@angular/common/http';
 import { BookBindingEnum } from 'app/shared/book-binding-enum';
-import { Category } from 'app/shared/category';
-import { Author } from 'app/shared/author';
-import { Book } from 'app/shared/book';
 import { AcquisitionDocumentEnum } from 'app/shared/acquasition-document-enum';
 import { CategoryWithBooks } from 'app/shared/category-with-books';
 import { CategoryAddDto } from 'app/shared/category-add-dto';
@@ -101,7 +96,6 @@ export class BookAddComponent implements OnInit {
     private categoryService: CategoryService,
     private publisherService: PublisherService,
     public bookConfig: DynamicDialogConfig
-
   ) {
     this.form = this.fb.group({
       title: [

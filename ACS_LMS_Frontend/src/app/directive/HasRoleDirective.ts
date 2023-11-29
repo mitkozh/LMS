@@ -27,7 +27,9 @@ export class HasRolesDirective implements OnChanges {
       return;
     }
 
-    const hasRole = this.roles.some(role => this.keycloakService.getUserRoles().includes(role));
+    const hasRole = this.roles.some((role) =>
+      this.keycloakService.getUserRoles().includes(role)
+    );
     console.log(this.keycloakService.getUserRoles());
     if (hasRole) {
       this.viewContainer.clear();

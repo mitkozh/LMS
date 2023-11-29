@@ -91,9 +91,6 @@ export class BookLibraryComponent implements OnInit, OnDestroy {
       if (book) {
         this.ref?.close();
         {
-          if (book) {
-            console.log("successsssssss");
-          }
           this.ref?.close();
         }
       }

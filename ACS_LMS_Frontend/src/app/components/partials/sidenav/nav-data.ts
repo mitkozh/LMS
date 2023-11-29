@@ -2,11 +2,6 @@ import { INavbarData } from "./helper";
 
 export const navbarData: INavbarData[] = [
     {
-        routeLink: 'dashboard',
-        icon: 'fal fa-home',
-        label: 'Dashboard'
-    },
-    {
         routeLink: 'books',
         icon: 'fal fa-book',
         label: 'Books',
@@ -45,16 +40,6 @@ export const navbarData: INavbarData[] = [
                 label: 'Create Coupens'
             }
         ]
-    },
-    {
-        routeLink: 'pages',
-        icon: 'fal fa-file',
-        label: 'Pages'
-    },
-    {
-        routeLink: 'media',
-        icon: 'fal fa-camera',
-        label: 'Media'
     },
     {
         routeLink: 'settings',

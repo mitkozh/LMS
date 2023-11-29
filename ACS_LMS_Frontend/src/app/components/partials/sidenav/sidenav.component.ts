@@ -28,7 +28,6 @@ interface SideNavToggle {
   ]
 })
 export class SidenavComponent implements OnInit {
-
   @Output() onToggleSideNav: EventEmitter<SideNavToggle> = new EventEmitter();
   @Output() authRequired: EventEmitter<boolean> = new EventEmitter<boolean>();
   collapsed = false;
@@ -60,18 +59,23 @@ export class SidenavComponent implements OnInit {
 
   toggleCollapse(): void {
     this.collapsed = !this.collapsed;
-    this.onToggleSideNav.emit({collapsed: this.collapsed, screenWidth: this.screenWidth});
+    this.onToggleSideNav.emit({
+      collapsed: this.collapsed,
+      screenWidth: this.screenWidth,
+    });
   }
 
   closeSidenav(): void {
     this.collapsed = false;
-    this.onToggleSideNav.emit({collapsed: this.collapsed, screenWidth: this.screenWidth});
+    this.onToggleSideNav.emit({
+      collapsed: this.collapsed,
+      screenWidth: this.screenWidth,
+    });
   }
 
   handleClick(item: INavbarData): void {
-    
     this.shrinkItems(item);
-    item.expanded = !item.expanded
+    item.expanded = !item.expanded;
   }
 
   getActiveClass(data: INavbarData): string {
@@ -80,7 +84,7 @@ export class SidenavComponent implements OnInit {
 
   shrinkItems(item: INavbarData): void {
     if (!this.multiple) {
-      for(let modelItem of this.navData) {
+      for (let modelItem of this.navData) {
         if (item !== modelItem && modelItem.expanded) {
           modelItem.expanded = false;
         }
