@@ -9,7 +9,6 @@ import bg.acs.acs_lms_backend_resource.model.enums.BookBindingEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -75,4 +74,6 @@ public class BookCopy extends BaseEntity {
     @OneToMany(mappedBy = "bookCopy", fetch = FetchType.LAZY)
     private List<Checkout> checkouts;
 
+    @OneToMany(mappedBy = "bookCopy", fetch = FetchType.LAZY)
+    private List<Reservation> reservations;
 }

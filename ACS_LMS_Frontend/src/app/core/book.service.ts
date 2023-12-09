@@ -20,6 +20,7 @@ import { BookShortDto } from 'app/shared/book-short-dto';
 import { GenericService, ServiceConfig } from './generic.service';
 import { BookFullDto } from 'app/shared/book-full-dto';
 import { BookCopyAddDto } from 'app/components/partials/modal/add-book-copy/book-copy-add-dto';
+import { ReservationDto as ReservationDto } from 'app/shared/reservation-dto';
 
 export const BOOK_SERVICE_CONFIG = new InjectionToken<ServiceConfig>(
   'BookServiceConfig'
@@ -54,6 +55,12 @@ export class BookService extends GenericService<
     super(httpClient, config);
   }
 
+  hasReservationForBook(bookId: number): Observable<ReservationDto> {
+    return this.httpClient.get<ReservationDto>(
+      `${this.baseUrl}${this.resourceEndpoint}/has-reservations/${bookId}`
+    );
+  }
+
   getBestsellers() {
     return this.httpClient.get<BookShortDto[]>(
       `${this.baseUrl}${this.resourceEndpoint}/bestsellers`
@@ -82,6 +89,18 @@ export class BookService extends GenericService<
     return this.httpClient.post<BookFullDto>(
       `${this.baseUrl}${this.resourceEndpoint}/bookCopy`,
       bookCopy
+    );
+  }
+
+  checkAvailableBooks(bookId: number): Observable<boolean> {
+    return this.httpClient.get<boolean>(
+      `${this.baseUrl}${this.resourceEndpoint}/available-check/${bookId}`
+    );
+  }
+
+  reserveBook(bookId: number): Observable<ReservationDto> {
+    return this.httpClient.get<ReservationDto>(
+      `${this.baseUrl}${this.resourceEndpoint}/reserveBook/${bookId}`
     );
   }
 

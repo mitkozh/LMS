@@ -50,7 +50,7 @@ import { NgOnDestroyService } from './core/ng-on-destroy.service';
 import { ChipsModule } from 'primeng/chips';
 import { DividerModule } from 'primeng/divider';
 import { AvatarModule } from 'primeng/avatar';
-
+import { CdkMenuModule } from '@angular/cdk/menu';
 import { TabMenuModule } from 'primeng/tabmenu';
 import { CardModule } from 'primeng/card';
 import { TableModule } from 'primeng/table';
@@ -93,6 +93,11 @@ import { authReducer } from './feature-module/reducers/auth/auth.reducer';
 import { AuthState } from './feature-module/reducers/auth/auth.state';
 import { login, logout } from './feature-module/reducers/auth/auth.actions';
 import { AuthEffects } from './feature-module/reducers/auth/auth.effects';
+import { OverlayModule } from 'primeng/overlay';
+import { BorrowABookComponent } from './components/pages/book-full/borrow-a-book/borrow-a-book.component';
+import { TranscationsComponent } from './components/pages/transcations/transcations.component';
+import { RESERVATION_SERVICE_CONFIG, ReservationService } from './core/reservation.service';
+import { PaginatorModule } from 'primeng/paginator';
 
 export function initializeKeycloak(
   keycloak: KeycloakService,
@@ -155,7 +160,9 @@ export function initializeKeycloak(
     MoreByAuthorComponent,
     AdvancedSearchComponent,
     SearchComponent,
-    HeaderComponent
+    HeaderComponent,
+    BorrowABookComponent,
+    TranscationsComponent,
   ],
 
   imports: [
@@ -167,6 +174,7 @@ export function initializeKeycloak(
     InputTextareaModule,
     CarouselModule,
     ButtonModule,
+    PaginatorModule,
     AvatarModule,
     HttpClientModule,
     ReactiveFormsModule,
@@ -186,6 +194,8 @@ export function initializeKeycloak(
     ToolbarModule,
     TableModule,
     DividerModule,
+    OverlayModule,
+    CdkMenuModule,
     StoreModule.forRoot({ auth: authReducer }),
     EffectsModule.forRoot([AuthEffects]),
   ],
@@ -224,6 +234,15 @@ export function initializeKeycloak(
       useClass: PublisherService,
       deps: [HttpClient, PUBLISHER_SERVICE_CONFIG],
     },
+    {
+      provide: RESERVATION_SERVICE_CONFIG,
+      useValue: { resourceEndpoint: 'reservations' },
+    },
+    {
+      provide: ReservationService,
+      useClass: ReservationService,
+      deps: [HttpClient, RESERVATION_SERVICE_CONFIG],
+    },    
     {
       provide: CATEGORY_SERVICE_CONFIG,
       useValue: { resourceEndpoint: 'categories' },

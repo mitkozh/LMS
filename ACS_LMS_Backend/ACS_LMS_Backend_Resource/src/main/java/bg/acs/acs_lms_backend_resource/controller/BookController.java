@@ -3,6 +3,7 @@ package bg.acs.acs_lms_backend_resource.controller;
 import bg.acs.acs_lms_backend_resource.model.dto.*;
 import bg.acs.acs_lms_backend_resource.model.entity.Book;
 import bg.acs.acs_lms_backend_resource.model.entity.Category;
+import bg.acs.acs_lms_backend_resource.model.entity.Reservation;
 import bg.acs.acs_lms_backend_resource.repository.BookRepository;
 import bg.acs.acs_lms_backend_resource.service.BookService;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.text.html.Option;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -80,7 +82,7 @@ public class BookController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/all/{title}")
+    @GetMapping("all/{title}")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_LIBRARIAN')")
     public ResponseEntity<Set<BookShortDto>> getBooksByTitle(@PathVariable String title) {
         title = URLDecoder.decode(title, StandardCharsets.UTF_8);
@@ -112,12 +114,20 @@ public class BookController {
     }
 
 
+        @GetMapping("reserveBook/{bookId}")
+        public ResponseEntity<ReservationDto> reserveBook(@PathVariable Long bookId) {
+            Optional<ReservationDto>  reservation= bookService.reserveBook(bookId);
+            return reservation.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.noContent().build());
+        }
 
+        @GetMapping("available-check/{bookId}")
+        public ResponseEntity<Boolean> checkAvailableBooks(@PathVariable Long bookId) {
+            return ResponseEntity.ok(bookService.areBooksAvailable(bookId));
+        }
 
-
-
-
-
-
-
+        @GetMapping("has-reservations/{bookId}")
+        public ResponseEntity<ReservationDto> hasReservationForBook(@PathVariable Long bookId) {
+            Optional<ReservationDto> reservation = bookService.hasReservationsForBook(bookId);
+            return reservation.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.noContent().build());
+        }
 }

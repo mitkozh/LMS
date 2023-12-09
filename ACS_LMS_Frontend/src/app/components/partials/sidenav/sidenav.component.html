@@ -1,5 +1,5 @@
 <div class="sidenav" [ngClass]="collapsed ? 'sidenav-collapsed' : ''">
-  <!-- <div class="logo-container">
+  <div class="logo-container">
     <button class="logo" (click)="toggleCollapse()">L</button>
     <div class="logo-text" @fadeInOut *ngIf="collapsed">LMS</div>
     <button
@@ -10,7 +10,7 @@
     >
       <i class="fal fa-times close-icon"></i>
     </button>
-  </div> -->
+  </div>
   <div class="scrollwrap scrollwrap_delayed">
     <ul class="sidenav-nav">
       <ng-container *ngFor="let data of navData">

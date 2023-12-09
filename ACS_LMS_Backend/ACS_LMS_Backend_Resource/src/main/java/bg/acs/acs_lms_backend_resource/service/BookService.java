@@ -1,25 +1,19 @@
 package bg.acs.acs_lms_backend_resource.service;
 
 import bg.acs.acs_lms_backend_resource.model.dto.*;
-import bg.acs.acs_lms_backend_resource.model.entity.BaseEntity;
-import bg.acs.acs_lms_backend_resource.model.entity.Book;
-import bg.acs.acs_lms_backend_resource.model.entity.BookCopy;
-import bg.acs.acs_lms_backend_resource.model.entity.Category;
+import bg.acs.acs_lms_backend_resource.model.entity.*;
 import bg.acs.acs_lms_backend_resource.repository.BookCopyRepository;
 import bg.acs.acs_lms_backend_resource.repository.BookRepository;
 import bg.acs.acs_lms_backend_resource.repository.CategoryRepository;
 import bg.acs.acs_lms_backend_resource.repository.ImageRepository;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -43,6 +37,10 @@ public class BookService {
     private final PublisherService publisherService;
 
     private final LanguageService languageService;
+
+    private final UserService userService;
+
+    private final ReservationService reservationService;
 
     @Transactional
     public BookShortDto saveBook(BookAddDto bookAddDto){
@@ -178,6 +176,7 @@ public class BookService {
         return mapBookAndBookCopyToBookFullDto(book, bookCopy);
     }
 
+
     private BookCopy mapBookCopyAddDtoToBookCopy(BookCopyAddDto bookCopyAddDto) {
         BookCopy map = modelMapper.map(bookCopyAddDto, BookCopy.class);
         map.setId(null);
@@ -200,5 +199,49 @@ public class BookService {
     public boolean checkForCallNumber(String callNumber) {
         return bookCopyRepository.existsByCallNumber(callNumber);
     }
+
+
+    @Transactional
+    public Optional<ReservationDto> reserveBook(Long bookId) {
+        if (hasReservationsForBook(bookId).isPresent()) {
+            throw new IllegalStateException("User has already reserved this book");
+        }
+
+        List<BookCopy> booksAvailable = booksAvailable(bookId);
+        if (!booksAvailable.isEmpty()) {
+            BookCopy bookCopy = booksAvailable.get(0);
+            Reservation reservation = Reservation.builder()
+                    .reservationDate(LocalDateTime.now())
+                    .bookCopy(bookCopy)
+                    .user(userService.getCurrentUser())
+                    .build();
+            Reservation save = reservationService.save(reservation);
+            return Optional.of(reservationService.mapReservationToReservationDto(save));
+        }
+        return Optional.empty();
+    }
+
+    public Optional<ReservationDto> hasReservationsForBook(Long bookId){
+        List<BookCopy> allByBookId = bookCopyRepository.findAllByBookId(bookId);
+        for (BookCopy copy : allByBookId){
+            Optional<ReservationDto> reservation = reservationService.getReservationByUserAndBookCopy(copy, userService.getCurrentUser());
+            if (reservation.isPresent()){
+                return reservation;
+            }
+        }
+        return Optional.empty();
+    }
+
+    public List<BookCopy> booksAvailable(Long bookId){
+        return bookCopyRepository.findAvailableCopiesByBookId(bookId).stream().toList();
+    }
+
+
+    public boolean areBooksAvailable(Long bookId){
+        return !booksAvailable(bookId).isEmpty();
+    }
+
+
+
 
 }
