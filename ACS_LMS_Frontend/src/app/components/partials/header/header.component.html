@@ -2,7 +2,11 @@
   <div class="head-content">
     <div class="head-content-left">
       <div class="search-container">
-        <div class="normal-search">
+        <div
+          *ngIf="!canShowSearchAsOverlay"
+          class="normal-search"
+          id="seach-box"
+        >
           <input
             type="search"
             class="search"
@@ -11,13 +15,39 @@
             placeholder="Search..."
           />
         </div>
+        <div *ngIf="canShowSearchAsOverlay">
+          <button
+            [cdkMenuTriggerFor]="searchOverlay"
+            class="search-menu-btn ripple"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 18 18"
+            >
+              <g
+                fill="none"
+                fill-rule="evenodd"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="1.67"
+                transform="translate(1 1)"
+              >
+                <circle cx="7.11" cy="7.11" r="7.11"></circle>
+                <path d="M16 16l-3.87-3.87"></path>
+              </g>
+            </svg>
+          </button>
+        </div>
       </div>
     </div>
     <div class="head-content-right">
       <div class="head-menu">
         <div class="head-menu-item">
           <button class="head-menu-item-btn ripple">
-            <i class="far fa-expanded menu-icon"></i>
+            <i class="fas fa-sort menu-icon"></i>
           </button>
         </div>
         <div class="head-menu-item">
@@ -26,17 +56,55 @@
           </button>
         </div>
         <div class="head-menu-item">
-            <button class="head-menu-item-btn ripple">
-              <i class="far fa-comment-alt menu-icon"></i>
-            </button>
+          <button class="head-menu-item-btn ripple">
+            <i class="far fa-comment-alt menu-icon"></i>
+          </button>
+        </div>
+        <ng-template #loginButton>
+          <div class="head-login-container">
+            <button class="head-login-item-btn" (click)="login()">Login</button>
           </div>
+        </ng-template>
       </div>
-      <div class="head-user-avatar-container">
+      <div
+        class="head-user-avatar-container"
+        *ngIf="isLoggedIn; else loginButton"
+      >
         <div class="head-user-avatar">
-            <img src="assets/images/profile_pic.jpg" alt="user" class="user-avatar">
-            
+          <img
+            src="assets/images/profile_pic.jpg"
+            alt="user"
+            class="user-avatar"
+          />
         </div>
       </div>
     </div>
   </div>
 </div>
+
+<ng-template #searchOverlay>
+  <div class="overlay overlay-search overlay-fall" cdkMenu>
+    <input type="search" class="search" name="" id="" placeholder="Search..." />
+    <button class="search-btn">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        viewBox="0 0 18 18"
+      >
+        <g
+          fill="none"
+          fill-rule="evenodd"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.67"
+          transform="translate(1 1)"
+        >
+          <circle cx="7.11" cy="7.11" r="7.11"></circle>
+          <path d="M16 16l-3.87-3.87"></path>
+        </g>
+      </svg>
+    </button>
+  </div>
+</ng-template>

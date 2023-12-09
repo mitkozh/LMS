@@ -10,6 +10,8 @@ import { ImageService } from './../../../core/image.service';
 import { BookFullDto } from 'app/shared/book-full-dto';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { AuthorShortDto } from 'app/shared/author-dto';
+import { UserRole } from 'app/shared/user-role';
+import { KeycloakService } from 'keycloak-angular';
 
 @Component({
   selector: 'app-book-full',
@@ -28,16 +30,19 @@ export class BookFullComponent implements OnInit {
   bookDescription: String | undefined;
   bookShortDescription: String | undefined;
   bookPhoto: SafeUrl | undefined;
+  isLoggedIn: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
     private bookService: BookService,
     private router: Router,
     private imageService: ImageService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private keycloakService: KeycloakService
   ) {}
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    this.isLoggedIn = await this.keycloakService.isLoggedIn();
     this.route.paramMap
       .pipe(
         filter((params) => params.has('title')),
@@ -59,7 +64,7 @@ export class BookFullComponent implements OnInit {
       )
       .subscribe((book) => {
         this.book = book;
-        this.authors = this.getEntitiesById(book.authors)
+        this.authors = this.getEntitiesById(book.authors);
         this.getPhoto(book.imageId).subscribe((photoUrl) => {
           this.bookPhoto = photoUrl;
         });
@@ -88,6 +93,14 @@ export class BookFullComponent implements OnInit {
       },
     ];
 
+    if (this.isLoggedIn) {
+      this.items.push({
+        label: 'Borrow book',
+        icon: 'fal fa-user-plus',
+        command: () => this.updateTab('subject'),
+      });
+    }
+
     this.activeItem =
       this.items.find((item) => item.label === this.tab) || this.items[0];
   }
@@ -113,7 +126,7 @@ export class BookFullComponent implements OnInit {
         tab = 'overview';
       } else {
         this.router.navigate([`books/${this.title}`], {
-          queryParams: { tab: 'overview' }, 
+          queryParams: { tab: 'overview' },
         });
       }
     } else {
@@ -136,6 +149,8 @@ export class BookFullComponent implements OnInit {
     });
   }
   showFullDescription = false;
+
+  roles: typeof UserRole = UserRole;
 
   getPhoto(imageId: number): Observable<SafeUrl> {
     console.log(imageId);

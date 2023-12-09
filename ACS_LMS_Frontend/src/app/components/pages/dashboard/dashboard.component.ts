@@ -17,6 +17,8 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { KeycloakService } from 'keycloak-angular';
 import { KeycloakProfile } from 'keycloak-js';
+import { ReservationService } from 'app/core/reservation.service';
+import { ReservationDto } from 'app/shared/reservation-dto';
 
 @Component({
   selector: 'app-dashboard',
@@ -33,7 +35,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private bookService: BookService,
     public dialogService: DialogService,
     private readonly keycloak: KeycloakService,
-    private http: HttpClient
+    private http: HttpClient,
+    private reservationService: ReservationService
   ) {}
   ngOnDestroy(): void {
     if (this.ref) {
@@ -42,6 +45,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   ref: DynamicDialogRef | undefined;
+  reservations: any[] = [];
 
   public async ngOnInit() {
     this.fetchData();
@@ -84,5 +88,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
       console.log('close');
     });
   }
- 
+
+  fetchReservations(): void {
+    this.reservationService
+      .getList()
+      .subscribe((reservations: ReservationDto[]) => {
+        this.reservations = reservations;
+      });
+  }
 }

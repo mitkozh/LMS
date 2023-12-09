@@ -14,16 +14,37 @@
           </ng-container>
         </p>
         <p class="year">{{ book?.publicationDate }}</p>
-        <p-tabMenu (activeItemChange)="onActiveItemChange($event)" [model]="items" [activeItem]="activeItem"></p-tabMenu>
-        <div class="card">
+        <p-tabMenu
+          (activeItemChange)="onActiveItemChange($event)"
+          [model]="items"
+          [activeItem]="activeItem"
+        ></p-tabMenu>
+        <div class="card1">
           <div *ngIf="activeItem?.label === 'Overview' && title">
             <app-overview [book]="book" [title]="title"></app-overview>
           </div>
           <div *ngIf="activeItem?.label === 'Other editions' && title">
-            <app-other-editions [title]="title" [book]="book"></app-other-editions>
+            <app-other-editions
+              [title]="title"
+              [book]="book"
+            ></app-other-editions>
           </div>
-          <div *ngIf="activeItem?.label === 'More by authors' && authors && authors.length>0">
+          <div
+            *ngIf="
+              activeItem?.label === 'More by authors' &&
+              authors &&
+              authors.length > 0
+            "
+          >
             <app-more-by-author [authors]="authors"></app-more-by-author>
+          </div>
+          <div *hasRoles="[roles.ROLE_ADMIN, roles.ROLE_ASSISTANT, roles.ROLE_LIBRARIAN, roles.ROLE_STUDENT, roles.ROLE_TEACHER]">
+            <div *ngIf="activeItem?.label === 'Borrow book' && title">
+              <app-borrow-a-book
+                [book]="book"
+                [title]="title"
+              ></app-borrow-a-book>
+            </div>
           </div>
         </div>
       </div>

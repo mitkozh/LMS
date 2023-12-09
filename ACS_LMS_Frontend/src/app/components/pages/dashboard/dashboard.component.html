@@ -10,6 +10,23 @@
     </div>
     <app-chart class="diagram"></app-chart>
   </div>
+  <p-table [value]="reservations" [paginator]="true" [rows]="10">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>User Email</th>
+        <th>Book Copy ID</th>
+        <th>Reservation Date</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-reservation>
+      <tr>
+        <td>{{reservation.userEmail}}</td>
+        <td>{{reservation.bookCopy.id}}</td>
+        <td>{{reservation.reservationDate}}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+  
 </div>
 
 

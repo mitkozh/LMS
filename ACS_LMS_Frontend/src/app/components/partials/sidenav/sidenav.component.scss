@@ -3,11 +3,11 @@
     background: #263238;
     transition: all .5s ease;
     position: fixed;
-    z-index: 1;
-    top: 60px;
+    z-index: 2;
+    top: 0px;
     width: 5rem;
     height: 100%;
-    // box-shadow: 0.063rem 0 1.25rem 0 #8690a3;
+    box-shadow: 0.063rem 0 1.25rem 0 #8690a3;
 
     .logo-container {
         display: flex;

@@ -10,8 +10,9 @@
   },
   "private": true,
   "dependencies": {
+    "@algolia/autocomplete-js": "^1.12.1",
     "@angular/animations": "^16.2.3",
-    "@angular/cdk": "^16.2.7",
+    "@angular/cdk": "^16.2.12",
     "@angular/common": "^16.2.3",
     "@angular/compiler": "^16.2.3",
     "@angular/core": "^16.2.3",

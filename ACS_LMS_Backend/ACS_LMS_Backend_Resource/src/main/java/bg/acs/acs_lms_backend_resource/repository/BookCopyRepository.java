@@ -26,7 +26,20 @@ public interface BookCopyRepository extends JpaRepository<BookCopy, Long> {
 
     Optional<BookCopy> findByBookAndId(Book book, Long id);
 
+    Optional<BookCopy> findFirstByBookId(Long id);
+
+
     List<BookCopy> findAllByBookTitle(String title);
 
     boolean existsByCallNumber(String callNumber);
+
+    @Query("SELECT bc FROM BookCopy bc " +
+            "LEFT JOIN bc.checkouts co " +
+            "LEFT JOIN bc.reservations re " +
+            "WHERE bc.book.id = :bookId " +
+            "AND (co IS NULL OR co.endTime IS NOT NULL) " +
+            "AND (re IS NULL)")
+    List<BookCopy> findAvailableCopiesByBookId(@Param("bookId") Long bookId);
+
+    List<BookCopy> findAllByBookId(Long bookId);
 }

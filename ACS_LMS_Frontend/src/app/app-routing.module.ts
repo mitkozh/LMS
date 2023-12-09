@@ -10,6 +10,7 @@ import { CategoryDetailsComponent } from './components/pages/books/category-deta
 import { NotFoundComponent } from './components/pages/not-found/not-found.component';
 import { BookFullComponent } from './components/pages/book-full/book-full.component';
 import { AdvancedSearchComponent } from './components/pages/advanced-search/advanced-search.component';
+import { TranscationsComponent } from './components/pages/transcations/transcations.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'books', pathMatch: 'full' },
@@ -27,6 +28,7 @@ const routes: Routes = [
   { path: 'books/:title/:edition', component: BookFullComponent },
   { path: 'not-found', component: NotFoundComponent },
   { path: 'advanced-search', component: AdvancedSearchComponent },
+  { path: 'transactions', component: TranscationsComponent },
   { path: '**', redirectTo: 'not-found' },
 ];
 
