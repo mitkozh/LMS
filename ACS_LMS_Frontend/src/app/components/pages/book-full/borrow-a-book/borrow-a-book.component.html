@@ -1,0 +1,17 @@
+<p-button
+  label="Reserve book"
+  (click)="reserveBook()"
+  *ngIf="canReserve && !reservation"
+></p-button>
+<p-card header="Reservation" *ngIf="reservation">
+  <div>
+    <p>Reservation ID: {{reservation.id}}</p>
+    <p>Email: {{reservation.userEmail}}</p>
+    <p>Book Copy ID: {{reservation.bookCopyId}}</p>
+    <p>Reservation Date: {{reservation.reservationDate | date}}</p>
+  </div>
+</p-card>
+<p-button
+  label="Join Waitlist"
+  *ngIf="!canReserve && !reservation"
+></p-button>
