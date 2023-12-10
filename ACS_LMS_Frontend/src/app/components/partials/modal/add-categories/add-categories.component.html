@@ -1,16 +1,25 @@
 <div class="add-container">
-    <div class="form-wrapper">
-      <form [formGroup]="form">
-        <div class="labeled-input">
-          <label for="name">Name</label>
-          <input pInputText id="name" formControlName="name" />
-        </div>
-        <div class="labeled-input">
-          <label for="description">Description</label>
-          <input pInputText id="description" formControlName="description" />
-        </div>
-        <button (click)="onSubmit()">submit</button>
-      </form>
-    </div>
+  <div class="form-wrapper">
+    <form [formGroup]="form">
+      <app-labeled-input
+        [label]="'Name'"
+        [fieldId]="'name'"
+        [fieldName]="'name'"
+        [inputType]="'input'"
+        [validationMessages]="categoryValidationMessages['name']"
+        [inputControl]="getFormControlByName('name')!"
+      ></app-labeled-input>
+
+      <app-labeled-input
+        [label]="'Description'"
+        [fieldId]="'description'"
+        [fieldName]="'description'"
+        [inputType]="'textarea'"
+        [validationMessages]="categoryValidationMessages['description']"
+        [inputControl]="getFormControlByName('description')!"
+      ></app-labeled-input>
+
+      <p-button (click)="onSubmit()">submit</p-button>
+    </form>
   </div>
-  
+</div>
