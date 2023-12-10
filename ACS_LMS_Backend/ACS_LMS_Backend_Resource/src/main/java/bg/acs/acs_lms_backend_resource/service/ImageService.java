@@ -53,11 +53,17 @@ public class ImageService {
     public byte[] getImageData(Long id) throws IOException {
         Optional<Image> dbImage = imageRepository.findById(id);
         if (dbImage.isPresent()) {
-            return ImageUtility.decompressImage(dbImage.get().getData());
+            byte[] data = dbImage.get().getData();
+            if (data != null) {
+                return ImageUtility.decompressImage(data);
+            } else {
+                throw new IllegalArgumentException("Image data is null for id: " + id);
+            }
         } else {
             throw new EntityNotFoundException("Image not found with id: " + id);
         }
     }
+
 
 
     private String generateUniqueFileName(String originalFileName) {
@@ -72,5 +78,17 @@ public class ImageService {
     }
 
 
+    public Image saveImage(Image image){
+        return imageRepository.save(image);
+    }
 
+
+    public Image getImage(Long id) {
+        Optional<Image> byId = imageRepository.findById(id);
+        return byId.orElse(null);
+    }
+
+    public void deleteImage(Long id) {
+        imageRepository.deleteById(id);
+    }
 }

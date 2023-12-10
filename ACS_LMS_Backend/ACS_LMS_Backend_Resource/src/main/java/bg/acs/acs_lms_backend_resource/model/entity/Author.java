@@ -17,11 +17,14 @@ import java.util.Set;
 @Builder
 public class Author extends BaseEntity{
 
+    @Column(name = "name", length = 100, nullable = false)
     private String name;
+
+    @Column(name = "description", length = 100, nullable = false)
 
     private String description;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "profile_photo_id", referencedColumnName = "id")
     private Image profilePhoto;
 

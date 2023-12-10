@@ -218,4 +218,13 @@ public class CategoryService {
     public Set<Category> saveAll(Set<Category> initializedCategories) {
         return new HashSet<>(categoryRepository.saveAll(initializedCategories));
     }
+
+    public void delete(Category testCategory) {
+        categoryRepository.delete(testCategory);
+    }
+
+    public void deleteCategory(CategoryWithBooksDto createdCategoryDto) {
+        Optional<Category> byName = categoryRepository.findByName(createdCategoryDto.getName());
+        byName.ifPresent(this::delete);
+    }
 }
