@@ -1,4 +1,4 @@
-import { Component, Inject, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, OnInit } from '@angular/core';
 import { BookCategory } from './book-category';
 import { GenericService } from 'app/core/generic.service';
 import { Category } from 'app/shared/category';
@@ -38,6 +38,8 @@ export class BookCategoriesComponent implements OnInit {
   ) {}
 
   roles: typeof UserRole = UserRole;
+  onSubmitCategoryEntity$ = new EventEmitter<CategoryWithBooks>();
+
 
   ngOnInit(): void {
     this.categoryService
@@ -62,16 +64,35 @@ export class BookCategoriesComponent implements OnInit {
   openBookAddModal() {
     this.ref = this.dialogService.open(AddCategoriesComponent, {
       header: 'Add category',
-      width: '80%',
+      width: 'min(600px, 60%)',
       height: '80%',
       contentStyle: { overflow: 'auto' },
       baseZIndex: 10000,
       draggable: true,
       closeOnEscape: false,
+      data: {
+        onSubmitEntity$: this.onSubmitCategoryEntity$,
+      },
+
     });
+
+    this.closeBookCategoriesAddModalOnSubmitted();
 
     this.ref.onClose.subscribe(() => {
       console.log('close');
+    });
+  }
+
+  closeBookCategoriesAddModalOnSubmitted() {
+    this.onSubmitCategoryEntity$.subscribe((category) => {
+      if (category) {
+        this.ref?.close();
+        {
+          if (category) {
+          }
+          this.ref?.close();
+        }
+      }
     });
   }
 }

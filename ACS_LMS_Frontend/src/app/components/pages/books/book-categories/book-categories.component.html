@@ -1,4 +1,4 @@
-<button *hasRoles="[roles.ROLE_ADMIN, roles.ROLE_LIBRARIAN]" (click)="openBookAddModal()" class="admin-button">Add Cateogory</button>
+<p-button *hasRoles="[roles.ROLE_ADMIN, roles.ROLE_LIBRARIAN]" (click)="openBookAddModal()" class="admin-button">Add Category</p-button>
 <div class="categories-grid">
   <div class="category" *ngFor="let category of bookCategories">
     <a [routerLink]="generateCategoryLink(category.name)">{{ category.name }}</a>

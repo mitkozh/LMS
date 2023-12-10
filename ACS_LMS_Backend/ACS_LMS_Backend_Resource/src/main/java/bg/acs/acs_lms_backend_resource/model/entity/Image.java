@@ -24,7 +24,7 @@ public class Image extends BaseEntity {
     @Column(name = "data", columnDefinition = "BYTEA", nullable = false)
     private byte[] data;
 
-    @OneToOne(mappedBy = "profilePhoto")
+    @OneToOne(mappedBy = "profilePhoto", cascade = CascadeType.MERGE)
     @JsonIgnore
     private Author author;
 

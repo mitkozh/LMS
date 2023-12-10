@@ -46,4 +46,15 @@ public class LanguageService {
     }
 
 
+    public Language saveLanguage(Language testLanguage) {
+        return languageRepository.save(testLanguage);
+    }
+
+    public void deleteLanguage(Language testLanguage) {
+        languageRepository.delete(testLanguage);
+    }
+
+    public void deleteLanguage(String languageCode) {
+        languageRepository.deleteById(languageCode);
+    }
 }

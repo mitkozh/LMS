@@ -71,6 +71,8 @@ export class BookLibraryComponent implements OnInit, OnDestroy {
         onSubmitEntity$: this.onSubmitBookEntity$,
       },
     });
+
+    this.closeBooksCopyAddModalOnSubmitted();
   }
 
   closeBooksAddModalOnSubmitted() {
@@ -79,7 +81,6 @@ export class BookLibraryComponent implements OnInit, OnDestroy {
         this.ref?.close();
         {
           if (book) {
-            console.log("successsssssss");
           }
           this.ref?.close();
         }

@@ -43,6 +43,8 @@ dependencies {
 	implementation 'org.keycloak.bom:keycloak-adapter-bom:21.1.2'
 	implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
 	implementation 'org.json:json:20230227'
+	testImplementation 'org.springframework.security:spring-security-test:6.1.5'
+
 }
 
 tasks.named('test') {

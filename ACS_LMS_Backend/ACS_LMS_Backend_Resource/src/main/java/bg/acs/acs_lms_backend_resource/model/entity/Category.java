@@ -18,7 +18,11 @@ import java.util.Set;
 public class Category extends BaseEntity{
 
 
+    @Column(name = "name", length = 100, nullable = false)
+
     private String name;
+
+    @Column(name = "description", length = 100, nullable = true)
 
     private String description;
 

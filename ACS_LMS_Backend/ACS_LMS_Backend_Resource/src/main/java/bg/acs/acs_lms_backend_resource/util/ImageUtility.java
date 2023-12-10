@@ -27,6 +27,9 @@ public class ImageUtility {
     }
 
     public static byte[] decompressImage(byte[] data) {
+        if (data == null) {
+            throw new IllegalArgumentException("Cannot decompress null data");
+        }
         Inflater inflater = new Inflater();
         inflater.setInput(data);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);
@@ -41,4 +44,5 @@ public class ImageUtility {
         }
         return outputStream.toByteArray();
     }
+
 }

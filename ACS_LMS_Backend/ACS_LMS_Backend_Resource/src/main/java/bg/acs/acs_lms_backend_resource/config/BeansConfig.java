@@ -2,7 +2,10 @@ package bg.acs.acs_lms_backend_resource.config;
 
 
 import bg.acs.acs_lms_backend_resource.util.KeycloakJwtAuthenticationConverter;
+import jakarta.persistence.EntityManagerFactory;
+import org.hibernate.SessionFactory;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
@@ -37,6 +40,9 @@ public class BeansConfig {
     public ModelMapper modelMapper(){
         return new ModelMapper();
     }
+
+
+
 
 
 }

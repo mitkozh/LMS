@@ -2,6 +2,7 @@ package bg.acs.acs_lms_backend_resource.service;
 
 import bg.acs.acs_lms_backend_resource.model.dto.AuthorShortDto;
 import bg.acs.acs_lms_backend_resource.model.entity.Author;
+import bg.acs.acs_lms_backend_resource.model.entity.Image;
 import bg.acs.acs_lms_backend_resource.repository.AuthorRepository;
 import bg.acs.acs_lms_backend_resource.repository.ImageRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -23,7 +25,9 @@ public class AuthorService {
 
     public AuthorShortDto mapAuthorToAuthorShortDto(Author author){
         AuthorShortDto authorShortDto = modelMapper.map(author, AuthorShortDto.class);
-        authorShortDto.setImageId(author.getProfilePhoto().getId());
+        if (author.getProfilePhoto() != null) {
+            authorShortDto.setImageId(author.getProfilePhoto().getId());
+        }
         return authorShortDto;
     }
     public Author mapAuthorNameToAuthor(String authorName) {
@@ -34,9 +38,11 @@ public class AuthorService {
 
     public Author mapAuthorShortDtoToAuthor(AuthorShortDto authorShortDto){
         Author author = modelMapper.map(authorShortDto, Author.class);
-        author.setProfilePhoto(imageRepository.findById(authorShortDto.getImageId()).orElseThrow(EntityNotFoundException::new));
+        Optional<Image> optionalImage = imageRepository.findById(authorShortDto.getImageId());
+        optionalImage.ifPresent(author::setProfilePhoto);
         return author;
     }
+
 
     public Set<Author> getAuthorsByIds(Set<Long> ids){
         return authorRepository.findAllByIdIsIn(ids);
@@ -60,5 +66,9 @@ public class AuthorService {
     public AuthorShortDto getAuthorByName(String name) {
         Author author = mapAuthorNameToAuthor(name);
         return mapAuthorToAuthorShortDto(author);
+    }
+
+    public void deleteAuthor(Long id) {
+        authorRepository.deleteById(id);
     }
 }
