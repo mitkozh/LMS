@@ -1,6 +1,6 @@
 export type BookInfoType = { property: string; value: any };
 
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { Observable, catchError, finalize, map, of } from 'rxjs';
@@ -12,6 +12,9 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { AuthorShortDto } from 'app/shared/author-dto';
 import { UserRole } from 'app/shared/user-role';
 import { KeycloakService } from 'keycloak-angular';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { EditBookComponent } from 'app/components/partials/modal/edit-book/edit-book.component';
+import { BookShortDto } from 'app/shared/book-short-dto';
 
 @Component({
   selector: 'app-book-full',
@@ -19,8 +22,45 @@ import { KeycloakService } from 'keycloak-angular';
   styleUrls: ['./book-full.component.scss'],
 })
 export class BookFullComponent implements OnInit {
+  ref: DynamicDialogRef | undefined;
+  onSubmitBookEntity$ = new EventEmitter<BookShortDto>();
+  id!: number;
+
+  openEditBook() {
+    this.ref = this.dialogService.open(EditBookComponent, {
+      header: 'Edit book (original + edition)',
+      width: 'min(600px, 60%)',
+      height: '80%',
+      contentStyle: { overflow: 'auto' },
+      baseZIndex: 10000,
+      draggable: true,
+      closeOnEscape: false,
+      data: {
+        onSubmitEntity$: this.onSubmitBookEntity$,
+        title: this.book?.title,
+        bookCopyId: this.book?.bookCopyId,
+        id: this.book?.bookId,
+      },
+    });
+
+    this.closeBooksEditModalOnSubmitted();
+  }
+
+  closeBooksEditModalOnSubmitted() {
+    this.onSubmitBookEntity$.subscribe((book) => {
+      if (book) {
+        this.ref?.close();
+        {
+          if (book) {
+          }
+          this.ref?.close();
+        }
+      }
+      this.router.navigate(['']);
+    });
+  }
   authors: number[] | null = null;
-  title: string | null = null;
+  title: string = '';
   tab: string | null = null;
   items: MenuItem[] = [];
   bookInfo: BookInfoType[] = [];
@@ -38,21 +78,23 @@ export class BookFullComponent implements OnInit {
     private router: Router,
     private imageService: ImageService,
     private sanitizer: DomSanitizer,
-    private keycloakService: KeycloakService
+    private keycloakService: KeycloakService,
+    private dialogService: DialogService
   ) {}
 
   async ngOnInit(): Promise<void> {
     this.isLoggedIn = await this.keycloakService.isLoggedIn();
     this.route.paramMap
       .pipe(
-        filter((params) => params.has('title')),
+        filter((params) => params.has('title') && params.has('id')),
         switchMap(() => {
-          this.title = this.route.snapshot.paramMap.get('title');
+          this.title = String(this.route.snapshot.paramMap.get('title'));
+          this.id = Number(this.route.snapshot.paramMap.get('id'));
           this.tab = this.route.snapshot.queryParamMap.get('tab');
-          this.handleTabChange();
+          console.log(this.tab);
 
           this.isLoading = true;
-          return this.bookService.getBookFullByTitle(this.title || '');
+          return this.bookService.getBookFullByTitleAndId(this.title, this.id);
         }),
         catchError(() => {
           this.router.navigate(['/not-found']);
@@ -74,22 +116,22 @@ export class BookFullComponent implements OnInit {
       {
         label: 'Overview',
         icon: 'pi pi-fw pi-home',
-        command: () => this.updateTab('overview'),
+        command: () => this.updateTab('Overview'),
       },
       {
         label: 'Other editions',
         icon: 'pi pi-fw pi-calendar',
-        command: () => this.updateTab('editions'),
+        command: () => this.updateTab('Other editions'),
       },
       {
         label: 'More by authors',
         icon: 'pi pi-fw pi-pencil',
-        command: () => this.updateTab('author'),
+        command: () => this.updateTab('More by authors'),
       },
       {
         label: 'More by subject',
         icon: 'pi pi-fw pi-file',
-        command: () => this.updateTab('subject'),
+        command: () => this.updateTab('More by subject'),
       },
     ];
 
@@ -97,12 +139,24 @@ export class BookFullComponent implements OnInit {
       this.items.push({
         label: 'Borrow book',
         icon: 'fal fa-user-plus',
-        command: () => this.updateTab('subject'),
+        command: () => this.updateTab('Borrow book'),
       });
     }
 
-    this.activeItem =
-      this.items.find((item) => item.label === this.tab) || this.items[0];
+    this.route.queryParamMap.subscribe(() => {
+      let tabParam = this.route.snapshot.queryParamMap.get('tab');
+      console.log(tabParam);
+      if (tabParam) {
+        this.activeItem = this.items.find((item) => {
+          return (
+            item.label?.toLocaleLowerCase() === tabParam?.toLocaleLowerCase()
+          );
+        });
+      } else {
+        this.activeItem = this.items[0];
+      }
+      console.log(this.activeItem);
+    });
   }
 
   private getEntitiesById(entities: any[] | any) {
@@ -112,28 +166,6 @@ export class BookFullComponent implements OnInit {
     return entities.id;
   }
 
-  handleTabChange() {
-    let tab = '';
-
-    if (this.tab != null) {
-      tab = this.extractBookTitleFromLink(this.tab);
-    }
-
-    const tabsNames = this.items.map((el) => el.label);
-
-    if (!tabsNames.includes(tab)) {
-      if (tab === '') {
-        tab = 'overview';
-      } else {
-        this.router.navigate([`books/${this.title}`], {
-          queryParams: { tab: 'overview' },
-        });
-      }
-    } else {
-      this.activeItem =
-        this.items.find((item) => item.label === tab) || this.items[0];
-    }
-  }
   onActiveItemChange(event: MenuItem) {
     this.activeItem = event;
     if (event.label) {
@@ -170,7 +202,7 @@ export class BookFullComponent implements OnInit {
     }
   }
 
-  private extractBookTitleFromLink(title: string): string {
+  private extractTabFromLink(title: string): string {
     return decodeURIComponent(title);
   }
 
@@ -182,5 +214,3 @@ export class BookFullComponent implements OnInit {
       .join(', ');
   }
 }
-
-//test

@@ -1,74 +1,64 @@
-import { ValidationMessages } from '../../../../shared/validation-messages';
-import { bookValidationMessages } from './book-validation-messages';
-import { AuthorShortDto } from '../../../../shared/author-dto';
-import { Language } from '../../../../shared/language';
-import {
-  Component,
-  Inject,
-  OnInit,
-  EventEmitter,
-  ViewChild,
-} from '@angular/core';
+import { Component, EventEmitter, Input, ViewChild } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { BookAddDto } from './book-add-dto';
-import { Publisher } from 'app/shared/publisher';
-import { BookBindingEnum } from 'app/shared/book-binding-enum';
-import { AcquisitionDocumentEnum } from 'app/shared/acquasition-document-enum';
-import { CategoryWithBooks } from 'app/shared/category-with-books';
-import { CategoryAddDto } from 'app/shared/category-add-dto';
-import { ImageService } from 'app/core/image.service';
 import {
-  Subject,
-  Observable,
-  switchMap,
-  catchError,
-  of,
-  Subscription,
-  map,
-  forkJoin,
   BehaviorSubject,
+  Observable,
+  Subscription,
+  catchError,
   debounceTime,
   distinctUntilChanged,
+  forkJoin,
+  map,
+  of,
+  switchMap,
 } from 'rxjs';
+import { AddLanguageComponent } from '../add-language/add-language.component';
+import { AddPublisherComponent } from '../add-publisher/add-publisher.component';
+import { AddAuthorComponent } from '../add-author/add-author.component';
+import { AuthorShortDto } from 'app/shared/author-dto';
+import { Author } from 'app/shared/author';
+import { AuthorService } from 'app/core/author.service';
+import { LanguageService } from 'app/core/language.service';
+import { ImageService } from 'app/core/image.service';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { CategoryService } from 'app/core/category.service';
+import { PublisherService } from 'app/core/publisher.service';
 import {
   DialogService,
   DynamicDialogConfig,
   DynamicDialogRef,
 } from 'primeng/dynamicdialog';
-import { AddAuthorComponent } from '../add-author/add-author.component';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { SearchInputComponent } from '../../search-input/search-input.component';
-import { FileUploadEvent, FileUploadHandlerEvent } from 'primeng/fileupload';
-import { AddPublisherComponent } from '../add-publisher/add-publisher.component';
-import { AddLanguageComponent } from '../add-language/add-language.component';
-import { BookShortDto } from 'app/shared/book-short-dto';
-import { AddPublisherDto } from '../add-publisher/add-publisher-dto';
 import { BookService } from 'app/core/book.service';
-import { LanguageService } from 'app/core/language.service';
-import { AuthorService } from 'app/core/author.service';
-import { CategoryService } from 'app/core/category.service';
-import { PublisherService } from 'app/core/publisher.service';
-import { callNumberExistsValidator } from './call-number-exists-validator';
-import { isbnExistsValidator } from './isbn-exists-validator';
-
-interface AutoCompleteCompleteEvent {
-  originalEvent: Event;
-  query: string;
-}
+import { ValidationMessages } from 'app/shared/validation-messages';
+import { SearchInputComponent } from '../../search-input/search-input.component';
+import { BookShortDto } from 'app/shared/book-short-dto';
+import { bookValidationMessages } from '../book-add/book-validation-messages';
+import { callNumberExistsValidator } from '../book-add/call-number-exists-validator';
+import { isbnExistsValidator } from '../book-add/isbn-exists-validator';
+import { Language } from 'app/shared/language';
+import { CategoryWithBooks } from 'app/shared/category-with-books';
+import { Publisher } from 'app/shared/publisher';
+import { AcquisitionDocumentEnum } from 'app/shared/acquasition-document-enum';
+import { BookBindingEnum } from 'app/shared/book-binding-enum';
+import { BookAddDto } from '../book-add/book-add-dto';
+import { AutoCompleteCompleteEvent } from 'primeng/autocomplete';
+import { BookFullDto } from 'app/shared/book-full-dto';
+import { BookUpdateDto } from '../book-add/book-update-dto';
 
 @Component({
-  selector: 'app-book-add',
-  templateUrl: './book-add.component.html',
-  styleUrls: ['./book-add.component.scss'],
+  selector: 'app-edit-book',
+  templateUrl: './edit-book.component.html',
+  styleUrls: ['./edit-book.component.scss'],
 })
-export class BookAddComponent implements OnInit {
+export class EditBookComponent {
   onSubmitEntity$!: EventEmitter<BookShortDto>;
-
+  title: String | undefined;
+  bookCopyId!: number;
   @ViewChild(SearchInputComponent)
   private authorSearchInputComponent: SearchInputComponent | undefined;
   @ViewChild(SearchInputComponent)
@@ -87,6 +77,8 @@ export class BookAddComponent implements OnInit {
   imageId: number | undefined;
   bookValidationMessages: ValidationMessages = bookValidationMessages;
   form: FormGroup;
+  bookCover: SafeUrl | undefined;
+  bookId!: number;
   constructor(
     private bookService: BookService,
     public dialogService: DialogService,
@@ -168,7 +160,6 @@ export class BookAddComponent implements OnInit {
             Validators.required,
             Validators.pattern('\\d{10}|\\d{13}'),
           ],
-          asyncValidators: [isbnExistsValidator(bookService)],
           updateOn: 'blur',
         },
       ],
@@ -180,13 +171,14 @@ export class BookAddComponent implements OnInit {
         null,
         { validators: [Validators.required], updateOn: 'blur' },
       ],
-      
     });
   }
 
   ngOnInit(): void {
+    this.bookId = this.bookConfig.data.id;
     this.onSubmitEntity$ = this.bookConfig.data.onSubmitEntity$;
-    console.log(this.onSubmitEntity$);
+    this.title = this.bookConfig.data.title;
+    this.bookCopyId = this.bookConfig.data.bookCopyId;
     this.languageService
       .getList()
       .subscribe((languages: Language[] | undefined) => {
@@ -197,11 +189,12 @@ export class BookAddComponent implements OnInit {
       .subscribe((categories: CategoryWithBooks[] | undefined) => {
         this.categories = categories;
       });
-    this.bookService
-      .getListDto()
-      .subscribe((books: BookShortDto[] | undefined) => {
-        this.books = books;
-      });
+    if (this.title && this.bookCopyId) {
+      console.log(this.title + String(this.bookCopyId));
+      this.bookService
+        .getBookFullByTitleAndIdAndBookCopyId(this.title, this.bookId, this.bookCopyId)
+        .subscribe((book) => this.updateFormFields(book));
+    }
   }
 
   authorRequestsSubscription: Subscription[] = [];
@@ -232,20 +225,24 @@ export class BookAddComponent implements OnInit {
 
   onSubmit() {
     if (this.form?.valid) {
-      const bookData: BookAddDto = this.mapFormToBookAddDto(this.form.value);
+      const bookData: BookUpdateDto = this.mapFormToBookUpdateDto(
+        this.form.value
+      );
+      console.log(bookData);
       this.bookService
-        .addAndRecieveDto(bookData)
+        .updateAndThenRecieveDto(this.bookId, bookData)
         .subscribe((book: BookShortDto) => {
           this.onSubmitEntity$.emit(book);
-          console.log(this.onSubmitEntity$);
         });
     } else {
     }
   }
 
-  private mapFormToBookAddDto(formValue: any): BookAddDto {
+  private mapFormToBookUpdateDto(formValue: any): BookUpdateDto {
     return {
       title: formValue.title?.trim() || '',
+      bookId: this.bookId,
+      bookCopyId: this.bookCopyId,
       description: formValue.description?.trim() || '',
       imageId: this.imageId,
       volume: formValue.volume || null,
@@ -603,6 +600,51 @@ export class BookAddComponent implements OnInit {
       }
     });
   }
+
+  private updateFormFields(selectedBook: BookFullDto): void {
+    this.imageId = selectedBook.imageId;
+    this.imageService.getImage(this.imageId).subscribe((profilePic) => {
+      this.bookCover = this.sanitizer.bypassSecurityTrustUrl(
+        URL.createObjectURL(profilePic)
+      );
+    });
+    this.getPublisherById(selectedBook.publisherId);
+    this.fetchProfilePhotos([...selectedBook.authors]).subscribe(
+      (authorsSaved) =>
+        this.form.patchValue({
+          authors: authorsSaved,
+        })
+    );
+    console.log([...selectedBook.authors]);
+    this.form.patchValue({
+      title: selectedBook.title,
+      description: selectedBook.description,
+      volume: selectedBook.volume,
+      categories: selectedBook.categories,
+      callNumber: selectedBook.callNumber,
+      inventoryNumber: selectedBook.inventoryNumber,
+      price: selectedBook.price,
+      schoolInventoryNumber: selectedBook.schoolInventoryNumber,
+      language: selectedBook.language,
+      binding: selectedBook.binding,
+      size: selectedBook.size,
+      publicationDate: selectedBook.publicationDate,
+      edition: selectedBook.edition,
+      isbn: selectedBook.isbn,
+      notes: selectedBook.notes,
+      acquisitionDocumentEnum: selectedBook.acquisitionDocument,
+    });
+  }
+
+  private getPublisherById(id: number) {
+    this.publisherService
+      .getByIdAndRecieveDto(id)
+      .pipe(debounceTime(300), distinctUntilChanged())
+      .subscribe((recievedPublisher) =>
+        this.form.patchValue({ publisher: recievedPublisher })
+      );
+  }
+
   getFormControlByName(name: string): FormControl | null {
     return this.form?.get(name) as FormControl | null;
   }

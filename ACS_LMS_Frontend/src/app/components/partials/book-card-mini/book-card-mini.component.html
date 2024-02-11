@@ -1,5 +1,5 @@
 <article class="book-card-wrapper">
-  <a [href]="generateBookLink(book?.title)" class="card-link"></a>
+  <a [href]="generateBookLink(book?.title, book?.id)" class="card-link"></a>
   <div class="upper">
     <div class="colored-container"></div>
     <div class="image-wrapper">
@@ -10,7 +10,7 @@
     <p class="book-title">
       {{ book?.title }}
     </p>
-    <a class="author-link">
+    <a [href]="'/author/' + book?.authors?.[0]?.id" class="author-link">
       {{ book?.authors?.[0]?.name }}
     </a>
   </div>

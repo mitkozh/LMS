@@ -1,17 +1,12 @@
 package bg.acs.acs_lms_backend_resource.controller;
 
 import bg.acs.acs_lms_backend_resource.model.dto.*;
-import bg.acs.acs_lms_backend_resource.model.entity.Book;
-import bg.acs.acs_lms_backend_resource.model.entity.Category;
-import bg.acs.acs_lms_backend_resource.model.entity.Reservation;
-import bg.acs.acs_lms_backend_resource.repository.BookRepository;
 import bg.acs.acs_lms_backend_resource.service.BookService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import javax.swing.text.html.Option;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -41,30 +36,41 @@ public class BookController {
         return ResponseEntity.noContent().build();
     }
 
+    @PatchMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_LIBRARIAN')")
+    public ResponseEntity<BookShortDto> updateBook(@PathVariable Long id, @RequestBody BookUpdateDto bookUpdateDto) {
+        BookShortDto bookShortDto = bookService.updateBook(id, bookUpdateDto);
+        if (bookShortDto != null){
+            return ResponseEntity.ok(bookShortDto);
+        }
+        return ResponseEntity.noContent().build();
+    }
+
+
     @GetMapping("bestsellers")
     public ResponseEntity<Set<BookShortDto>> getBestsellers() {
         return ResponseEntity.ok(bookService.getBooksBestSellers(25));
     }
 
-    @GetMapping("{title}")
-    public ResponseEntity<BookFullDto> getBookByName(@PathVariable String title) {
-        Optional<BookFullDto> bookFullDto = bookService.getBookFullByTitle(title);
+    @GetMapping("{title}/{id}")
+    public ResponseEntity<BookFullDto> getBookByName(@PathVariable String title, @PathVariable Long id) {
+        Optional<BookFullDto> bookFullDto = bookService.getBookFullByTitleAndId(title, id);
         return bookFullDto.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.noContent().build());
     }
 
-    @GetMapping("{title}/{edition}")
-    public ResponseEntity<BookFullDto> getBookByName(@PathVariable String title, @PathVariable Long edition) {
+    @GetMapping("{title}/{id}/{bookCopyId}")
+    public ResponseEntity<BookFullDto> getBookByName(@PathVariable String title, @PathVariable Long id, @PathVariable Long bookCopyId) {
 
-        BookFullDto bookFullDto = bookService.getBookFullByTitleAndEdition(title, edition);
+        BookFullDto bookFullDto = bookService.getBookFullByTitleAndIdAndBookCopyId(title, id, bookCopyId);
         if (bookFullDto!=null){
             return ResponseEntity.ok(bookFullDto);
         }
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("bookCopy/{title}")
-    public ResponseEntity<Set<Long>> getBookCopyIDsByTitle(@PathVariable String title) {
-        Set<Long> bookCopyIDsByTitle = bookService.getBookCopyIDsByTitle(title);
+    @GetMapping("bookCopy/{title}/{id}")
+    public ResponseEntity<Set<Long>> getBookCopyIdsByTitleAndId(@PathVariable String title,@PathVariable Long id) {
+        Set<Long> bookCopyIDsByTitle = bookService.getBookCopyIdsByTitleAndId(title, id);
         if (!bookCopyIDsByTitle.isEmpty()){
             return ResponseEntity.ok(bookCopyIDsByTitle);
         }
@@ -114,6 +120,12 @@ public class BookController {
     }
 
 
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_LIBRARIAN')")
+    @GetMapping("check-isbn/{isbn}")
+    public ResponseEntity<Boolean> checkForISBN(@PathVariable String isbn) {
+        boolean exists = bookService.checkForISBN(isbn);
+        return ResponseEntity.ok(exists);
+    }
         @GetMapping("reserveBook/{bookId}")
         public ResponseEntity<ReservationDto> reserveBook(@PathVariable Long bookId) {
             Optional<ReservationDto>  reservation= bookService.reserveBook(bookId);

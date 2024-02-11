@@ -14,22 +14,23 @@ import { BookInfoType } from '../book-full.component';
 })
 export class OverviewComponent implements OnInit {
   @Input() book: BookFullDto | undefined | null;
+  @Input() id!: number;
   @Input() title!: String;
   bookInfo: BookInfoType[] = [];
   isLoading = false;
   bookDescription: String | undefined;
   bookShortDescription: String | undefined;
-  bookPhoto: SafeUrl | undefined;
   showFullDescription = false;
+  shouldToggle: boolean = false;
 
   constructor(private bookService: BookService, private router: Router) {}
 
   ngOnInit(): void {
     if (!this.book) {
       this.isLoading = true;
-
+      console.log(this.id);
       this.bookService
-        .getBookFullByTitle(this.title)
+        .getBookFullByTitleAndId(this.title, this.id)
         .pipe(
           catchError(() => {
             this.router.navigate(['/not-found']);
@@ -65,6 +66,7 @@ export class OverviewComponent implements OnInit {
 
     if (this.bookDescription !== this.bookShortDescription) {
       this.bookShortDescription += '...';
+      this.shouldToggle = true;
     }
   }
 

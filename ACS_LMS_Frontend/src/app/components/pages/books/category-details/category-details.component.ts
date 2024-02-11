@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, Inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { CategoryService } from 'app/core/category.service';
 import { GenericService } from 'app/core/generic.service';
 import { Category } from 'app/shared/category';
 import { CategoryAddDto } from 'app/shared/category-add-dto';
@@ -28,12 +29,7 @@ export class CategoryDetailsComponent {
 
   constructor(
     private route: ActivatedRoute,
-    @Inject('categoryService')
-    private categoryService: GenericService<
-      Category,
-      CategoryAddDto,
-      CategoryWithBooks
-    >,
+    private categoryService: CategoryService,
     private router: Router
   ) {}
 

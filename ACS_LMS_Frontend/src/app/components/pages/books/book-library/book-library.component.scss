@@ -1,4 +1,10 @@
 .book-library {
+  p-button:not(:first-child){
+    margin: 0px 0px 20px 10px;
+  }
+  .p-button{
+    margin: 20px;
+  }
   div {
     a {
         font-size: 40px;

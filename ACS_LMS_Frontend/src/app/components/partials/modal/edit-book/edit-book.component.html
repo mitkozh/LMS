@@ -2,35 +2,82 @@
   <div class="form-wrapper">
     <form [formGroup]="form">
       <app-labeled-input
-        [label]="'Book'"
-        [fieldId]="'book'"
-        [inputType]="'app-search-input'"
-        [validationMessages]="bookValidationMessages['book']"
-        [inputControl]="getFormControlByName('book')!"
-        [suggestionsDynamic]="booksSearchResults"
-        [optionTemplate]="optionTemplate"
-        (completeMethod)="onBooksTextChange($event)"
-        [multiple]="false"
-        [field]="'title'"
-      ></app-labeled-input>
-      <ng-template #optionTemplate let-book>
-        <div class="book">
-          <app-book-card-mini [book]="book"></app-book-card-mini>
-        </div>
-      </ng-template>
-      <div *ngIf="noBooksResultMessage.length > 0" #noAuthor>
-        <p>
-          {{ noBooksResultMessage }}
-        </p>
-      </div>
-
-      <app-labeled-input
         [label]="'ISBN'"
         [fieldId]="'isbn'"
         [fieldName]="'isbn'"
         [inputType]="'input'"
         [validationMessages]="bookValidationMessages['isbn']"
         [inputControl]="getFormControlByName('isbn')!"
+      ></app-labeled-input>
+
+      <app-labeled-input
+        [label]="'Title'"
+        [fieldId]="'title'"
+        [fieldName]="'title'"
+        [inputType]="'input'"
+        [validationMessages]="bookValidationMessages['title']"
+        [inputControl]="getFormControlByName('title')!"
+      ></app-labeled-input>
+
+      <app-labeled-input
+        [label]="'Description'"
+        [fieldId]="'description'"
+        [fieldName]="'description'"
+        [inputType]="'textarea'"
+        [validationMessages]="bookValidationMessages['description']"
+        [inputControl]="getFormControlByName('description')!"
+      ></app-labeled-input>
+
+      <app-labeled-input
+        [photo]="bookCover"
+        inputType="file-upload"
+        [required]="true"
+        fieldId="coverPhoto"
+        label="Cover Photo"
+        (coverPhotoNameChange)="handleCoverPhotoNameChange($event)"
+      ></app-labeled-input>
+
+      <app-labeled-input
+        [label]="'Volume'"
+        [fieldId]="'volume'"
+        [fieldName]="'volume'"
+        [inputType]="'input'"
+        [validationMessages]="bookValidationMessages['volume']"
+        [inputControl]="getFormControlByName('volume')!"
+      ></app-labeled-input>
+
+      <app-labeled-input
+        [label]="'Authors'"
+        [fieldId]="'authors'"
+        [inputType]="'app-search-input'"
+        [validationMessages]="bookValidationMessages['authors']"
+        [inputControl]="getFormControlByName('authors')!"
+        [suggestionsDynamic]="authorSearchResults"
+        [optionTemplate]="optionTemplate"
+        (completeMethod)="onAuthorTextChange($event)"
+      ></app-labeled-input>
+      <ng-template #optionTemplate let-author>
+        <div class="author">
+          <img [src]="author.profilePhoto" class="profilePicMini" />
+          <div>{{ author.name }}</div>
+        </div>
+      </ng-template>
+      <div *ngIf="noAuthorResulMessage.length > 0" #noAuthor>
+        <p>
+          {{ noAuthorResulMessage }}
+          <a (click)="openAuthorAddModal()">Do you want to add one?</a>
+        </p>
+      </div>
+      <app-labeled-input
+        [label]="'Categories'"
+        [fieldId]="'categories'"
+        [fieldName]="'categories'"
+        [inputType]="'autocomplete'"
+        [validationMessages]="bookValidationMessages['categories']"
+        [inputControl]="getFormControlByName('categories')!"
+        (completeMethod)="filterCategories($event)"
+        [multiple]="true"
+        [suggestions]="filteredCategories"
       ></app-labeled-input>
 
       <app-labeled-input
@@ -143,6 +190,7 @@
         [inputType]="'calendar'"
         [validationMessages]="bookValidationMessages['publicationDate']"
         [inputControl]="getFormControlByName('publicationDate')!"
+        [required]="false"
       ></app-labeled-input>
 
       <app-labeled-input

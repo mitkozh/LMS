@@ -30,12 +30,13 @@ import { createAuthorRefinementList } from './authors-filters';
 import { createCategoriesHierarchicalMenu } from './categories';
 import { createBooksHits } from './books';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { Observable, map, of } from 'rxjs';
+import { Observable, map, of, take } from 'rxjs';
 import { connectHits } from 'instantsearch.js/es/connectors';
 import {
   HitsConnectorParams,
   HitsRenderState,
 } from 'instantsearch.js/es/connectors/hits/connectHits';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-advanced-search',
@@ -55,13 +56,17 @@ export class AdvancedSearchComponent implements OnInit {
   constructor(
     private imageService: ImageService,
     private domSanitizer: DomSanitizer,
-    private ngZone: NgZone
+    private ngZone: NgZone,
+    private route: ActivatedRoute,
+    private router: Router
   ) {}
 
-  ngOnInit() {
-    this.ngZone.runOutsideAngular(() => {
-      const books = createBooksHits(this.imageService, this.domSanitizer);
 
+
+  ngOnInit() {
+      const books = createBooksHits(this.imageService, this.domSanitizer);
+     
+      
       const config: SearchkitConfig = {
         connection: {
           host: 'http://localhost:9200',
@@ -70,8 +75,9 @@ export class AdvancedSearchComponent implements OnInit {
           highlight_attributes: ['book_title'],
           search_attributes: [
             { field: 'book_title', weight: 3 },
-            'description', 'authors.name.keyword'
-          ], 
+            'description',
+            'authors.name.keyword',
+          ],
           result_attributes: [
             'book_title',
             'authors',
@@ -116,6 +122,8 @@ export class AdvancedSearchComponent implements OnInit {
         },
       };
 
+      
+
       const searchkitClient = new Searchkit(config);
       const searchClient = SearchkitInstantsearchClient(searchkitClient);
       const search = instantsearch({
@@ -123,7 +131,7 @@ export class AdvancedSearchComponent implements OnInit {
         searchClient: searchClient as any,
       });
 
-      const searchBox = createSearchBox();
+      const searchBox = createSearchBox(this.router);
       const sortBy = createSortBy();
       const categories = createCategoriesHierarchicalMenu();
       const authors = createAuthorRefinementList();
@@ -155,8 +163,7 @@ export class AdvancedSearchComponent implements OnInit {
       search.on('render', () => {
         const hitsContainer = document.querySelector('[data-widget="hits"]');
         if (hitsContainer) {
-          const imageElements =
-            hitsContainer.querySelectorAll('img.cover-photo');
+          const imageElements = hitsContainer.querySelectorAll('img.cover-photo');
           imageElements.forEach((imageElement) => {
             const imageId = imageElement.getAttribute('_imageId');
             if (imageId) {
@@ -168,7 +175,17 @@ export class AdvancedSearchComponent implements OnInit {
           });
         }
       });
-    });
+
+
+      this.route.queryParams.subscribe((params) => {
+        const searchQuery = params['search'];
+        if (searchQuery) {
+          search.helper?.setQuery(searchQuery).search();
+        }
+      });
+
+      
+    
   }
   getPhoto(imageId: number): Observable<string> {
     if (imageId) {

@@ -47,6 +47,7 @@ export const bookValidationMessages: ValidationMessages = {
   edition: [{ type: 'required', message: 'Edition is required' }],
   isbn: [
     { type: 'required', message: 'ISBN is required' },
+    { type: 'isbnExists', message: 'A book with the same ISBN is already added' },
     { type: 'pattern', message: 'ISBN must be a 10 or 13-digit number' },
   ],
   notes: [

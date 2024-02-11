@@ -15,7 +15,6 @@ export const createBooksHits = (
         const bookTitle = hit['book_title'];
         const bookLink = `/books/${encodeURIComponent(bookTitle)}`;
         const imageId = hit['image_id'] ? hit['image_id'] : '';
-        console.log(JSON.stringify(hit, null, 3));
         return `
         <article class="hit">
       <a href="${bookLink}" class="card-link"></a>

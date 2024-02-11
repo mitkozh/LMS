@@ -17,7 +17,9 @@ export class BookCardMediumComponent implements OnInit {
   @Input()
   title: string = '';
   @Input()
-  edition!: Number;
+  bookCopyId!: Number;
+  @Input()
+  id!: Number;
   firstHalf: BookInfoType[] = [];
   secondHalf: BookInfoType[] = [];
 
@@ -39,7 +41,7 @@ export class BookCardMediumComponent implements OnInit {
   ngOnInit(): void {
     this.isLoading = true;
     this.bookService
-      .getBookFullByTitleAndEdition(this.title, this.edition)
+      .getBookFullByTitleAndIdAndBookCopyId(this.title, this.id, this.bookCopyId)
       .pipe(
         catchError(() => {
           this.router.navigate(['/not-found']);

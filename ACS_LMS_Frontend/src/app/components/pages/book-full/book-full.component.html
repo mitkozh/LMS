@@ -1,4 +1,12 @@
 <div class="book-wrapper">
+  <p-button
+    *hasRoles="[roles.ROLE_ADMIN, roles.ROLE_LIBRARIAN]"
+    (onClick)="openEditBook()"
+    >Edit Book</p-button
+  >
+  <p-button *hasRoles="[roles.ROLE_ADMIN, roles.ROLE_LIBRARIAN]"
+    >Delete Book</p-button
+  >
   <div class="book">
     <div class="image-wrapper">
       <img [src]="bookPhoto" alt="Book Cover" />
@@ -21,10 +29,15 @@
         ></p-tabMenu>
         <div class="card1">
           <div *ngIf="activeItem?.label === 'Overview' && title">
-            <app-overview [book]="book" [title]="title"></app-overview>
+            <app-overview
+              [id]="id"
+              [book]="book"
+              [title]="title"
+            ></app-overview>
           </div>
           <div *ngIf="activeItem?.label === 'Other editions' && title">
             <app-other-editions
+              [id]="id"
               [title]="title"
               [book]="book"
             ></app-other-editions>
@@ -38,7 +51,15 @@
           >
             <app-more-by-author [authors]="authors"></app-more-by-author>
           </div>
-          <div *hasRoles="[roles.ROLE_ADMIN, roles.ROLE_ASSISTANT, roles.ROLE_LIBRARIAN, roles.ROLE_STUDENT, roles.ROLE_TEACHER]">
+          <div
+            *hasRoles="[
+              roles.ROLE_ADMIN,
+              roles.ROLE_ASSISTANT,
+              roles.ROLE_LIBRARIAN,
+              roles.ROLE_STUDENT,
+              roles.ROLE_TEACHER
+            ]"
+          >
             <div *ngIf="activeItem?.label === 'Borrow book' && title">
               <app-borrow-a-book
                 [book]="book"

@@ -11,6 +11,7 @@ import { NotFoundComponent } from './components/pages/not-found/not-found.compon
 import { BookFullComponent } from './components/pages/book-full/book-full.component';
 import { AdvancedSearchComponent } from './components/pages/advanced-search/advanced-search.component';
 import { TranscationsComponent } from './components/pages/transcations/transcations.component';
+import { AuthorFullComponent } from './components/pages/author-full/author-full.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'books', pathMatch: 'full' },
@@ -24,8 +25,9 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'sign-in', redirectTo: 'login', pathMatch: 'full' },
   { path: 'categories/:category', component: CategoryDetailsComponent },
-  { path: 'books/:title', component: BookFullComponent },
-  { path: 'books/:title/:edition', component: BookFullComponent },
+  { path: 'books/:title/:id', component: BookFullComponent },
+  { path: 'books/:title/:id/:edition', component: BookFullComponent },
+  { path: 'author/:author', component: AuthorFullComponent},
   { path: 'not-found', component: NotFoundComponent },
   { path: 'advanced-search', component: AdvancedSearchComponent },
   { path: 'transactions', component: TranscationsComponent },
