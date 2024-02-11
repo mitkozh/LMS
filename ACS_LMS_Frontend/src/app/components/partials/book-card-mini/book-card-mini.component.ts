@@ -48,7 +48,7 @@ export class BookCardMiniComponent implements OnInit {
       );
     }
   }
-  generateBookLink(bookTitle: string | undefined): string {
-    return `/books/${encodeURIComponent(bookTitle ?? '')}`;
+  generateBookLink(bookTitle: string | undefined, id: number | undefined): string {
+    return `/books/${encodeURIComponent(bookTitle ?? '')}/${encodeURIComponent(id ?? '')}`;
   }
 }

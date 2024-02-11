@@ -2,7 +2,8 @@
   <div *ngFor="let copyId of bookCopies">
     <app-book-card-medium
       [title]="title"
-      [edition]="copyId"
+      [id]="id"
+      [bookCopyId]="copyId"
     ></app-book-card-medium>
   </div>
 </div>

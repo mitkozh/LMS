@@ -14,14 +14,16 @@ export class OtherEditionsComponent implements OnInit {
   book: BookFullDto | undefined | null;
   @Input()
   title!: string;
+  @Input()
+  id!: number;
   bookCopies: Number[] | undefined;
 
   constructor(private bookService: BookService, private router: Router) {}
 
   ngOnInit(): void {
-    console.log("test")
+    console.log('test');
     this.bookService
-      .getBookCopiesByTitle(this.title)
+      .getBookCopiesByTitleAndId(this.title, this.id)
       .subscribe((copyIds: Number[]) => {
         // this.bookCopies = copyIds.filter(
         //   (copyId) => copyId !== this.book?.bookCopyId

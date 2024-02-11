@@ -10,7 +10,7 @@ export class BookEffects {
     this.actions$.pipe(
       ofType(BookActions.loadBook),
       mergeMap(({ title }) =>
-        this.bookService.getBookFullByTitle(title).pipe(
+        this.bookService.getBookFullByTitleAndId(title).pipe(
           map((book) => BookActions.setBook({ book })),
         ),
       ),
