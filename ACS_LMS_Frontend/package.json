@@ -11,6 +11,8 @@
   "private": true,
   "dependencies": {
     "@algolia/autocomplete-js": "^1.12.1",
+    "@algolia/autocomplete-plugin-query-suggestions": "^1.16.0",
+    "@algolia/autocomplete-plugin-recent-searches": "^1.16.0",
     "@angular/animations": "^16.2.3",
     "@angular/cdk": "^16.2.12",
     "@angular/common": "^16.2.3",

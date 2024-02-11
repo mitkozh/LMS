@@ -21,6 +21,7 @@ import { GenericService, ServiceConfig } from './generic.service';
 import { BookFullDto } from 'app/shared/book-full-dto';
 import { BookCopyAddDto } from 'app/components/partials/modal/add-book-copy/book-copy-add-dto';
 import { ReservationDto as ReservationDto } from 'app/shared/reservation-dto';
+import { BookUpdateDto } from 'app/components/partials/modal/book-add/book-update-dto';
 
 export const BOOK_SERVICE_CONFIG = new InjectionToken<ServiceConfig>(
   'BookServiceConfig'
@@ -31,11 +32,15 @@ export const BOOK_SERVICE_CONFIG = new InjectionToken<ServiceConfig>(
 })
 export class BookService extends GenericService<
   Book,
-  BookAddDto,
+  BookAddDto | BookUpdateDto,
   BookShortDto
 > {
+  checkForISBN(isbn: string): Observable<boolean> {
+    return this.httpClient.get<boolean>(
+      `${this.baseUrl}${this.resourceEndpoint}/check-isbn/${isbn}`
+    );
+  }
 
-  
   checkForCallNumber(callNumber: string): Observable<boolean> {
     return this.httpClient.get<boolean>(
       `${this.baseUrl}${this.resourceEndpoint}/check-call-number/${callNumber}`
@@ -67,21 +72,25 @@ export class BookService extends GenericService<
     );
   }
 
-  getBookFullByTitle(title: String) {
+  getBookFullByTitleAndId(title: String, id: Number) {
     return this.httpClient.get<BookFullDto>(
-      `${this.baseUrl}${this.resourceEndpoint}/${title}`
+      `${this.baseUrl}${this.resourceEndpoint}/${title}/${id}`
     );
   }
 
-  getBookFullByTitleAndEdition(title: String, edition: Number) {
+  getBookFullByTitleAndIdAndBookCopyId(
+    title: String,
+    id: Number,
+    bookCopyId: Number
+  ) {
     return this.httpClient.get<BookFullDto>(
-      `${this.baseUrl}${this.resourceEndpoint}/${title}/${edition}`
+      `${this.baseUrl}${this.resourceEndpoint}/${title}/${id}/${bookCopyId}`
     );
   }
 
-  getBookCopiesByTitle(title: String) {
+  getBookCopiesByTitleAndId(title: String, id: number) {
     return this.httpClient.get<Number[]>(
-      `${this.baseUrl}${this.resourceEndpoint}/bookCopy/${title}`
+      `${this.baseUrl}${this.resourceEndpoint}/bookCopy/${title}/${id}`
     );
   }
 

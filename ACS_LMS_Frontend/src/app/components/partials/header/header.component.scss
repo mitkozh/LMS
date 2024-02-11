@@ -244,3 +244,22 @@
     color: #699dfa;
   }
 }
+
+
+.cdk-menu{
+  background-color: #eff2f3;
+  border-radius: 0.625rem;
+  margin: 5px -5%;
+  box-shadow: 0px 0px 10px 0 rgb(34 41 47 / 10%);
+
+  .cdk-menu-item {
+    padding: 10px;
+    cursor: pointer;
+  
+  }
+  
+  .cdk-menu-item:hover,
+  .cdk-menu-item:focus {
+    color: #699dfa;
+  }
+}

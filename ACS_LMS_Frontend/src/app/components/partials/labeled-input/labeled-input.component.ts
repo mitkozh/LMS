@@ -41,6 +41,8 @@ import { callNumberExistsValidator } from '../modal/book-add/call-number-exists-
   ],
 })
 export class LabeledInputComponent implements ControlValueAccessor {
+
+  hasSelectedFile: boolean| undefined;
   @Input()
   public inputControl: FormControl = new FormControl();
 
@@ -82,6 +84,7 @@ export class LabeledInputComponent implements ControlValueAccessor {
   @Output() completeMethod = new EventEmitter<any>();
   @Output()
   public coverPhotoNameChange = new EventEmitter<number>();
+  @Input()
   photo: any | undefined;
 
   constructor(
@@ -141,6 +144,12 @@ export class LabeledInputComponent implements ControlValueAccessor {
 
   shouldShowError(): boolean {
     const control = this.inputControl;
+    // if (this.type==='file-upload'){
+    //   if (this.photo && this.hasSelectedFile){
+    //     return false;
+    //   }
+    //   return true;
+    // }
     return control.invalid && (control.dirty || control.touched);
   }
 
@@ -149,7 +158,7 @@ export class LabeledInputComponent implements ControlValueAccessor {
     if (fileEvent.originalEvent instanceof HttpResponse) {
       let serverResponse = fileEvent.originalEvent.body;
       imageId = serverResponse.id;
-      this.coverPhotoNameChange.emit(imageId); // Emit the new coverPhotoName
+      this.coverPhotoNameChange.emit(imageId);
     }
     if (imageId) {
       this.imageService.getImage(imageId).subscribe((profilePic) => {

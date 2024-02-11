@@ -1,1 +1,39 @@
-<p>author-full works!</p>
+<div class="wrapper">
+  <div class="author-dialog">
+    <div class="author-flex">
+      <img
+        *ngIf="authorImage"
+        [src]="authorImage"
+        alt=""
+        class="author-image"
+      />
+      <div class="right-side">
+        <div class="author-name">{{ author?.name }}</div>
+        <div *ngIf="author?.description && author?.description?.trim()?.length" class="description-wrapper">
+          <div class="description">
+            <p [class.short-description]="!showFullDescription">
+              {{
+                showFullDescription ? authorDescription : authorShortDescription
+              }}
+            </p>
+          </div>
+          <div *ngIf="shouldToggle" class="read-more" >
+            <p-button
+              (click)="toggleDescription()"
+              [label]="showFullDescription ? 'Read Less' : 'Read More'"
+              [icon]="
+                showFullDescription
+                  ? 'fa-solid fa-angle-up'
+                  : 'fa-solid fa-angle-down'
+              "
+              iconPos="right"
+            ></p-button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="authorAsNumArray">
+    <app-more-by-author [authors]="authorAsNumArray"></app-more-by-author>
+  </div>
+</div>

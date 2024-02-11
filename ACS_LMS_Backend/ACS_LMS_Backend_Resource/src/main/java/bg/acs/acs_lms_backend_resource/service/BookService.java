@@ -10,6 +10,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -46,15 +47,13 @@ public class BookService {
     public BookShortDto saveBook(BookAddDto bookAddDto){
         Book book = bookRepository.findByTitle(bookAddDto.getTitle())
                 .orElse(mapBookAddDtoToBook(bookAddDto));
+        Book book1 = bookRepository.saveAndFlush(book);
         BookCopy bookCopy = mapBookAddDtoToBookCopy(bookAddDto);
-        bookCopy.setPublicationDate(bookAddDto.getPublicationDate());
-        bookCopy.setBook(book);
-        bookCopy.setPublisher(publisherService.getPublisherById(bookAddDto.getPublisher()));
-        bookCopy.setLanguage(languageService.mapLanguageDtoToLanguage(bookAddDto.getLanguage()));
-        bookRepository.save(book);
+        bookCopy.setBook(book1);
         bookCopyRepository.save(bookCopy);
         return mapBookToBookShortDto(book);
     }
+
 
     public Set<BookShortDto> getBooksShort(){
         return bookRepository.findAll().stream().map(this::mapBookToBookShortDto).collect(Collectors.toSet());
@@ -72,6 +71,17 @@ public class BookService {
     public BookCopy mapBookAddDtoToBookCopy(BookAddDto bookAddDto) {
         BookCopy bookCopy = modelMapper.map(bookAddDto, BookCopy.class);
         bookCopy.setPublisher(publisherService.getPublisherById(bookAddDto.getPublisher()));
+        bookCopy.setLanguage(languageService.mapLanguageDtoToLanguage(bookAddDto.getLanguage()));
+        bookCopy.setPublicationDate(bookAddDto.getPublicationDate());
+        return bookCopy;
+    }
+
+    public BookCopy mapBookUpdateDtoToBookCopy(BookUpdateDto bookUpdateDto) {
+        BookCopy bookCopy = modelMapper.map(bookUpdateDto, BookCopy.class);
+        bookCopy.setPublisher(publisherService.getPublisherById(bookUpdateDto.getPublisher()));
+        bookCopy.setLanguage(languageService.mapLanguageDtoToLanguage(bookUpdateDto.getLanguage()));
+        bookCopy.setPublicationDate(bookUpdateDto.getPublicationDate());
+        bookCopy.setId(bookUpdateDto.getBookCopyId());
         return bookCopy;
     }
 
@@ -92,9 +102,20 @@ public class BookService {
         return book;
     }
 
+    public Book mapBookUpdateDtoToBook(BookUpdateDto bookUpdateDto) {
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        modelMapper.typeMap(BookUpdateDto.class, Book.class)
+                .addMappings(mapper -> mapper.map(BookUpdateDto::getBookId, Book::setId));
+        Book book = modelMapper.map(bookUpdateDto, Book.class);
+        book.setAuthors(authorService.getAuthorsByIds(bookUpdateDto.getAuthors()));
+        book.setCategories(mapCategoryNamesToCategories(bookUpdateDto.getCategories()));
+        book.setCoverPhoto(imageRepository.findById(bookUpdateDto.getImageId()).orElseThrow(EntityNotFoundException::new));
+        return book;
+    }
 
-    public Set<Long> getBookCopyIDsByTitle(String title){
-        List<BookCopy> allByBookTitle = bookCopyRepository.findAllByBookTitle(title);
+
+    public Set<Long> getBookCopyIdsByTitleAndId(String title, Long id){
+        List<BookCopy> allByBookTitle = bookCopyRepository.findAllByBookTitleAndBookId(title, id);
         return allByBookTitle.stream().map(BaseEntity::getId).collect(Collectors.toSet());
     }
 
@@ -118,6 +139,8 @@ public class BookService {
                 .collect(Collectors.toSet());
     }
 
+
+
 //    @Caching(evict = {
 //            @CacheEvict(value = "bestSellers", allEntries = true)
 //    })
@@ -135,8 +158,8 @@ public class BookService {
                 .collect(Collectors.toSet());
     }
 
-    public Optional<BookFullDto> getBookFullByTitle(String title) {
-        Book book = bookRepository.findByTitle(title).orElseThrow(EntityNotFoundException::new);
+    public Optional<BookFullDto> getBookFullByTitleAndId(String title, Long id) {
+        Book book = bookRepository.findByTitleAndId(title, id).orElseThrow(EntityNotFoundException::new);
         Optional<BookCopy> firstByBook = bookCopyRepository.findFirstByBook(book);
         return firstByBook.map(bookCopy -> mapBookAndBookCopyToBookFullDto(book, bookCopy));
     }
@@ -155,9 +178,9 @@ public class BookService {
 
     }
 
-    public BookFullDto getBookFullByTitleAndEdition(String title, Long edition) {
-        Book book = bookRepository.findByTitle(title).orElseThrow(EntityNotFoundException::new);
-        Optional<BookCopy> firstByBook = bookCopyRepository.findByBookAndId(book, edition);
+    public BookFullDto getBookFullByTitleAndIdAndBookCopyId(String title, Long id, Long bookCopyId) {
+        Book book = bookRepository.findByTitleAndId(title, id).orElseThrow(EntityNotFoundException::new);
+        Optional<BookCopy> firstByBook = bookCopyRepository.findByBookAndId(book, bookCopyId);
         if (firstByBook.isPresent()) {
             return mapBookAndBookCopyToBookFullDto(book, firstByBook.get());
         } else {
@@ -241,6 +264,22 @@ public class BookService {
         return !booksAvailable(bookId).isEmpty();
     }
 
+
+    public boolean checkForISBN(String isbn) {
+        return bookCopyRepository.existsByIsbn(isbn);
+
+    }
+
+    @Transactional
+    public BookShortDto updateBook(Long id, BookUpdateDto bookUpdateDto) {
+        Book book = mapBookUpdateDtoToBook(bookUpdateDto);
+        Book updatedBook = bookRepository.saveAndFlush(book);
+        BookCopy bookCopy = mapBookUpdateDtoToBookCopy(bookUpdateDto);
+        bookCopy.setBook(updatedBook);
+        bookCopyRepository.save(bookCopy);
+
+        return mapBookToBookShortDto(updatedBook);
+    }
 
 
 

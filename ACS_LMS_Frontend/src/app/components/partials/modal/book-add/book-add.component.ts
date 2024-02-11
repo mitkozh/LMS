@@ -54,6 +54,7 @@ import { AuthorService } from 'app/core/author.service';
 import { CategoryService } from 'app/core/category.service';
 import { PublisherService } from 'app/core/publisher.service';
 import { callNumberExistsValidator } from './call-number-exists-validator';
+import { isbnExistsValidator } from './isbn-exists-validator';
 
 interface AutoCompleteCompleteEvent {
   originalEvent: Event;
@@ -167,6 +168,7 @@ export class BookAddComponent implements OnInit {
             Validators.required,
             Validators.pattern('\\d{10}|\\d{13}'),
           ],
+          asyncValidators: [isbnExistsValidator(bookService)],
           updateOn: 'blur',
         },
       ],
@@ -178,6 +180,7 @@ export class BookAddComponent implements OnInit {
         null,
         { validators: [Validators.required], updateOn: 'blur' },
       ],
+      
     });
   }
 

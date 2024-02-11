@@ -31,7 +31,7 @@
       </p>
     </div>
     <p-divider></p-divider>
-    <div class="read-more">
+    <div *ngIf="shouldToggle" class="read-more">
       <p-button
         (click)="toggleDescription()"
         [label]="showFullDescription ? 'Read Less' : 'Read More'"

@@ -8,6 +8,8 @@
           id="seach-box"
         >
           <input
+          [(ngModel)]="searchValue"
+            (keydown.enter)="onSearch($event)"
             type="search"
             class="search"
             name=""
@@ -70,7 +72,7 @@
         class="head-user-avatar-container"
         *ngIf="isLoggedIn; else loginButton"
       >
-        <div class="head-user-avatar">
+        <div class="head-user-avatar" [cdkMenuTriggerFor]="profile">
           <img
             src="assets/images/profile_pic.jpg"
             alt="user"
@@ -84,7 +86,15 @@
 
 <ng-template #searchOverlay>
   <div class="overlay overlay-search overlay-fall" cdkMenu>
-    <input type="search" class="search" name="" id="" placeholder="Search..." />
+    <input 
+    [(ngModel)]="searchValue"
+      (keydown.enter)="onSearch($event)"
+      type="search"
+      class="search"
+      name=""
+      id=""
+      placeholder="Search..."
+    />
     <button class="search-btn">
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -106,5 +116,15 @@
         </g>
       </svg>
     </button>
+  </div>
+</ng-template>
+<ng-template #profile>
+  <div class="cdk-menu">
+    <div class="cdk-menu-item" (click)="onProfileClick()">
+      <span>Profile</span>
+    </div>
+    <div class="cdk-menu-item" (click)="onLogoutClick()">
+      <span>Logout</span>
+    </div>
   </div>
 </ng-template>

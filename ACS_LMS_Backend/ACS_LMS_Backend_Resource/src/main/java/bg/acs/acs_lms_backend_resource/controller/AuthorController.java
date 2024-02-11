@@ -54,8 +54,17 @@ public class AuthorController {
             return ResponseEntity.ok(author);
         }
         return ResponseEntity.noContent().build();
+    }
 
 
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_LIBRARIAN')")
+    public ResponseEntity<AuthorShortDto> getAuthorById(@PathVariable Long id) {
+        AuthorShortDto author = authorService.getAuthorById(id);
+        if (author!=null) {
+            return ResponseEntity.ok(author);
+        }
+        return ResponseEntity.noContent().build();
     }
 
 

@@ -33,7 +33,7 @@ export class GenericService<TModel, TDtoAdd, TDtoRecieve> {
     );
   }
 
-  getResultsDtoByName(name: string){
+  getResultsDtoByName(name: string) {
     return this.httpClient.get<TDtoRecieve[]>(
       `${this.baseUrl}${this.resourceEndpoint}/all/${name}`
     );
@@ -51,12 +51,11 @@ export class GenericService<TModel, TDtoAdd, TDtoRecieve> {
     );
   }
 
-  getByIdAndRecieveDto(id: number){
+  getByIdAndRecieveDto(id: number) {
     return this.httpClient.get<TDtoRecieve>(
       `${this.baseUrl}${this.resourceEndpoint}/${id}`
     );
   }
-
 
   getByName(name: string) {
     return this.httpClient.get<TModel>(
@@ -91,9 +90,9 @@ export class GenericService<TModel, TDtoAdd, TDtoRecieve> {
     );
   }
 
-  updateAndThenRecieveDto(dto: TDtoAdd) {
-    return this.httpClient.put<TDtoRecieve>(
-      `${this.baseUrl}${this.resourceEndpoint}`,
+  updateAndThenRecieveDto(id: number, dto: TDtoAdd) {
+    return this.httpClient.patch<TDtoRecieve>(
+      `${this.baseUrl}${this.resourceEndpoint}/${id}`,
       dto
     );
   }

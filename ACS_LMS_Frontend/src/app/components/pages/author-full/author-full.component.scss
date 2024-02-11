@@ -1,0 +1,56 @@
+.wrapper {
+    .author-dialog {
+      .author-flex {
+        display: flex;
+        align-items: center;
+  
+        .author-image {
+          width: 100px;
+          height: 100px;
+          border-radius: 50%;
+          object-fit: cover;
+        }
+  
+        .right-side {
+          margin-left: 20px;
+  
+          .author-name {
+            font-size: 20px;
+            font-weight: bold;
+          }
+  
+          .description {
+            margin-top: 10px;
+            font-size: 16px;
+            color: #333;
+  
+            .short-description {
+              text-overflow: ellipsis;
+              overflow: hidden;
+              white-space: nowrap;
+            }
+          }
+  
+          .read-more {
+            margin-top: 10px;
+  
+            button {
+              padding: 10px 20px;
+              font-size: 16px;
+              color: #fff;
+              background-color: #007bff;
+              border: none;
+              border-radius: 5px;
+              cursor: pointer;
+              transition: background-color 0.3s ease;
+  
+              &:hover {
+                background-color: #0056b3;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  

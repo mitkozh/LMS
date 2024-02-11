@@ -68,7 +68,7 @@ export class BookLibraryComponent implements OnInit, OnDestroy {
       draggable: true,
       closeOnEscape: false,
       data: {
-        onSubmitEntity$: this.onSubmitBookEntity$,
+        onSubmitEntity$: this.onSubmitBookCopyEntity$,
       },
     });
 

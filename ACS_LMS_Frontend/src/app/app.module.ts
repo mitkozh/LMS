@@ -99,6 +99,7 @@ import { TranscationsComponent } from './components/pages/transcations/transcati
 import { RESERVATION_SERVICE_CONFIG, ReservationService } from './core/reservation.service';
 import { PaginatorModule } from 'primeng/paginator';
 import { AuthorFullComponent } from './components/pages/author-full/author-full.component';
+import { EditBookComponent } from './components/partials/modal/edit-book/edit-book.component';
 
 export function initializeKeycloak(
   keycloak: KeycloakService,
@@ -165,6 +166,7 @@ export function initializeKeycloak(
     BorrowABookComponent,
     TranscationsComponent,
     AuthorFullComponent,
+    EditBookComponent,
   ],
 
   imports: [

@@ -1,9 +1,24 @@
+import { Router } from '@angular/router';
 import { searchBox as searchBoxWidget } from 'instantsearch.js/es/widgets';
 
-export const createSearchBox = () => {
+export const createSearchBox = (router: Router) => {
   return searchBoxWidget({
     container: '#searchbox',
     placeholder: 'Book, author, category, …',
+    queryHook: (newQuery, searchFunction) => {
+      let debounceTimeout;
+      clearTimeout(debounceTimeout);
+      debounceTimeout = setTimeout(() => {
+        router.navigate([], {
+          queryParams: {
+            'search': newQuery
+          },
+          queryParamsHandling: 'merge'
+        });
+
+        searchFunction(newQuery);
+      }, 300); 
+    },
     templates: {
       submit: `
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 18 18">
