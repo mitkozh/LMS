@@ -1,10 +1,10 @@
-# Uchi-Lib: Library and Cataloguing System
+# Uchi-Bib: Library and Cataloguing System
 
-"Uchi-Lib" is an innovative library and cataloguing system designed for students, teachers, and librarians. It offers easy access to educational resources, books, and facilitates the work of librarians. The system is created with the aim to enrich the learning experience and stimulate curiosity.
+"Uchi-Bib" is an innovative library and cataloguing system designed for students, teachers, and librarians. It offers easy access to educational resources, books, and facilitates the work of librarians. The system is created with the aim to enrich the learning experience and stimulate curiosity.
 
 ## Technology Stack
 
-Uchi-Lib utilizes the following technologies:
+Uchi-Bib utilizes the following technologies:
 
 - Java
 - SpringBoot
@@ -50,5 +50,5 @@ Here's a quick guide on how to get your Uchi-Lib system up and running:
 
 8. **Start the frontend**: Navigate to the frontend directory and run `ng serve` to start the Angular application.
 
-9. **Access the application**: Open your web browser and navigate to `http://localhost:4200` to start using Uchi-Lib!
+9. **Access the application**: Open your web browser and navigate to `http://localhost:4200` to start using Uchi-Bib!
 
