@@ -27,10 +27,18 @@ const routes: Routes = [
   { path: 'categories/:category', component: CategoryDetailsComponent },
   { path: 'books/:title/:id', component: BookFullComponent },
   { path: 'books/:title/:id/:edition', component: BookFullComponent },
-  { path: 'author/:author', component: AuthorFullComponent},
+  { path: 'author/:author', component: AuthorFullComponent },
   { path: 'not-found', component: NotFoundComponent },
-  { path: 'advanced-search', component: AdvancedSearchComponent },
-  { path: 'transactions', component: TranscationsComponent },
+  {
+    path: 'advanced-search',
+    component: AdvancedSearchComponent,
+    canActivate: [AppAuthGuard],
+  },
+  {
+    path: 'transactions',
+    component: TranscationsComponent,
+    canActivate: [AppAuthGuard],
+  },
   { path: '**', redirectTo: 'not-found' },
 ];
 

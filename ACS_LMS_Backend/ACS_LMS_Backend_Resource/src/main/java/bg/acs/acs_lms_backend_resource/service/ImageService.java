@@ -14,8 +14,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class ImageService {
@@ -28,14 +36,46 @@ public class ImageService {
     }
 
     public ImageDto uploadImage(MultipartFile file) throws IOException {
-        String originalFileName = file.getOriginalFilename();
-        String uniqueFileName = generateUniqueFileName(originalFileName);
-
-
+        String uniqueFileName = generateUniqueFileName(UUID.randomUUID().toString());
         Image savedImage = imageRepository.save(Image.builder()
                 .fileName(uniqueFileName)
                 .contentType(file.getContentType())
                 .data(ImageUtility.compressImage(file.getBytes()))
+                .build());
+
+        return new ImageDto(savedImage.getId(), savedImage.getFileName(), savedImage.getContentType());
+    }
+
+    public ImageDto uploadLocalImage(String filePath) throws IOException {
+        Path path = Paths.get(filePath);
+        String uniqueFileName = generateUniqueFileName(UUID.randomUUID().toString());
+        String contentType = "image/png";
+        byte[] content = Files.readAllBytes(path);
+
+        Image savedImage = imageRepository.save(Image.builder()
+                .fileName(uniqueFileName)
+                .contentType(contentType)
+                .data(ImageUtility.compressImage(content))
+                .build());
+
+        return new ImageDto(savedImage.getId(), savedImage.getFileName(), savedImage.getContentType());
+    }
+
+    public ImageDto uploadImageFromUrl(String imageUrl) throws IOException {
+        URL url = new URL(imageUrl);
+        try (InputStream inputStream = url.openStream()) {
+            return uploadImage(inputStream, "image.png", "image/png");
+        }
+    }
+
+    public ImageDto uploadImage(InputStream inputStream, String originalFilename, String contentType) throws IOException {
+        String uniqueFileName = generateUniqueFileName(originalFilename);
+        byte[] content = inputStream.readAllBytes();
+
+        Image savedImage = imageRepository.save(Image.builder()
+                .fileName(uniqueFileName)
+                .contentType(contentType)
+                .data(ImageUtility.compressImage(content))
                 .build());
 
         return new ImageDto(savedImage.getId(), savedImage.getFileName(), savedImage.getContentType());
@@ -90,5 +130,9 @@ public class ImageService {
 
     public void deleteImage(Long id) {
         imageRepository.deleteById(id);
+    }
+
+    public Optional<Image> findById(Long imageId) {
+        return imageRepository.findById(imageId);
     }
 }

@@ -98,13 +98,7 @@ export class GenericService<TModel, TDtoAdd, TDtoRecieve> {
   }
 
   remove(id: number) {
-    return this.httpClient.delete<number>(
-      `${this.baseUrl}${this.resourceEndpoint}/${id}`
-    );
-  }
-
-  removeAndRecieveDto(id: number) {
-    return this.httpClient.delete<TDtoRecieve>(
+    return this.httpClient.delete<boolean>(
       `${this.baseUrl}${this.resourceEndpoint}/${id}`
     );
   }

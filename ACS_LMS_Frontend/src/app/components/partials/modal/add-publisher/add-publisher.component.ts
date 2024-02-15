@@ -27,7 +27,11 @@ export class AddPublisherComponent {
   constructor(
     private fb: FormBuilder,
     @Inject('publisherService')
-    private publisherService: GenericService<Publisher, AddPublisherDto, Publisher>,
+    private publisherService: GenericService<
+      Publisher,
+      AddPublisherDto,
+      Publisher
+    >,
     public config: DynamicDialogConfig
   ) {}
   ngOnInit(): void {
@@ -39,7 +43,7 @@ export class AddPublisherComponent {
   });
 
   private mapFormToPublisherDto(formValue: any): AddPublisherDto {
-    return {  
+    return {
       name: formValue.name || '',
     };
   }

@@ -35,6 +35,24 @@ export class BookService extends GenericService<
   BookAddDto | BookUpdateDto,
   BookShortDto
 > {
+  findBookWithGoogleApiWithISBN(isbn: string): Observable<BookFullDto> {
+    return this.httpClient.get<BookFullDto>(
+      `${this.baseUrl}${this.resourceEndpoint}/get-book-with-google-api/isbn/${isbn}`
+    );
+  }
+  deleteBookByBookIdAndBookCopyId(
+    bookId: number,
+    bookCopyId: number
+  ): Observable<boolean> {
+    return this.httpClient.delete<boolean>(
+      `${this.baseUrl}${this.resourceEndpoint}/${bookId}/${bookCopyId}`
+    );
+  }
+  checkForInventoryNumber(inventoryNumber: string): Observable<boolean> {
+    return this.httpClient.get<boolean>(
+      `${this.baseUrl}${this.resourceEndpoint}/check-inventory-number/${inventoryNumber}`
+    );
+  }
   checkForISBN(isbn: string): Observable<boolean> {
     return this.httpClient.get<boolean>(
       `${this.baseUrl}${this.resourceEndpoint}/check-isbn/${isbn}`
@@ -148,9 +166,6 @@ export class BookService extends GenericService<
       },
     ];
 
-    // Simulate fetching data from API
-    // Replace the code below with your actual API call
-    // return this.http.get<IStatBoxData[]>('your-api-endpoint');
     return of(statBoxData);
   }
 }

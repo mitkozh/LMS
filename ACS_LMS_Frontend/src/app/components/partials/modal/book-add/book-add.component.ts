@@ -1,3 +1,4 @@
+import { BookGoogleApi } from './../../../../shared/book-google-api';
 import { ValidationMessages } from '../../../../shared/validation-messages';
 import { bookValidationMessages } from './book-validation-messages';
 import { AuthorShortDto } from '../../../../shared/author-dto';
@@ -55,6 +56,8 @@ import { CategoryService } from 'app/core/category.service';
 import { PublisherService } from 'app/core/publisher.service';
 import { callNumberExistsValidator } from './call-number-exists-validator';
 import { isbnExistsValidator } from './isbn-exists-validator';
+import { inventoryNumberExists } from './inventory-number-exists';
+import { BookFullDto } from 'app/shared/book-full-dto';
 
 interface AutoCompleteCompleteEvent {
   originalEvent: Event;
@@ -68,7 +71,6 @@ interface AutoCompleteCompleteEvent {
 })
 export class BookAddComponent implements OnInit {
   onSubmitEntity$!: EventEmitter<BookShortDto>;
-
   @ViewChild(SearchInputComponent)
   private authorSearchInputComponent: SearchInputComponent | undefined;
   @ViewChild(SearchInputComponent)
@@ -84,6 +86,7 @@ export class BookAddComponent implements OnInit {
   public publisherSearchResults = this._publisherSearchResults$.asObservable();
   private _publisherLoading$ = new BehaviorSubject<boolean>(false);
   public publisherLoading$ = this._publisherLoading$.asObservable();
+  bookCover: SafeUrl | undefined;
   imageId: number | undefined;
   bookValidationMessages: ValidationMessages = bookValidationMessages;
   form: FormGroup;
@@ -139,6 +142,7 @@ export class BookAddComponent implements OnInit {
         {
           validators: [Validators.required, Validators.maxLength(50)],
           updateOn: 'blur',
+          asyncValidators: [inventoryNumberExists(bookService)],
         },
       ],
       price: [null, { updateOn: 'blur' }],
@@ -180,7 +184,6 @@ export class BookAddComponent implements OnInit {
         null,
         { validators: [Validators.required], updateOn: 'blur' },
       ],
-      
     });
   }
 
@@ -202,6 +205,30 @@ export class BookAddComponent implements OnInit {
       .subscribe((books: BookShortDto[] | undefined) => {
         this.books = books;
       });
+
+    this.form
+      .get('isbn')
+      ?.valueChanges.pipe(debounceTime(300), distinctUntilChanged())
+      .subscribe((isbn) => {
+        this.bookService
+          .findBookWithGoogleApiWithISBN(isbn)
+          .subscribe((book) => {
+            this.patchForm(book);
+          });
+      });
+
+    // this.form
+    //   .get('isbn')
+    //   ?.valueChanges.pipe(debounceTime(300), distinctUntilChanged())
+    //   .subscribe((isbn) => {
+    //     if (this.form.get('isbn')?.valid) {
+    //       this.bookApiService.getBookByISBN(isbn).subscribe((response) => {
+    //         if (response) {
+    //           console.log(response);
+    //         }
+    //       });
+    //     }
+    //   });
   }
 
   authorRequestsSubscription: Subscription[] = [];
@@ -240,6 +267,11 @@ export class BookAddComponent implements OnInit {
           console.log(this.onSubmitEntity$);
         });
     } else {
+      Object.keys(this.form.controls).forEach((field) => {
+        let control = this.getFormControlByName(field);
+        control?.updateValueAndValidity();
+        control?.markAllAsTouched();
+      });
     }
   }
 
@@ -605,5 +637,38 @@ export class BookAddComponent implements OnInit {
   }
   getFormControlByName(name: string): FormControl | null {
     return this.form?.get(name) as FormControl | null;
+  }
+
+  patchForm(book: BookFullDto) {
+    this.imageId = book.imageId;
+    this.imageService.getImage(this.imageId).subscribe((profilePic) => {
+      this.bookCover = this.sanitizer.bypassSecurityTrustUrl(
+        URL.createObjectURL(profilePic)
+      );
+    });
+
+    this.getPublisherById(book.publisherId);
+    this.fetchProfilePhotos([...book.authors]).subscribe((authorsSaved) =>
+      this.form.patchValue({
+        authors: authorsSaved,
+      })
+    );
+    this.form.patchValue({
+      title: book.title,
+      description: book.description,
+      categories: book.categories,
+      language: book.language,
+      size: book.size,
+      publicationDate: book.publicationDate,
+    });
+  }
+
+  private getPublisherById(id: number) {
+    this.publisherService
+      .getByIdAndRecieveDto(id)
+      .pipe(debounceTime(300), distinctUntilChanged())
+      .subscribe((recievedPublisher) =>
+        this.form.patchValue({ publisher: recievedPublisher })
+      );
   }
 }

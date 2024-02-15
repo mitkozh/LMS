@@ -4,7 +4,7 @@
     (onClick)="openEditBook()"
     >Edit Book</p-button
   >
-  <p-button *hasRoles="[roles.ROLE_ADMIN, roles.ROLE_LIBRARIAN]"
+  <p-button  (onClick)="deleteBook()" *hasRoles="[roles.ROLE_ADMIN, roles.ROLE_LIBRARIAN]"
     >Delete Book</p-button
   >
   <div class="book">

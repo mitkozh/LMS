@@ -193,8 +193,8 @@ public class BookService {
         BookCopy bookCopy = mapBookCopyAddDtoToBookCopy(bookCopyAddDto);
         Book book = bookRepository.findById(bookCopyAddDto.getBookId()).orElseThrow(EntityNotFoundException::new);
         book.getBookCopies().add(bookCopy);
-        bookCopy.setBook(book);
-        bookRepository.save(book);
+        Book save = bookRepository.save(book);
+        bookCopy.setBook(save);
         bookCopyRepository.save(bookCopy);
         return mapBookAndBookCopyToBookFullDto(book, bookCopy);
     }
@@ -267,7 +267,6 @@ public class BookService {
 
     public boolean checkForISBN(String isbn) {
         return bookCopyRepository.existsByIsbn(isbn);
-
     }
 
     @Transactional
@@ -281,6 +280,25 @@ public class BookService {
         return mapBookToBookShortDto(updatedBook);
     }
 
+
+    public boolean checkForInventoryNumber(String inventoryNumber) {
+        return bookCopyRepository.existsByInventoryNumber(inventoryNumber);
+    }
+
+    @Transactional
+    public Boolean deleteBookByBookIdAndBookCopyId(Long bookId, Long bookCopyId) {
+        bookCopyRepository.deleteById(bookCopyId);
+        List<BookCopy> allByBookId = bookCopyRepository.findAllByBookId(bookId);
+        if (allByBookId.size()==0){
+            Book book = bookRepository.findById(bookId).orElseThrow(EntityNotFoundException::new);
+            bookRepository.delete(book);
+        }
+        Optional<BookCopy> byId = bookCopyRepository.findById(bookCopyId);
+        if (byId.isPresent()){
+            return false;
+        }
+        return true;
+    }
 
 
 }

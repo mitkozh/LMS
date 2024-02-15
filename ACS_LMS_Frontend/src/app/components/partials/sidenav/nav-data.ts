@@ -24,6 +24,7 @@ export const navbarData: INavbarData[] = [
     routeLink: 'dashboard',
     icon: 'fal fa-chart-line',
     label: 'Dashboard',
+    requiredRoles: [roles.ROLE_ADMIN, roles.ROLE_LIBRARIAN],
   },
   {
     routeLink: 'my-books',

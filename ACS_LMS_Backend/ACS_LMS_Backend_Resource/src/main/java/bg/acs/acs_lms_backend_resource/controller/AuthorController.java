@@ -11,6 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.web.util.UrlUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
@@ -46,8 +47,7 @@ public class AuthorController {
       }
 
     @GetMapping("/name/{name}")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_LIBRARIAN')")
-    public ResponseEntity<AuthorShortDto> getAuthorByName(@PathVariable String name) {
+    public ResponseEntity<AuthorShortDto> getAuthorByName(@PathVariable String name) throws IOException {
         name = URLDecoder.decode(name, StandardCharsets.UTF_8);
         AuthorShortDto author = authorService.getAuthorByName(name);
         if (author!=null) {
@@ -58,7 +58,6 @@ public class AuthorController {
 
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_LIBRARIAN')")
     public ResponseEntity<AuthorShortDto> getAuthorById(@PathVariable Long id) {
         AuthorShortDto author = authorService.getAuthorById(id);
         if (author!=null) {

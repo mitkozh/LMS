@@ -31,13 +31,13 @@ public class LanguageService {
     }
 
     public LanguageDto getByLanguageCodeDto(String languageCode) {
-        Language language =  languageRepository.findByLanguageCodeIgnoreCase(languageCode);
+        Language language =  languageRepository.findByLanguageCodeIgnoreCase(languageCode).orElse(null);
         return this.modelMapper.map(language, LanguageDto.class);
     }
 
 
     public Language getByLanguageCode(String languageCode) {
-        return  languageRepository.findByLanguageCodeIgnoreCase(languageCode);
+        return  languageRepository.findByLanguageCodeIgnoreCase(languageCode).orElse(null);
     }
 
 
@@ -56,5 +56,13 @@ public class LanguageService {
 
     public void deleteLanguage(String languageCode) {
         languageRepository.deleteById(languageCode);
+    }
+
+    public Language findByLanguageCodeOrCreate(String language) {
+        if (language!=null && language.length()>0) {
+            return languageRepository.findByLanguageCodeIgnoreCase(language)
+                    .orElse(languageRepository.saveAndFlush(new Language(language.toLowerCase())));
+        }
+        return null;
     }
 }

@@ -15,6 +15,7 @@ import { KeycloakService } from 'keycloak-angular';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { EditBookComponent } from 'app/components/partials/modal/edit-book/edit-book.component';
 import { BookShortDto } from 'app/shared/book-short-dto';
+import { DeleteBookComponent } from 'app/components/partials/modal/delete-book/delete-book.component';
 
 @Component({
   selector: 'app-book-full',
@@ -24,6 +25,8 @@ import { BookShortDto } from 'app/shared/book-short-dto';
 export class BookFullComponent implements OnInit {
   ref: DynamicDialogRef | undefined;
   onSubmitBookEntity$ = new EventEmitter<BookShortDto>();
+  onSubmitDeleteEntity$ = new EventEmitter<boolean>();
+
   id!: number;
 
   openEditBook() {
@@ -32,7 +35,7 @@ export class BookFullComponent implements OnInit {
       width: 'min(600px, 60%)',
       height: '80%',
       contentStyle: { overflow: 'auto' },
-      baseZIndex: 10000,
+      baseZIndex: 30,
       draggable: true,
       closeOnEscape: false,
       data: {
@@ -59,6 +62,26 @@ export class BookFullComponent implements OnInit {
       this.router.navigate(['']);
     });
   }
+
+  deleteBook() {this.ref = this.dialogService.open(DeleteBookComponent, {
+    header: 'Delete book',
+    width: 'min(600px, 60%)',
+    height: '80%',
+    contentStyle: { overflow: 'auto' },
+    baseZIndex: 10000,
+    draggable: true,
+    closeOnEscape: false,
+    data: {
+      onSubmitEntity$: this.onSubmitBookEntity$,
+      title: this.book?.title,
+      bookCopyId: this.book?.bookCopyId,
+      id: this.book?.bookId,
+    },
+  });
+
+  this.closeBooksEditModalOnSubmitted();
+}
+
   authors: number[] | null = null;
   title: string = '';
   tab: string | null = null;

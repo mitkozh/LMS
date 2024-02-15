@@ -29,6 +29,7 @@
       ></app-labeled-input>
 
       <app-labeled-input
+      [photo]="bookCover"
         inputType="file-upload"
         [required]="true"
         fieldId="coverPhoto"
@@ -180,6 +181,7 @@
         [inputType]="'input'"
         [validationMessages]="bookValidationMessages['size']"
         [inputControl]="getFormControlByName('size')!"
+        [required]="false"
       ></app-labeled-input>
 
       <app-labeled-input
@@ -189,6 +191,7 @@
         [inputType]="'calendar'"
         [validationMessages]="bookValidationMessages['publicationDate']"
         [inputControl]="getFormControlByName('publicationDate')!"
+        [required]="false"
       ></app-labeled-input>
 
       <app-labeled-input

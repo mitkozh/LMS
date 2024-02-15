@@ -615,7 +615,6 @@ export class EditBookComponent {
           authors: authorsSaved,
         })
     );
-    console.log([...selectedBook.authors]);
     this.form.patchValue({
       title: selectedBook.title,
       description: selectedBook.description,

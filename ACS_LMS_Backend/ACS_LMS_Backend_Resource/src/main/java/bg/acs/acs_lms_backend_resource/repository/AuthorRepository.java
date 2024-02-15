@@ -19,4 +19,6 @@ public interface AuthorRepository extends JpaRepository<Author, Long> {
     List<Author> getAllByNameContainsIgnoreCase(String name);
 
     Set<Author> findAllByIdIsIn(Set<Long> ids);
+
+    Optional<Author> findFirstByName(String authorName);
 }

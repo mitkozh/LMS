@@ -22,6 +22,10 @@ public class CategoryService {
 
     private final BookService bookService;
 
+    public List<Category> findAllByNames(List<String> names){
+        return categoryRepository.findByNameIn(names);
+    }
+
 
     public Set<CategoryWithBooksDto> getAll() {
         return categoryRepository.findAll().stream().map(this::mapCategoryToCategoryWithBooksDto).collect(Collectors.toSet());

@@ -48,6 +48,8 @@ import { PublisherService } from 'app/core/publisher.service';
 import { AcquisitionDocumentEnum } from 'app/shared/acquasition-document-enum';
 import { BookBindingEnum } from 'app/shared/book-binding-enum';
 import { LanguageService } from 'app/core/language.service';
+import { inventoryNumberExists } from '../book-add/inventory-number-exists';
+import { callNumberExistsValidator } from '../book-add/call-number-exists-validator';
 
 @Component({
   selector: 'app-add-book-copy',
@@ -91,6 +93,7 @@ export class AddBookCopyComponent implements OnInit {
         {
           validators: [Validators.required, Validators.maxLength(50)],
           updateOn: 'blur',
+          asyncValidators: [callNumberExistsValidator(bookService)],
         },
       ],
       inventoryNumber: [
@@ -98,6 +101,7 @@ export class AddBookCopyComponent implements OnInit {
         {
           validators: [Validators.required, Validators.maxLength(50)],
           updateOn: 'blur',
+          asyncValidators: [inventoryNumberExists(bookService)],
         },
       ],
       price: [null, { updateOn: 'blur' }],
@@ -154,7 +158,10 @@ export class AddBookCopyComponent implements OnInit {
       ?.valueChanges.pipe(
         switchMap((selectedBook: BookShortDto | null) => {
           if (selectedBook) {
-            return this.bookService.getBookFullByTitleAndId(selectedBook.title, selectedBook.id);
+            return this.bookService.getBookFullByTitleAndId(
+              selectedBook.title,
+              selectedBook.id
+            );
           } else {
             return of(null);
           }
@@ -208,8 +215,8 @@ export class AddBookCopyComponent implements OnInit {
   private updateFormFields(selectedBook: BookFullDto): void {
     this.getPublisherById(selectedBook.publisherId);
     this.form.patchValue({
-      callNumber: selectedBook.callNumber,
-      inventoryNumber: selectedBook.inventoryNumber,
+      // callNumber: selectedBook.callNumber,
+      // inventoryNumber: selectedBook.inventoryNumber,
       price: selectedBook.price,
       schoolInventoryNumber: selectedBook.schoolInventoryNumber,
       language: selectedBook.language,
@@ -456,14 +463,18 @@ export class AddBookCopyComponent implements OnInit {
       const bookCopyData: BookCopyAddDto = this.mapFormToBookCopyAddDto(
         this.form.value
       );
-      console.log(JSON.stringify(bookCopyData, null, 3));
-      // this.bookService
-      //   .addBookCopy(bookCopyData)
-      //   .subscribe((bookFull: BookFullDto) => {
-      //     this.onSubmitEntity$.emit(bookFull);
-      //     console.log(this.onSubmitEntity$);
-      //   });
+      this.bookService
+        .addBookCopy(bookCopyData)
+        .subscribe((bookFull: BookFullDto) => {
+          this.onSubmitEntity$.emit(bookFull);
+          console.log(this.onSubmitEntity$);
+        });
     } else {
+      Object.keys(this.form.controls).forEach((field) => {
+        let control = this.getFormControlByName(field);
+        control?.updateValueAndValidity();
+        control?.markAllAsTouched();
+      });
     }
   }
 

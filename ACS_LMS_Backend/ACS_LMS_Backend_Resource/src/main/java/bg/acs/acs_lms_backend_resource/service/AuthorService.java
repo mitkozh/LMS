@@ -1,16 +1,19 @@
 package bg.acs.acs_lms_backend_resource.service;
 
 import bg.acs.acs_lms_backend_resource.model.dto.AuthorShortDto;
+import bg.acs.acs_lms_backend_resource.model.dto.ImageDto;
 import bg.acs.acs_lms_backend_resource.model.entity.Author;
 import bg.acs.acs_lms_backend_resource.model.entity.Image;
 import bg.acs.acs_lms_backend_resource.repository.AuthorRepository;
 import bg.acs.acs_lms_backend_resource.repository.ImageRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.Null;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -21,7 +24,7 @@ public class AuthorService {
 
     private final AuthorRepository authorRepository;
 
-    private final ImageRepository imageRepository;
+    private final ImageService imageService;
     private final ModelMapper modelMapper;
 
     public AuthorShortDto mapAuthorToAuthorShortDto(Author author){
@@ -31,15 +34,25 @@ public class AuthorService {
         }
         return authorShortDto;
     }
-    public Author mapAuthorNameToAuthor(String authorName) {
-        return
-               authorRepository.findByName(authorName)
-                        .orElse(Author.builder().name(authorName).build());
+    @Transactional
+    public Author mapAuthorNameToAuthor(String authorName) throws IOException {
+        ImageDto imageDto = imageService.uploadLocalImage("src/main/resources/static/author-photo.png");
+        Image image = imageService.getImage(imageDto.getId());
+        if (authorName != null && !authorName.isEmpty()) {
+            Author author = authorRepository.findFirstByName(authorName).orElse(null);
+            if (author == null) {
+                author = Author.builder().name(authorName).profilePhoto(image).build();
+                author = authorRepository.save(author);
+            }
+            return author;
+        } else {
+            return null;
+        }
     }
 
     public Author mapAuthorShortDtoToAuthor(AuthorShortDto authorShortDto){
         Author author = modelMapper.map(authorShortDto, Author.class);
-        Optional<Image> optionalImage = imageRepository.findById(authorShortDto.getImageId());
+        Optional<Image> optionalImage = imageService.findById(authorShortDto.getImageId());
         optionalImage.ifPresent(author::setProfilePhoto);
         return author;
     }
@@ -64,7 +77,7 @@ public class AuthorService {
         return mapAuthorToAuthorShortDto(author);
     }
 
-    public AuthorShortDto getAuthorByName(String name) {
+    public AuthorShortDto getAuthorByName(String name) throws IOException {
         Author author = mapAuthorNameToAuthor(name);
         return mapAuthorToAuthorShortDto(author);
     }

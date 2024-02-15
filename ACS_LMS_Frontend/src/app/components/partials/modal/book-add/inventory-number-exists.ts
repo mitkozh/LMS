@@ -7,23 +7,22 @@ import { BookService } from 'app/core/book.service';
 import { Observable, of } from 'rxjs';
 import { catchError, debounceTime, map, switchMap } from 'rxjs/operators';
 
-export function isbnExistsValidator(service: BookService): AsyncValidatorFn {
+export function inventoryNumberExists(service: BookService): AsyncValidatorFn {
   return (control: AbstractControl): Observable<ValidationErrors | null> => {
-    const isbn = control.value;
+    const inventoryNumber = control.value;
 
     if (control.pristine) {
       return of(null);
     }
-    if (!isbn) {
+    if (!inventoryNumber) {
       return of(null);
     }
-    return of(isbn).pipe(
+    return of(inventoryNumber).pipe(
       debounceTime(500),
-      switchMap((isbn: string) => {
-        return service.checkForISBN(isbn).pipe(
+      switchMap((inventoryNumber: string) => {
+        return service.checkForInventoryNumber(inventoryNumber).pipe(
           map((exists) => {
-            console.log(exists);
-            return exists ? { isbnExists: true } : null;
+            return exists ? { inventoryNumberExists: true } : null;
           }),
           catchError((error) => {
             return of(null);
