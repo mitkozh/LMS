@@ -1,0 +1,214 @@
+<div class="delete-book-container">
+  <div class="form-wrapper">
+    <form [formGroup]="form">
+      <app-labeled-input
+        [disabled]="true"
+        [label]="'ISBN'"
+        [fieldId]="'isbn'"
+        [fieldName]="'isbn'"
+        [inputType]="'input'"
+        [inputControl]="getFormControlByName('isbn')!"
+      ></app-labeled-input>
+
+      <app-labeled-input
+        [disabled]="true"
+        [label]="'Title'"
+        [fieldId]="'title'"
+        [fieldName]="'title'"
+        [inputType]="'input'"
+        [inputControl]="getFormControlByName('title')!"
+      ></app-labeled-input>
+
+      <app-labeled-input
+        [disabled]="true"
+        [label]="'Description'"
+        [fieldId]="'description'"
+        [fieldName]="'description'"
+        [inputType]="'textarea'"
+        [inputControl]="getFormControlByName('description')!"
+      ></app-labeled-input>
+
+      <app-labeled-input
+        [disabled]="true"
+        [photo]="bookCover"
+        inputType="file-upload"
+        [required]="true"
+        fieldId="coverPhoto"
+        label="Cover Photo"
+        (coverPhotoNameChange)="handleCoverPhotoNameChange($event)"
+      ></app-labeled-input>
+
+      <app-labeled-input
+        [disabled]="true"
+        [label]="'Volume'"
+        [fieldId]="'volume'"
+        [fieldName]="'volume'"
+        [inputType]="'input'"
+        [inputControl]="getFormControlByName('volume')!"
+      ></app-labeled-input>
+
+      <app-labeled-input
+        [disabled]="true"
+        [label]="'Authors'"
+        [fieldId]="'authors'"
+        [inputType]="'app-search-input'"
+        [inputControl]="getFormControlByName('authors')!"
+        [optionTemplate]="optionTemplate"
+      ></app-labeled-input>
+      <ng-template #optionTemplate let-author>
+        <div class="author">
+          <img [src]="author.profilePhoto" class="profilePicMini" />
+          <div>{{ author.name }}</div>
+        </div>
+      </ng-template>
+      <app-labeled-input
+        [disabled]="true"
+        [label]="'Categories'"
+        [fieldId]="'categories'"
+        [fieldName]="'categories'"
+        [inputType]="'autocomplete'"
+        [inputControl]="getFormControlByName('categories')!"
+        [multiple]="true"
+      ></app-labeled-input>
+
+      <app-labeled-input
+        [disabled]="true"
+        [label]="'Call Number'"
+        [fieldId]="'callNumber'"
+        [fieldName]="'callNumber'"
+        [inputType]="'input'"
+        [inputControl]="getFormControlByName('callNumber')!"
+      ></app-labeled-input>
+
+      <app-labeled-input
+        [disabled]="true"
+        [label]="'Inventory Number'"
+        [fieldId]="'inventoryNumber'"
+        [fieldName]="'inventoryNumber'"
+        [inputType]="'input'"
+        [inputControl]="getFormControlByName('inventoryNumber')!"
+      ></app-labeled-input>
+
+      <app-labeled-input
+        [disabled]="true"
+        [label]="'Price'"
+        [fieldId]="'price'"
+        [fieldName]="'price'"
+        [inputType]="'input'"
+        [inputControl]="getFormControlByName('price')!"
+        [type]="'number'"
+        [required]="false"
+      ></app-labeled-input>
+
+      <app-labeled-input
+        [disabled]="true"
+        [label]="'School Inventory Number'"
+        [fieldId]="'schoolInventoryNumber'"
+        [fieldName]="'schoolInventoryNumber'"
+        [inputType]="'input'"
+        [inputControl]="getFormControlByName('schoolInventoryNumber')!"
+      ></app-labeled-input>
+
+      <app-labeled-input
+        [disabled]="true"
+        [label]="'Language'"
+        [fieldId]="'language'"
+        [fieldName]="'language'"
+        [inputType]="'autocomplete'"
+        [inputControl]="getFormControlByName('language')!"
+        [multiple]="false"
+      ></app-labeled-input>
+      <!-- <div *ngIf="noLanguageResultMessage.length > 0">
+          <p>
+            {{ noLanguageResultMessage }}
+            <a (click)="openLanguageAddModal()">Do you want to add one?</a>
+          </p>
+        </div> -->
+
+      <app-labeled-input
+        [disabled]="true"
+        [label]="'Publisher'"
+        [fieldId]="'publisher'"
+        [inputType]="'app-search-input'"
+        [inputControl]="getFormControlByName('publisher')!"
+        [multiple]="false"
+        [dataKey]="'name'"
+        [field]="'name'"
+      ></app-labeled-input>
+      <!-- <ng-template #optionTemplate2 let-publisher>
+          <div class="publisher">
+            <div>{{ publisher.name }}</div>
+          </div>
+        </ng-template>
+        <div *ngIf="noPublisherResultMessage.length > 0">
+          <p>
+            {{ noPublisherResultMessage }}
+            <a (click)="openPublisherAddModal()">Do you want to add one?</a>
+          </p>
+        </div> -->
+
+      <app-labeled-input
+        [disabled]="true"
+        [label]="'Binding'"
+        [fieldId]="'binding'"
+        [fieldName]="'binding'"
+        [inputType]="'autocomplete'"
+        [inputControl]="getFormControlByName('binding')!"
+        [dropdown]="true"
+        [multiple]="false"
+      ></app-labeled-input>
+
+      <app-labeled-input
+        [disabled]="true"
+        [label]="'Size'"
+        [fieldId]="'size'"
+        [fieldName]="'size'"
+        [inputType]="'input'"
+        [inputControl]="getFormControlByName('size')!"
+      ></app-labeled-input>
+
+      <app-labeled-input
+        [disabled]="true"
+        [label]="'Publication Date'"
+        [fieldId]="'publicationDate'"
+        [fieldName]="'publicationDate'"
+        [inputType]="'calendar'"
+        [inputControl]="getFormControlByName('publicationDate')!"
+        [required]="false"
+      ></app-labeled-input>
+
+      <app-labeled-input
+        [disabled]="true"
+        [label]="'Edition'"
+        [fieldId]="'edition'"
+        [fieldName]="'edition'"
+        [inputType]="'input'"
+        [inputControl]="getFormControlByName('edition')!"
+      ></app-labeled-input>
+
+      <app-labeled-input
+        [disabled]="true"
+        [label]="'Notes'"
+        [fieldId]="'notes'"
+        [fieldName]="'notes'"
+        [inputType]="'input'"
+        [inputControl]="getFormControlByName('notes')!"
+        [required]="false"
+      ></app-labeled-input>
+
+      <app-labeled-input
+        [disabled]="true"
+        [label]="'Acquisition Document'"
+        [fieldId]="'acquisitionDocumentEnum'"
+        [fieldName]="'acquisitionDocumentEnum'"
+        [inputType]="'autocomplete'"
+        [inputControl]="getFormControlByName('acquisitionDocumentEnum')!"
+        [dropdown]="true"
+        [multiple]="false"
+      ></app-labeled-input>
+      <p-confirmDialog></p-confirmDialog>
+
+      <p-button (click)="onSubmit()">Delete</p-button>
+    </form>
+  </div>
+</div>
