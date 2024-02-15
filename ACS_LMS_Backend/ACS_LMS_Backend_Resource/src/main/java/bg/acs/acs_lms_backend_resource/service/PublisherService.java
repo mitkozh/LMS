@@ -43,4 +43,16 @@ public class PublisherService {
         Publisher publisher = publisherRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         return this.modelMapper.map(publisher, PublisherDto.class);
     }
+
+    public Publisher findByPublisherNameOrCreate(String publisherName) {
+        if (publisherName != null && publisherName.length() > 0) {
+            Publisher publisher = publisherRepository.findByNameIgnoreCase(publisherName).orElse(null);
+            if (publisher == null) {
+                publisher = new Publisher(publisherName);
+                publisher = publisherRepository.saveAndFlush(publisher);
+            }
+            return publisher;        }
+        return null;
+    }
+
 }

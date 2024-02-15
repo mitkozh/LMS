@@ -28,7 +28,9 @@ public class ResourceServerConfig {
         return http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.GET, "/images/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/books/authors").permitAll()
                         .requestMatchers("/books/bestsellers", "/books/**").permitAll()
+                        .requestMatchers("/authors/**").permitAll()
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwt ->
@@ -36,7 +38,7 @@ public class ResourceServerConfig {
                             jwt.decoder(JwtDecoders.fromIssuerLocation(issuerUri));
                             jwt.jwtAuthenticationConverter(new KeycloakJwtAuthenticationConverter());
                         })
-                )
+                ).csrf(csrf->csrf.ignoringRequestMatchers("/books/authors"))
                 .build();
     }
 

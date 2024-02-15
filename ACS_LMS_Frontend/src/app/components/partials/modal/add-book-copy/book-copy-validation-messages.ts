@@ -9,12 +9,17 @@ export const bookValidationMessages: ValidationMessages = {
   callNumber: [
     { type: 'required', message: 'Call number is required' },
     { type: 'maxlength', message: 'Call number must not exceed 50 characters' },
+    { type: 'callNumberExists', message: 'Call number already in use' },
   ],
   inventoryNumber: [
     { type: 'required', message: 'Inventory number is required' },
     {
       type: 'maxlength',
       message: 'Inventory number must not exceed 50 characters',
+    },
+    {
+      type: 'inventoryNumberExists',
+      message: 'Inventory number must be unique',
     },
   ],
   schoolInventoryNumber: [

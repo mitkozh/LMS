@@ -49,6 +49,8 @@ import { AddAuthorComponent } from './components/partials/modal/add-author/add-a
 import { NgOnDestroyService } from './core/ng-on-destroy.service';
 import { ChipsModule } from 'primeng/chips';
 import { DividerModule } from 'primeng/divider';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+
 import { AvatarModule } from 'primeng/avatar';
 import { CdkMenuModule } from '@angular/cdk/menu';
 import { TabMenuModule } from 'primeng/tabmenu';
@@ -96,10 +98,15 @@ import { AuthEffects } from './feature-module/reducers/auth/auth.effects';
 import { OverlayModule } from 'primeng/overlay';
 import { BorrowABookComponent } from './components/pages/book-full/borrow-a-book/borrow-a-book.component';
 import { TranscationsComponent } from './components/pages/transcations/transcations.component';
-import { RESERVATION_SERVICE_CONFIG, ReservationService } from './core/reservation.service';
+import {
+  RESERVATION_SERVICE_CONFIG,
+  ReservationService,
+} from './core/reservation.service';
 import { PaginatorModule } from 'primeng/paginator';
 import { AuthorFullComponent } from './components/pages/author-full/author-full.component';
 import { EditBookComponent } from './components/partials/modal/edit-book/edit-book.component';
+import { DeleteBookComponent } from './components/partials/modal/delete-book/delete-book.component';
+import { ConfirmationService } from 'primeng/api';
 
 export function initializeKeycloak(
   keycloak: KeycloakService,
@@ -167,9 +174,11 @@ export function initializeKeycloak(
     TranscationsComponent,
     AuthorFullComponent,
     EditBookComponent,
+    DeleteBookComponent,
   ],
 
   imports: [
+    ConfirmDialogModule,
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
@@ -246,7 +255,7 @@ export function initializeKeycloak(
       provide: ReservationService,
       useClass: ReservationService,
       deps: [HttpClient, RESERVATION_SERVICE_CONFIG],
-    },    
+    },
     {
       provide: CATEGORY_SERVICE_CONFIG,
       useValue: { resourceEndpoint: 'categories' },
@@ -260,6 +269,7 @@ export function initializeKeycloak(
       provide: AUTHOR_SERVICE_CONFIG,
       useValue: { resourceEndpoint: 'authors' },
     },
+    [ConfirmationService],
     {
       provide: AuthorService,
       useClass: AuthorService,

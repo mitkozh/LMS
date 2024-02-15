@@ -31,6 +31,8 @@ export const bookValidationMessages: ValidationMessages = {
       type: 'maxlength',
       message: 'Inventory number must not exceed 50 characters',
     },
+    { type: 'inventoryNumberExists', message: 'Inventory number must be unique' },
+
   ],
   schoolInventoryNumber: [
     { type: 'required', message: 'School inventory number is required' },
@@ -38,6 +40,7 @@ export const bookValidationMessages: ValidationMessages = {
       type: 'maxlength',
       message: 'School inventory number must not exceed 50 characters',
     },
+
   ],
   language: [{ type: 'required', message: 'Language is required' }],
   publisher: [{ type: 'required', message: 'Publisher is required' }],

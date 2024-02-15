@@ -12,16 +12,16 @@
   [inputStyleClass]="'p-autoComplete-override'"
   [forceSelection]="forceSelection"
 >
-    <ng-template let-value pTemplate="selectedItem">
-      <ng-container
-        [ngTemplateOutlet]="optionTemplate"
-        [ngTemplateOutletContext]="{ $implicit: value }"
-      ></ng-container>
-    </ng-template>
-    <ng-template let-searchedItem pTemplate="item">
-      <ng-container
-        [ngTemplateOutlet]="optionTemplate"
-        [ngTemplateOutletContext]="{ $implicit: searchedItem }"
-      ></ng-container>
+  <ng-template let-value pTemplate="selectedItem">
+    <ng-container
+      [ngTemplateOutlet]="optionTemplate"
+      [ngTemplateOutletContext]="{ $implicit: value }"
+    ></ng-container>
+  </ng-template>
+  <ng-template let-searchedItem pTemplate="item">
+    <ng-container
+      [ngTemplateOutlet]="optionTemplate"
+      [ngTemplateOutletContext]="{ $implicit: searchedItem }"
+    ></ng-container>
   </ng-template>
 </p-autoComplete>

@@ -47,6 +47,7 @@
       [ngClass]="{ 'ng-dirty': shouldShowError() }"
     ></textarea>
     <p-calendar
+      dateFormat="yy-mm-dd"
       *ngSwitchCase="'calendar'"
       [id]="fieldId"
       [formControl]="inputControl"
@@ -55,6 +56,7 @@
     ></p-calendar>
     <div *ngSwitchCase="'file-upload'">
       <p-fileUpload
+        *ngIf="!disabled"
         id="image"
         [url]="imageService.getUploadImageUrl()"
         name="image"
@@ -63,7 +65,12 @@
         method="post"
         [multiple]="false"
       ></p-fileUpload>
-      <img *ngIf="photo" [src]="photo" class="photo" />
+      <img
+        *ngIf="photo"
+        [ngClass]="{ disabled: disabled }"
+        [src]="photo"
+        class="photo"
+      />
     </div>
   </ng-container>
   <div class="error-wrapper" *ngFor="let validation of validationMessages">

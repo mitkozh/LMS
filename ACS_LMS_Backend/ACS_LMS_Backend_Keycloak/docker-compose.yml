@@ -1,9 +1,9 @@
-version: '3.8'
+version: "3.8"
 
 services:
   keycloak_demo:
     image: keycloak-app
-    command: start-dev
+    command: -v start-dev --import-realm
     environment:
       KC_DB: postgres
       KC_DB_URL_HOST: postgres_keycloak_demo
@@ -16,15 +16,18 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - postgres_keycloak_demo 
+      - postgres_keycloak_demo
     networks:
       - keycloak_demo_dev_network
+    volumes:
+      - ./keycloak:/opt/keycloak/data/import
 
   postgres_keycloak_demo:
     image: postgres:14.2
     command: postgres -c 'max_connections=200'
     volumes:
       - pqdata_keycloak_demo:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     environment:
       POSTGRES_DB: keycloak
       PGUSER: keycloak

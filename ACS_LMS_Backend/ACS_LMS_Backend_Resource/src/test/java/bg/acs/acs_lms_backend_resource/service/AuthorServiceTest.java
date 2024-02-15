@@ -12,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -65,7 +66,7 @@ public class AuthorServiceTest {
     }
 
     @Test
-    public void getAuthorByNameTest() {
+    public void getAuthorByNameTest() throws IOException {
         when(authorRepository.findByName(anyString())).thenReturn(Optional.of(author));
         when(modelMapper.map(any(Author.class), any())).thenReturn(authorShortDto);
 

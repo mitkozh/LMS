@@ -84,6 +84,7 @@ export class LabeledInputComponent implements ControlValueAccessor {
   @Output() completeMethod = new EventEmitter<any>();
   @Output()
   public coverPhotoNameChange = new EventEmitter<number>();
+
   @Input()
   photo: any | undefined;
 
