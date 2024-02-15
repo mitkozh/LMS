@@ -20,7 +20,7 @@ public class Author extends BaseEntity{
     @Column(name = "name", length = 100, nullable = false)
     private String name;
 
-    @Column(name = "description", length = 100, nullable = false)
+    @Column(name = "description", length = 100)
 
     private String description;
 

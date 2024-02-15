@@ -13,6 +13,7 @@ import org.modelmapper.ModelMapper;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -65,7 +66,7 @@ public class LanguageServiceTest {
 
     @Test
     public void testGetByLanguageCodeDto() {
-        when(languageRepository.findByLanguageCodeIgnoreCase("en")).thenReturn(language);
+        when(languageRepository.findByLanguageCodeIgnoreCase("en")).thenReturn(Optional.ofNullable(language));
         when(modelMapper.map(language, LanguageDto.class)).thenReturn(languageDto);
 
         LanguageDto result = languageService.getByLanguageCodeDto("en");
