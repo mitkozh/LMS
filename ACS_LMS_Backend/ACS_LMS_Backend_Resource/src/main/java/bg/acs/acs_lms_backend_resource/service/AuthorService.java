@@ -5,10 +5,8 @@ import bg.acs.acs_lms_backend_resource.model.dto.ImageDto;
 import bg.acs.acs_lms_backend_resource.model.entity.Author;
 import bg.acs.acs_lms_backend_resource.model.entity.Image;
 import bg.acs.acs_lms_backend_resource.repository.AuthorRepository;
-import bg.acs.acs_lms_backend_resource.repository.ImageRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
-import jakarta.validation.constraints.Null;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -89,5 +87,11 @@ public class AuthorService {
     public AuthorShortDto getAuthorById(Long id) {
         Author author = authorRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         return mapAuthorToAuthorShortDto(author);
+    }
+
+    public AuthorShortDto updateAuthor(Long id, AuthorShortDto authorShortDto) {
+        Author author = mapAuthorShortDtoToAuthor(authorShortDto);
+        return mapAuthorToAuthorShortDto(authorRepository.save(author));
+
     }
 }

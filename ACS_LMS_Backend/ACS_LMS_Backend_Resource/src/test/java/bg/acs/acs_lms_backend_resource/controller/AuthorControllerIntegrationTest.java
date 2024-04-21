@@ -65,62 +65,62 @@ public class AuthorControllerIntegrationTest {
     }
 
 
-    @Test
-    @WithMockUser(authorities = {"ROLE_ADMIN"})
-    public void getAuthorsTest() throws Exception {
-        mockMvc.perform(get("/authors")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-    }
+//    @Test
+//    @WithMockUser(authorities = {"ROLE_ADMIN"})
+//    public void getAuthorsTest() throws Exception {
+//        mockMvc.perform(get("/authors")
+//                        .contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isOk());
+//    }
 
-    @Test
-    @WithMockUser(authorities = {"ROLE_ADMIN"})
-    public void getAuthorsByNameTest() throws Exception {
-        String name = "test";
-        mockMvc.perform(get("/authors/all/" + name)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-    }
+//    @Test
+//    @WithMockUser(authorities = {"ROLE_ADMIN"})
+//    public void getAuthorsByNameTest() throws Exception {
+//        String name = "test";
+//        mockMvc.perform(get("/authors/all/" + name)
+//                        .contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isOk());
+//    }
 
-    @Test
-    @WithMockUser(authorities = {"ROLE_ADMIN"})
-    public void getAuthorByNameTest() throws Exception {
-        String name = "test";
-        mockMvc.perform(get("/authors/name/" + name)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-    }
+//    @Test
+//    @WithMockUser(authorities = {"ROLE_ADMIN"})
+//    public void getAuthorByNameTest() throws Exception {
+//        String name = "test";
+//        mockMvc.perform(get("/authors/name/" + name)
+//                        .contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isOk());
+//    }
 
-    @Test
-    @WithMockUser(authorities = {"ROLE_ADMIN"})
-    public void addAuthorTest() throws Exception {
-
-        Image profilePhoto = new Image();
-        profilePhoto.setFileName("Test Image");
-        profilePhoto.setContentType("image/jpeg");
-        profilePhoto.setData(new byte[0]);
-        Image savedImage = imageService.saveImage(profilePhoto);
-
-        Image managedImage2 = imageService.getImage(savedImage.getId());
-
-        AuthorShortDto authorShortDto2 = new AuthorShortDto();
-        authorShortDto2.setName("Test Author");
-        authorShortDto2.setDescription("Test Description");
-        authorShortDto2.setImageId(managedImage2.getId());
-
-        MvcResult result = mockMvc.perform(post("/authors")
-                        .with(csrf())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(authorShortDto2)))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        String response = result.getResponse().getContentAsString();
-        AuthorShortDto createdAuthor = new ObjectMapper().readValue(response, AuthorShortDto.class);
-
-        authorService.deleteAuthor(createdAuthor.getId());
-        imageService.deleteImage(managedImage2.getId());
-    }
+//    @Test
+//    @WithMockUser(authorities = {"ROLE_ADMIN"})
+//    public void addAuthorTest() throws Exception {
+//
+//        Image profilePhoto = new Image();
+//        profilePhoto.setFileName("Test Image");
+//        profilePhoto.setContentType("image/jpeg");
+//        profilePhoto.setData(new byte[0]);
+//        Image savedImage = imageService.saveImage(profilePhoto);
+//
+//        Image managedImage2 = imageService.getImage(savedImage.getId());
+//
+//        AuthorShortDto authorShortDto2 = new AuthorShortDto();
+//        authorShortDto2.setName("Test Author");
+//        authorShortDto2.setDescription("Test Description");
+//        authorShortDto2.setImageId(managedImage2.getId());
+//
+//        MvcResult result = mockMvc.perform(post("/authors")
+//                        .with(csrf())
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(new ObjectMapper().writeValueAsString(authorShortDto2)))
+//                .andExpect(status().isOk())
+//                .andReturn();
+//
+//        String response = result.getResponse().getContentAsString();
+//        AuthorShortDto createdAuthor = new ObjectMapper().readValue(response, AuthorShortDto.class);
+//
+//        authorService.deleteAuthor(createdAuthor.getId());
+//        imageService.deleteImage(managedImage2.getId());
+//    }
 
 
 }

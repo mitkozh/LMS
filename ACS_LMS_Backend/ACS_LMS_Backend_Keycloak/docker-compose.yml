@@ -2,6 +2,8 @@ version: "3.8"
 
 services:
   keycloak_demo:
+    container_name: keycloak
+    hostname: ${KC_HOSTNAME}
     image: keycloak-app
     command: -v start-dev --import-realm
     environment:
@@ -13,12 +15,17 @@ services:
       KC_DB_SCHEMA: public
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_HOSTNAME: ${KC_HOSTNAME}
+      KC_HTTP_PORT: 9080
+      KEYCLOAK_FRONTEND_URL: ${KEYCLOAK_FRONTEND_URL}
+      EXTRA_STARTUP_ARGS: |
+        - Dkeycloak.frontendUrl=${KEYCLOAK_FRONTEND_URL}
     ports:
-      - "8080:8080"
+      - "9080:9080"
     depends_on:
       - postgres_keycloak_demo
     networks:
-      - keycloak_demo_dev_network
+      - common_network
     volumes:
       - ./keycloak:/opt/keycloak/data/import
 
@@ -40,11 +47,11 @@ services:
     ports:
       - "5436:5432"
     networks:
-      - keycloak_demo_dev_network
+      - common_network
 
 volumes:
   pqdata_keycloak_demo:
 
 networks:
-  keycloak_demo_dev_network:
-    driver: bridge
+  common_network:
+    name: common_network

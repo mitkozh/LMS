@@ -1,0 +1,38 @@
+#when in prod, change the keycloak frontend_url to http://keycloak:9080
+frontend_url: "http://localhost"
+
+server:
+  port: 8080
+
+
+spring:
+  servlet:
+    multipart:
+      max-file-size: 1MB
+      max-request-size: 10MB
+  application.name: backend-resources
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://postgres:5432/acs_library?allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true&serverTimezone=UTC
+    username: ${POSTGRESDB_USER}
+    password: ${POSTGRESDB_ROOT_PASSWORD}
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    defer-datasource-initialization: true
+  sql:
+    init:
+      mode: always
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri:  http://keycloak:9080/realms/ACS_TEST
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    org.springframework.security.web: DEBUG
+

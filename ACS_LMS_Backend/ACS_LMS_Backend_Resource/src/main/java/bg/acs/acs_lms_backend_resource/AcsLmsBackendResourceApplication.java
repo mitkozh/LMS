@@ -3,6 +3,8 @@ package bg.acs.acs_lms_backend_resource;
 import bg.acs.acs_lms_backend_resource.model.entity.Category;
 import bg.acs.acs_lms_backend_resource.service.CategoryService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -17,12 +19,14 @@ import java.util.Set;
 @RequiredArgsConstructor
 @EnableCaching
 @EnableScheduling
-
+@Log4j2
 public class AcsLmsBackendResourceApplication implements CommandLineRunner {
 
 	private final CategoryService categoryService;
 
+
 	public static void main(String[] args) {
+
 		SpringApplication.run(AcsLmsBackendResourceApplication.class, args);
 	}
 

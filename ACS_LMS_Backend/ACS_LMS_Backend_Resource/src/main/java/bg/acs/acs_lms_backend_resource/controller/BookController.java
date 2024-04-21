@@ -1,7 +1,6 @@
 package bg.acs.acs_lms_backend_resource.controller;
 
 import bg.acs.acs_lms_backend_resource.model.dto.*;
-import bg.acs.acs_lms_backend_resource.model.entity.Book;
 import bg.acs.acs_lms_backend_resource.service.BookAPIService;
 import bg.acs.acs_lms_backend_resource.service.BookService;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +16,7 @@ import java.util.Optional;
 import java.util.Set;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = {"${frontend_url}"})
 @RequiredArgsConstructor
 @RequestMapping("books")
 public class BookController {
@@ -84,6 +83,17 @@ public class BookController {
     }
 
 
+    @GetMapping("book/free-copy/{id}")
+    public ResponseEntity<Set<Long>> getFreeBookCopyIdsByBookId(@PathVariable Long id) {
+        Set<Long> freeBookCopiesByBookId = bookService.getFreeBookCopiesByBookId(id);
+        if (!freeBookCopiesByBookId.isEmpty()) {
+            return ResponseEntity.ok(freeBookCopiesByBookId);
+        }
+        return ResponseEntity.noContent().build();
+    }
+
+
+
     @DeleteMapping("/{bookId}/{bookCopyId}")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_LIBRARIAN')")
     public ResponseEntity<Boolean> deleteBookByBookIdAndBookCopyId(@PathVariable Long bookId, @PathVariable Long bookCopyId) {
@@ -115,6 +125,14 @@ public class BookController {
         return ResponseEntity.ok(books);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<BookShortDto> getBook(@PathVariable Long id) {
+        BookShortDto bookShortDto = bookService.getBookById(id);
+        if (bookShortDto != null) {
+            return ResponseEntity.ok(bookShortDto);
+        }
+        return ResponseEntity.noContent().build();
+    }
 
     @PostMapping("authors")
     public ResponseEntity<Set<BookShortDto>> getBooksByAuthorsIds(@RequestBody List<Long> ids) {
@@ -162,7 +180,7 @@ public class BookController {
 
     @GetMapping("has-reservations/{bookId}")
     public ResponseEntity<ReservationDto> hasReservationForBook(@PathVariable Long bookId) {
-        Optional<ReservationDto> reservation = bookService.hasReservationsForBook(bookId);
+        Optional<ReservationDto> reservation = bookService.hasActiveReservationsForBookAndHasNotBorrower(bookId);
         return reservation.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.noContent().build());
     }
 

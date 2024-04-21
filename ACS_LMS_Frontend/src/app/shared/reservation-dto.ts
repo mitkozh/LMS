@@ -3,5 +3,8 @@ export interface ReservationDto {
     userEmail: string;
     bookCopyId: number;
     reservationDate: Date;
+    dueDate: Date;
+    bookId: number;  
+    bookName: string;
   }
   

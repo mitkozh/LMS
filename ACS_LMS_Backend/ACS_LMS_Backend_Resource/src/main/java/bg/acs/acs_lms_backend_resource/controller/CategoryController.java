@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Set;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = {"${frontend_url}"})
 @RequiredArgsConstructor
 @RequestMapping("categories")
 public class CategoryController {

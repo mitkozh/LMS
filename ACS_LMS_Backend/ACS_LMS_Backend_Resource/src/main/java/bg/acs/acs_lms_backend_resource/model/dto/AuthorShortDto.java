@@ -16,7 +16,7 @@ public class AuthorShortDto {
 
     private Long id;
 
-    @NotBlank(message = "Name code is required!")
+
     @Size(max = 50, message = "Name must not exceed 50 characters")
     private String name;
 

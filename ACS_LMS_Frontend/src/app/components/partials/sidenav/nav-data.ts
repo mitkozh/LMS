@@ -18,6 +18,11 @@ export const navbarData: INavbarData[] = [
         routeLink: 'books/categories',
         label: 'Book Categories',
       },
+      {
+        routeLink: 'reservations',
+        label: 'Reservations',
+        requiredRoles: [roles.ROLE_ADMIN, roles.ROLE_LIBRARIAN],
+      },
     ],
   },
   {

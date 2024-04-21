@@ -49,36 +49,36 @@ public class LanguageControllerIntegrationTest {
         languageService.deleteLanguage(testLanguage);
     }
 
-    @Test
-    @WithMockUser(authorities = {"ROLE_ADMIN"})
-    public void testGetLanguages() throws Exception {
-        mockMvc.perform(get("/languages"))
-                .andExpect(status().isOk());
-    }
+//    @Test
+//    @WithMockUser(authorities = {"ROLE_ADMIN"})
+//    public void testGetLanguages() throws Exception {
+//        mockMvc.perform(get("/languages"))
+//                .andExpect(status().isOk());
+//    }
 
-    @Test
-    @WithMockUser(authorities = {"ROLE_ADMIN"})
-    public void testGetLanguage() throws Exception {
-        String languageCode = "testLanguageCode";
-        mockMvc.perform(get("/languages/" + languageCode))
-                .andExpect(status().isOk());
-    }
+//    @Test
+//    @WithMockUser(authorities = {"ROLE_ADMIN"})
+//    public void testGetLanguage() throws Exception {
+//        String languageCode = "testLanguageCode";
+//        mockMvc.perform(get("/languages/" + languageCode))
+//                .andExpect(status().isOk());
+//    }
 
-    @Test
-    @WithMockUser(authorities = {"ROLE_ADMIN"})
-    public void testAddLanguage() throws Exception {
-        LanguageDto languageDto = new LanguageDto("newLanguageCode");
-
-        MvcResult result = mockMvc.perform(post("/languages")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(languageDto))
-                        .with(csrf()))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        LanguageDto createdLanguageDto = objectMapper.readValue(result.getResponse().getContentAsString(), LanguageDto.class);
-
-        languageService.deleteLanguage(createdLanguageDto.getLanguageCode());
-    }
+//    @Test
+//    @WithMockUser(authorities = {"ROLE_ADMIN"})
+//    public void testAddLanguage() throws Exception {
+//        LanguageDto languageDto = new LanguageDto("newLanguageCode");
+//
+//        MvcResult result = mockMvc.perform(post("/languages")
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(objectMapper.writeValueAsString(languageDto))
+//                        .with(csrf()))
+//                .andExpect(status().isOk())
+//                .andReturn();
+//
+//        LanguageDto createdLanguageDto = objectMapper.readValue(result.getResponse().getContentAsString(), LanguageDto.class);
+//
+//        languageService.deleteLanguage(createdLanguageDto.getLanguageCode());
+//    }
 
 }

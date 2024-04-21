@@ -1,4 +1,3 @@
-import { LoginModalComponent } from './../../partials/modal/login/login-modal/login-modal.component';
 import {
   Component,
   Inject,
@@ -72,22 +71,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     });
   }
 
-  openLoginModal() {
-    // const modalRef = this.modalService.open(LoginModalComponent);
-    this.ref = this.dialogService.open(LoginModalComponent, {
-      header: 'Login',
-      width: '30%',
-      height: '80%',
-      contentStyle: { overflow: 'auto' },
-      baseZIndex: 10000,
-      draggable: true,
-      closeOnEscape: false,
-    });
-
-    this.ref.onClose.subscribe(() => {
-      console.log('close');
-    });
-  }
 
   fetchReservations(): void {
     this.reservationService

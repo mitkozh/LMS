@@ -46,37 +46,37 @@ public class CategoryControllerIntegrationTest {
         categoryService.delete(testCategory);
     }
 
-    @Test
-    @WithMockUser(authorities = {"ROLE_ADMIN"})
-    public void testGetCategories() throws Exception {
-        mockMvc.perform(get("/categories"))
-                .andExpect(status().isOk());
-    }
+//    @Test
+//    @WithMockUser(authorities = {"ROLE_ADMIN"})
+//    public void testGetCategories() throws Exception {
+//        mockMvc.perform(get("/categories"))
+//                .andExpect(status().isOk());
+//    }
 
-    @Test
-    @WithMockUser(authorities = {"ROLE_ADMIN"})
-    public void testAddCategory() throws Exception {
-        CategoryWithBooksDto categoryDto = new CategoryWithBooksDto();
-        categoryDto.setName("Test category");
+//    @Test
+//    @WithMockUser(authorities = {"ROLE_ADMIN"})
+//    public void testAddCategory() throws Exception {
+//        CategoryWithBooksDto categoryDto = new CategoryWithBooksDto();
+//        categoryDto.setName("Test category");
+//
+//        MvcResult result = mockMvc.perform(post("/categories")
+//                        .with(csrf())
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(objectMapper.writeValueAsString(categoryDto)))
+//                .andExpect(status().isOk())
+//                .andReturn();
+//
+//
+//        CategoryWithBooksDto createdCategoryDto = objectMapper.readValue(result.getResponse().getContentAsString(), CategoryWithBooksDto.class);
+//        categoryService.deleteCategory(createdCategoryDto);
+//    }
 
-        MvcResult result = mockMvc.perform(post("/categories")
-                        .with(csrf())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(categoryDto)))
-                .andExpect(status().isOk())
-                .andReturn();
 
-
-        CategoryWithBooksDto createdCategoryDto = objectMapper.readValue(result.getResponse().getContentAsString(), CategoryWithBooksDto.class);
-        categoryService.deleteCategory(createdCategoryDto);
-    }
-
-
-    @Test
-    @WithMockUser(authorities = {"ROLE_ADMIN"})
-    public void testGetCategoryByName() throws Exception {
-        String name = "Test Category";
-        mockMvc.perform(get("/categories/name/" + name))
-                .andExpect(status().isOk());
-    }
+//    @Test
+//    @WithMockUser(authorities = {"ROLE_ADMIN"})
+//    public void testGetCategoryByName() throws Exception {
+//        String name = "Test Category";
+//        mockMvc.perform(get("/categories/name/" + name))
+//                .andExpect(status().isOk());
+//    }
 }

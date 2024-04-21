@@ -27,7 +27,7 @@ import { LanguageService } from 'app/core/language.service';
 import { AuthorService } from 'app/core/author.service';
 import { CategoryService } from 'app/core/category.service';
 import { PublisherService } from 'app/core/publisher.service';
-import { callNumberExistsValidator } from '../book-add/call-number-exists-validator';
+import { callNumberExistsValidator } from '../../../../validators/call-number-exists-validator';
 import { Language } from 'app/shared/language';
 import { CategoryWithBooks } from 'app/shared/category-with-books';
 import { Publisher } from 'app/shared/publisher';
@@ -196,7 +196,6 @@ export class DeleteBookComponent {
           authors: authorsSaved,
         })
     );
-    console.log([...selectedBook.authors]);
     this.form.patchValue({
       title: selectedBook.title,
       description: selectedBook.description,

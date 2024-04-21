@@ -5,14 +5,16 @@ import { GenericService } from 'app/core/generic.service';
 import { Author } from 'app/shared/author';
 import { AuthorShortDto } from 'app/shared/author-dto';
 import { AddAuthorDto } from './add-author-dto';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import {
   FileSelectEvent,
   FileUploadEvent,
   FileUploadHandlerEvent,
 } from 'primeng/fileupload';
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { DynamicDialogConfig } from 'primeng/dynamicdialog';
+import { ValidationMessages } from 'app/shared/validation-messages';
+import { authorValidationMessages } from './author-validation-messeges';
 
 @Component({
   selector: 'app-add-author',
@@ -31,7 +33,7 @@ import { DynamicDialogConfig } from 'primeng/dynamicdialog';
 })
 export class AddAuthorComponent implements OnInit {
   imageId: number | undefined;
-  profilePic: any | undefined;
+  profilePic: SafeUrl | undefined;
   onSubmitEntity$!: EventEmitter<AuthorShortDto>;
 
   constructor(
@@ -46,6 +48,8 @@ export class AddAuthorComponent implements OnInit {
     this.onSubmitEntity$ = this.config.data.onSubmitEntity$;
   }
 
+  authorValidationMessages: ValidationMessages = authorValidationMessages;
+
   form = this.fb.group({
     name: ['', Validators.required],
     description: [''],
@@ -59,6 +63,9 @@ export class AddAuthorComponent implements OnInit {
     };
   }
 
+  handleAuthorPhotoNameChange(newImageId: number) {
+    this.imageId = newImageId;
+  }
   onSubmitAuthor() {
     if (this.form.valid) {
       const authorData: AddAuthorDto = this.mapFormToAuthorAddDto(
@@ -70,25 +77,17 @@ export class AddAuthorComponent implements OnInit {
         }
       });
     } else {
+      Object.keys(this.form.controls).forEach((field) => {
+        let control = this.getFormControlByName(field);
+        control?.updateValueAndValidity();
+        control?.markAllAsTouched();
+    });
     }
   }
 
-  onFileUpload(fileEvent: FileUploadHandlerEvent) {
-    if (fileEvent.files.length === 1) {
-      let responseType: any;
-      let file: File = fileEvent.files[0];
-      this.imageService.uploadImage(file).subscribe((res) => {
-        this.imageId = res.id;
-        responseType = res.type;
-        this.imageService
-          .getImage(this.imageId as number)
-          .subscribe((profilePic) => {
-            this.profilePic = this.sanitizer.bypassSecurityTrustUrl(
-              URL.createObjectURL(profilePic)
-            );
-          });
-      });
-    } else {
-    }
+
+  getFormControlByName(name: string): FormControl | null {
+    return this.form?.get(name) as FormControl | null;
   }
+  
 }

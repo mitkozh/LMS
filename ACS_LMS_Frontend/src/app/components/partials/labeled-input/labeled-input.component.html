@@ -50,9 +50,12 @@
       dateFormat="yy-mm-dd"
       *ngSwitchCase="'calendar'"
       [id]="fieldId"
+      [touchUI]="touchUI"
       [formControl]="inputControl"
+      appendTo="body"
       [ngClass]="{ 'ng-dirty': shouldShowError() }"
       [styleClass]="'p-autoComplete-override'"
+      [baseZIndex]="100000"
     ></p-calendar>
     <div *ngSwitchCase="'file-upload'">
       <p-fileUpload

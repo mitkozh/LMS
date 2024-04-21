@@ -7,6 +7,8 @@ import {
   TemplateRef,
   ViewChild,
   forwardRef,
+  SimpleChanges,
+  OnChanges,
 } from '@angular/core';
 import {
   AbstractControl,
@@ -26,7 +28,7 @@ import {
   noop,
   takeUntil,
 } from 'rxjs';
-import { callNumberExistsValidator } from '../modal/book-add/call-number-exists-validator';
+import { callNumberExistsValidator } from '../../../validators/call-number-exists-validator';
 
 @Component({
   selector: 'app-labeled-input',
@@ -40,11 +42,15 @@ import { callNumberExistsValidator } from '../modal/book-add/call-number-exists-
     },
   ],
 })
-export class LabeledInputComponent implements ControlValueAccessor {
+export class LabeledInputComponent implements ControlValueAccessor, OnChanges {
 
   hasSelectedFile: boolean| undefined;
+
   @Input()
-  public inputControl: FormControl = new FormControl();
+  public disabled = false;
+
+  @Input()
+  public inputControl: FormControl = new FormControl({value: null as any, disabled: this.disabled});
 
   @ViewChild(AutoComplete, { static: false })
   autoComplete!: AutoComplete;
@@ -53,8 +59,7 @@ export class LabeledInputComponent implements ControlValueAccessor {
   public label?: string;
   @Input()
   public required = true;
-  @Input()
-  public disabled = false;
+
   @Input()
   public value: any = [];
 
@@ -80,6 +85,7 @@ export class LabeledInputComponent implements ControlValueAccessor {
   @Input() forceSelection = true;
   @Input() type = 'text';
   @Input() dataKey = 'id';
+  @Input() touchUI = false;
   @Input() dropdown = false;
   @Output() completeMethod = new EventEmitter<any>();
   @Output()
@@ -126,6 +132,13 @@ export class LabeledInputComponent implements ControlValueAccessor {
     this.onTouched = fn;
     this.inputControl.valueChanges.subscribe(() => fn());
   }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['disabled']) {
+      this.setDisabledState(changes['disabled'].currentValue);
+    }
+  }
+  
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
