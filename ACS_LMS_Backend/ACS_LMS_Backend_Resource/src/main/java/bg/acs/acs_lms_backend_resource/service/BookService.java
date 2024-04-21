@@ -2,10 +2,7 @@ package bg.acs.acs_lms_backend_resource.service;
 
 import bg.acs.acs_lms_backend_resource.model.dto.*;
 import bg.acs.acs_lms_backend_resource.model.entity.*;
-import bg.acs.acs_lms_backend_resource.repository.BookCopyRepository;
-import bg.acs.acs_lms_backend_resource.repository.BookRepository;
-import bg.acs.acs_lms_backend_resource.repository.CategoryRepository;
-import bg.acs.acs_lms_backend_resource.repository.ImageRepository;
+import bg.acs.acs_lms_backend_resource.repository.*;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -15,10 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,6 +25,8 @@ public class BookService {
 
     private final AuthorService authorService;
 
+    private final CheckoutRepository checkoutRepository;
+
     private final CategoryRepository categoryRepository;
 
     private final ImageRepository imageRepository;
@@ -42,6 +38,7 @@ public class BookService {
     private final UserService userService;
 
     private final ReservationService reservationService;
+    private final ReservationRepository reservationRepository;
 
     @Transactional
     public BookShortDto saveBook(BookAddDto bookAddDto){
@@ -55,15 +52,19 @@ public class BookService {
     }
 
 
-    public Set<BookShortDto> getBooksShort(){
-        return bookRepository.findAll().stream().map(this::mapBookToBookShortDto).collect(Collectors.toSet());
+    public Set<BookShortDto> getBooksShort() {
+        return bookRepository.findAllByDeletedIsFalse().stream()
+                .map(this::mapBookToBookShortDto)
+                .collect(Collectors.toSet());
     }
 
-    public Set<BookShortDto> getBooksByCategory(Category category){
-        return bookRepository.findAllByCategoriesContaining(category)
+    public Set<BookShortDto> getBooksByCategory(Category category) {
+        Set<BookShortDto> books =  bookRepository.findAllByCategoriesContainingAndDeletedIsFalse(category)
                 .stream()
                 .map(this::mapBookToBookShortDto)
                 .collect(Collectors.toSet());
+
+        return books;
     }
 
 
@@ -95,6 +96,10 @@ public class BookService {
     }
 
     public Book mapBookAddDtoToBook(BookAddDto bookAddDto) {
+        return getBook(bookAddDto);
+    }
+
+    private Book getBook(BookAddDto bookAddDto) {
         Book book = modelMapper.map(bookAddDto, Book.class);
         book.setAuthors(authorService.getAuthorsByIds(bookAddDto.getAuthors()));
         book.setCategories(mapCategoryNamesToCategories(bookAddDto.getCategories()));
@@ -106,11 +111,7 @@ public class BookService {
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         modelMapper.typeMap(BookUpdateDto.class, Book.class)
                 .addMappings(mapper -> mapper.map(BookUpdateDto::getBookId, Book::setId));
-        Book book = modelMapper.map(bookUpdateDto, Book.class);
-        book.setAuthors(authorService.getAuthorsByIds(bookUpdateDto.getAuthors()));
-        book.setCategories(mapCategoryNamesToCategories(bookUpdateDto.getCategories()));
-        book.setCoverPhoto(imageRepository.findById(bookUpdateDto.getImageId()).orElseThrow(EntityNotFoundException::new));
-        return book;
+        return getBook(bookUpdateDto);
     }
 
 
@@ -123,7 +124,7 @@ public class BookService {
     public Set<BookShortDto> getBooksBestSellers(int topN) {
         List<Map<String, Object>> bestSellersData = bookCopyRepository.findTopNBestSellers(PageRequest.of(0,topN));
         List<Book> booksToBeMapped;
-        if (bestSellersData.isEmpty()){
+        if (bestSellersData.size()<topN){
             booksToBeMapped = bookRepository.findAll(PageRequest.of(0, topN)).stream().toList();
         }
         else {
@@ -209,11 +210,14 @@ public class BookService {
     }
 
     public Set<BookShortDto> getBooksByTitle(String title) {
-        return bookRepository.getAllByTitleContainsIgnoreCase(title).stream().map(this::mapBookToBookShortDto).collect(Collectors.toSet());
+        return bookRepository.getAllByTitleContainsIgnoreCaseAndDeletedIsFalse(title)
+                .stream()
+                .map(this::mapBookToBookShortDto)
+                .collect(Collectors.toSet());
     }
 
     public Set<BookShortDto> getBooksByAuthorsIds(List<Long> ids) {
-        return bookRepository.findAllByAuthorIds(ids)
+        return bookRepository.findAllByAuthorIdsAndDeletedIsFalse(ids)
                 .stream()
                 .map(this::mapBookToBookShortDto)
                 .collect(Collectors.toSet());
@@ -226,7 +230,7 @@ public class BookService {
 
     @Transactional
     public Optional<ReservationDto> reserveBook(Long bookId) {
-        if (hasReservationsForBook(bookId).isPresent()) {
+        if (hasActiveReservationsForBookAndHasNotBorrower(bookId).isPresent()) {
             throw new IllegalStateException("User has already reserved this book");
         }
 
@@ -244,10 +248,10 @@ public class BookService {
         return Optional.empty();
     }
 
-    public Optional<ReservationDto> hasReservationsForBook(Long bookId){
+    public Optional<ReservationDto> hasActiveReservationsForBookAndHasNotBorrower(Long bookId){
         List<BookCopy> allByBookId = bookCopyRepository.findAllByBookId(bookId);
         for (BookCopy copy : allByBookId){
-            Optional<ReservationDto> reservation = reservationService.getReservationByUserAndBookCopy(copy, userService.getCurrentUser());
+            Optional<ReservationDto> reservation = reservationService.getActiveReservationByUserAndBookCopy(copy, userService.getCurrentUser());
             if (reservation.isPresent()){
                 return reservation;
             }
@@ -256,12 +260,15 @@ public class BookService {
     }
 
     public List<BookCopy> booksAvailable(Long bookId){
-        return bookCopyRepository.findAvailableCopiesByBookId(bookId).stream().toList();
+        return getFreeBookCopiesByBookId(bookId)
+                .stream()
+                .map(bId->bookCopyRepository.findById(bId).orElseThrow(EntityNotFoundException::new))
+                .collect(Collectors.toList());
     }
 
 
     public boolean areBooksAvailable(Long bookId){
-        return !booksAvailable(bookId).isEmpty();
+        return !getFreeBookCopiesByBookId(bookId).isEmpty();
     }
 
 
@@ -287,18 +294,55 @@ public class BookService {
 
     @Transactional
     public Boolean deleteBookByBookIdAndBookCopyId(Long bookId, Long bookCopyId) {
-        bookCopyRepository.deleteById(bookCopyId);
+        BookCopy bookCopy = bookCopyRepository.findById(bookCopyId)
+                .orElseThrow(EntityNotFoundException::new);
+        bookCopyRepository.delete(bookCopy);
         List<BookCopy> allByBookId = bookCopyRepository.findAllByBookId(bookId);
         if (allByBookId.size()==0){
-            Book book = bookRepository.findById(bookId).orElseThrow(EntityNotFoundException::new);
-            bookRepository.delete(book);
+            Book book = bookRepository.findById(bookId)
+                    .orElseThrow(EntityNotFoundException::new);
+            book.setDeleted(true);
         }
         Optional<BookCopy> byId = bookCopyRepository.findById(bookCopyId);
-        if (byId.isPresent()){
-            return false;
-        }
-        return true;
+        return byId.isEmpty();
     }
 
+    public BookShortDto getBookById(Long id) {
+        Optional<Book> optionalBook = bookRepository.findById(id);
+        if (optionalBook.isPresent()) {
+            Book book = optionalBook.get();
+            return mapBookToBookShortDto(book);
+        }
+        return null;
+    }
 
+    public Set<Long> getFreeBookCopiesByBookId(Long id) {
+        Set<Long> freeBookCopyIds = new HashSet<>();
+        Set<Long> checkedOutBookCopyIds = new HashSet<>();
+        Set<Long> reservedBookCopyIds = new HashSet<>();
+
+        Set<Checkout> checkouts = checkoutRepository.findByBookCopyIdAndReturnedFalse(id);
+        checkouts.forEach(checkout -> checkedOutBookCopyIds.add(checkout.getBookCopy().getId()));
+
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        Set<Reservation> reservations = reservationRepository.findByBookCopyIdAndCancelledFalseAndDueDateAfterAndActivatedFalse(id, currentDateTime);
+        reservations.forEach(reservation -> reservedBookCopyIds.add(reservation.getBookCopy().getId()));
+
+        Set<BookCopy> allBookCopies = bookCopyRepository.findByBookId(id);
+        allBookCopies.forEach(bookCopy -> {
+            if (!checkedOutBookCopyIds.contains(bookCopy.getId()) && !reservedBookCopyIds.contains(bookCopy.getId())) {
+                freeBookCopyIds.add(bookCopy.getId());
+            }
+        });
+
+        return freeBookCopyIds;
+    }
+
+    public Optional<BookCopy> findBookCopyById(Long bookCopyId) {
+        return bookCopyRepository.findById(bookCopyId);
+    }
+
+    public Optional<Book> findBookById(Long bookId) {
+        return bookRepository.findById(bookId);
+    }
 }

@@ -24,14 +24,12 @@ import { BooksGridComponent } from './components/partials/books-grid/books-grid.
 import { AuthConfigModule } from './auth/auth-config.module';
 import { AuthInterceptor } from 'angular-auth-oidc-client';
 import { UnauthorizedComponent } from './components/pages/unauthorized/unauthorized.component';
-import { LoginComponent } from './components/pages/login/login.component';
 import { InputTextModule } from 'primeng/inputtext';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { CalendarModule } from 'primeng/calendar';
 import { FileUploadModule } from 'primeng/fileupload';
 import { ToolbarModule } from 'primeng/toolbar';
 import { SplitButtonModule } from 'primeng/splitbutton';
-import { LoginModalComponent } from './components/partials/modal/login/login-modal/login-modal.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -107,6 +105,15 @@ import { AuthorFullComponent } from './components/pages/author-full/author-full.
 import { EditBookComponent } from './components/partials/modal/edit-book/edit-book.component';
 import { DeleteBookComponent } from './components/partials/modal/delete-book/delete-book.component';
 import { ConfirmationService } from 'primeng/api';
+import { KEYCLOAK_URL } from './core/constants';
+import { EditAuthorComponent } from './components/partials/modal/edit-author/edit-author.component';
+import { ReservationsComponent } from './components/pages/reservations/reservations.component';
+import { RentOutComponent } from './components/partials/modal/rent-out/rent-out.component';
+import { USER_SERVICE_CONFIG, UserService } from './core/user.service';
+import {
+  CHECKOUT_SERVICE_CONFIG,
+  CheckoutService,
+} from './core/checkout.service';
 
 export function initializeKeycloak(
   keycloak: KeycloakService,
@@ -115,7 +122,7 @@ export function initializeKeycloak(
   return () =>
     keycloak.init({
       config: {
-        url: 'http://localhost:8080',
+        url: KEYCLOAK_URL,
         realm: 'ACS_TEST',
         clientId: 'frontend_client',
       },
@@ -149,8 +156,6 @@ export function initializeKeycloak(
     BookCategoriesComponent,
     BooksGridComponent,
     UnauthorizedComponent,
-    LoginComponent,
-    LoginModalComponent,
     HasRolesDirective,
     BookAddComponent,
     CategoryDetailsComponent,
@@ -175,6 +180,9 @@ export function initializeKeycloak(
     AuthorFullComponent,
     EditBookComponent,
     DeleteBookComponent,
+    EditAuthorComponent,
+    ReservationsComponent,
+    RentOutComponent,
   ],
 
   imports: [
@@ -274,6 +282,24 @@ export function initializeKeycloak(
       provide: AuthorService,
       useClass: AuthorService,
       deps: [HttpClient, AUTHOR_SERVICE_CONFIG],
+    },
+    {
+      provide: USER_SERVICE_CONFIG,
+      useValue: { resourceEndpoint: 'users' },
+    },
+    {
+      provide: UserService,
+      useClass: UserService,
+      deps: [HttpClient, USER_SERVICE_CONFIG],
+    },
+    {
+      provide: CHECKOUT_SERVICE_CONFIG,
+      useValue: { resourceEndpoint: 'checkouts' },
+    },
+    {
+      provide: CheckoutService,
+      useClass: CheckoutService,
+      deps: [HttpClient, CHECKOUT_SERVICE_CONFIG],
     },
     DialogService,
     AppAuthGuard,

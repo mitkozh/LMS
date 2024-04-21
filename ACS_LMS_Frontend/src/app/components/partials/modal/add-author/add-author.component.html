@@ -1,27 +1,31 @@
 <div class="add-container">
   <div class="form-wrapper">
     <form [formGroup]="form">
-      <div class="labeled-input">
-        <label for="name">Name</label>
-        <input pInputText id="name" formControlName="name" />
-      </div>
-      <div class="labeled-input">
-        <label for="description">Description</label>
-        <input pInputText id="description" formControlName="description" />
-      </div>
-      <div class="labeled-input">
-        <label for="profilepic">Profile Picture</label>
-        <p-fileUpload
-          id="profilepic"
-          name="profilepic"
-          (onSelect)="onFileUpload($event)"
-          accept="image/*"
-          [auto]="true"
-          mode="basic"
-        ></p-fileUpload>
-        <img *ngIf="profilePic" [src]="profilePic" class="profilePicMini" />
-      </div>
-      <button (click)="onSubmitAuthor()">Submit</button>
+      <app-labeled-input
+        [label]="'Name'"
+        [fieldId]="'name'"
+        [fieldName]="'name'"
+        [inputType]="'input'"
+        [validationMessages]="authorValidationMessages['name']"
+        [inputControl]="getFormControlByName('name')!"
+      ></app-labeled-input>
+      <app-labeled-input
+        [label]="'Description'"
+        [fieldId]="'description'"
+        [fieldName]="'description'"
+        [inputType]="'textarea'"
+        [validationMessages]="authorValidationMessages['description']"
+        [inputControl]="getFormControlByName('description')!"
+      ></app-labeled-input>
+      <app-labeled-input
+        [photo]="profilePic"
+        inputType="file-upload"
+        [required]="true"
+        fieldId="profilePic"
+        label="Author Picture"
+        (coverPhotoNameChange)="handleAuthorPhotoNameChange($event)"
+      ></app-labeled-input>
+      <p-button (click)="onSubmitAuthor()">Submit</p-button>
     </form>
   </div>
 </div>

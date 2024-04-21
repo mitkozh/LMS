@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { BookService } from 'app/core/book.service';
 import { BookFullDto } from 'app/shared/book-full-dto';
 import { ReservationDto } from 'app/shared/reservation-dto';
+import { of, switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'app-borrow-a-book',
@@ -14,36 +15,44 @@ export class BorrowABookComponent implements OnInit {
   book: BookFullDto | undefined | null;
   @Input()
   title!: string;
+  @Input()
+  id!: number;
 
   canReserve: boolean = false;
   reservation: ReservationDto | null = null;
+  hasActiveCheckout: boolean = false;
 
   constructor(private bookService: BookService, private router: Router) {}
-
   ngOnInit() {
-    if (this.book) {
+    if (this.id) {
       this.bookService
-        .checkAvailableBooks(this.book.bookId)
-        .subscribe((response: boolean) => {
-          this.canReserve = response;
-          if (this.canReserve && this.book) {
-            this.bookService
-              .hasReservationForBook(this.book.bookId)
-              .subscribe((reservation: ReservationDto) => {
-                if (reservation) {
-                  this.canReserve = false;
-                  this.reservation = reservation;
-                }
-              });
+        .hasReservationForBook(this.id)
+        .pipe(
+          tap((reservation: ReservationDto) => {
+            if (reservation) {
+              this.canReserve = false;
+              this.reservation = reservation;
+            }
+          }),
+          switchMap((reservation: ReservationDto) =>
+            !reservation
+              ? this.bookService.checkAvailableBooks(this.id)
+              : of(null)
+          )
+        )
+        .subscribe((response: boolean | null) => {
+          if (response !== null) {
+            this.canReserve = response;
+            console.log(this.canReserve);
           }
         });
     }
   }
 
   reserveBook() {
-    if (this.book && !this.reservation) {
+    if (this.id && !this.reservation) {
       this.bookService
-        .reserveBook(this.book.bookId)
+        .reserveBook(this.id)
         .subscribe((response: ReservationDto) => {
           if (response) {
             this.canReserve = false;

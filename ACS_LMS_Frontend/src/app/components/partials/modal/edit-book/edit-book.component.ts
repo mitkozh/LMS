@@ -38,8 +38,8 @@ import { ValidationMessages } from 'app/shared/validation-messages';
 import { SearchInputComponent } from '../../search-input/search-input.component';
 import { BookShortDto } from 'app/shared/book-short-dto';
 import { bookValidationMessages } from '../book-add/book-validation-messages';
-import { callNumberExistsValidator } from '../book-add/call-number-exists-validator';
-import { isbnExistsValidator } from '../book-add/isbn-exists-validator';
+import { callNumberExistsValidator } from '../../../../validators/call-number-exists-validator';
+import { isbnExistsValidator } from '../../../../validators/isbn-exists-validator';
 import { Language } from 'app/shared/language';
 import { CategoryWithBooks } from 'app/shared/category-with-books';
 import { Publisher } from 'app/shared/publisher';
@@ -304,7 +304,6 @@ export class EditBookComponent {
       }
     }
 
-    console.log(filtered);
 
     this.filteredBindings = filtered;
   }

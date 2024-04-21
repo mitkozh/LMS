@@ -175,10 +175,13 @@ export class BookFullComponent implements OnInit {
             item.label?.toLocaleLowerCase() === tabParam?.toLocaleLowerCase()
           );
         });
+        
       } else {
         this.activeItem = this.items[0];
       }
-      console.log(this.activeItem);
+      if (this.activeItem){
+        this.onActiveItemChange(this.activeItem);
+      }
     });
   }
 

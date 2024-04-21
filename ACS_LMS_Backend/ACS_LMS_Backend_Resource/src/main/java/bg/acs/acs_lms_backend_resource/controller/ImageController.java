@@ -17,7 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/images")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = {"${frontend_url}"})
 public class ImageController {
 
     private final ImageService imageService;

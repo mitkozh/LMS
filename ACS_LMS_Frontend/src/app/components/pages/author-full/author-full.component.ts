@@ -1,5 +1,5 @@
 import { catchError, filter, map, switchMap } from 'rxjs/operators';
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthorService } from 'app/core/author.service';
 import { Author } from 'app/shared/author';
@@ -7,6 +7,10 @@ import { AuthorShortDto } from 'app/shared/author-dto';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Observable, of } from 'rxjs';
 import { ImageService } from 'app/core/image.service';
+import { UserRole } from 'app/shared/user-role';
+import { KeycloakService } from 'keycloak-angular';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { EditAuthorComponent } from 'app/components/partials/modal/edit-author/edit-author.component';
 
 @Component({
   selector: 'app-author-full',
@@ -14,6 +18,42 @@ import { ImageService } from 'app/core/image.service';
   styleUrls: ['./author-full.component.scss'],
 })
 export class AuthorFullComponent implements OnInit {
+  ref: DynamicDialogRef | undefined;
+  onSubmitBookEntity$ = new EventEmitter<AuthorShortDto>();
+  
+  openAuthorEdit() {
+    this.ref = this.dialogService.open(EditAuthorComponent, {
+      header: 'Edit author',
+      width: 'min(600px, 60%)',
+      height: '80%',
+      contentStyle: { overflow: 'auto' },
+      baseZIndex: 30,
+      draggable: true,
+      closeOnEscape: false,
+      data: {
+        onSubmitEntity$: this.onSubmitBookEntity$,
+        authorName: this.author?.name,
+        id: this.author?.id,
+      },
+    });
+
+    this.closeBooksEditModalOnSubmitted();
+  }
+
+  closeBooksEditModalOnSubmitted() {
+    this.onSubmitBookEntity$.subscribe((book) => {
+      if (book) {
+        this.ref?.close();
+        {
+          if (book) {
+          }
+          this.ref?.close();
+        }
+      }
+      this.router.navigate(['']);
+    });
+  }
+
   authorDescription: String | undefined;
   authorShortDescription: String | undefined;
   authorPhoto: SafeUrl | undefined;
@@ -21,19 +61,22 @@ export class AuthorFullComponent implements OnInit {
   author: AuthorShortDto | undefined;
   authorImage: SafeUrl | undefined;
   authorAsNumArray: number[] | undefined;
-  shouldToggle: boolean  = false;
+  shouldToggle: boolean = false;
 
   constructor(
+    private dialogService: DialogService,
     private authorService: AuthorService,
     private route: ActivatedRoute,
     private router: Router,
     private imageService: ImageService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private keycloakService: KeycloakService
   ) {}
 
   toggleDescription() {
     this.showFullDescription = !this.showFullDescription;
   }
+  roles: typeof UserRole = UserRole;
 
   ngOnInit(): void {
     this.route.paramMap
@@ -55,20 +98,32 @@ export class AuthorFullComponent implements OnInit {
       )
       .subscribe((author) => {
         this.author = author;
-        this.authorAsNumArray = [author.id]
-        console.log(this.authorAsNumArray.at(0))
+        this.authorAsNumArray = [author.id];
+        console.log(this.authorAsNumArray.at(0));
         this.getPhoto(author.imageId).subscribe(
           (image) => (this.authorImage = image)
         );
 
         this.authorDescription = author.description;
         this.authorShortDescription = this.authorDescription.substring(0, 300);
-    
+
         if (this.authorDescription !== this.authorShortDescription) {
           this.authorShortDescription += '...';
           this.shouldToggle = true;
         }
-          });
+      });
+  }
+
+  get hasAdminOrLibrarianRoles(): boolean {
+    const adminLibrarianRoles = [
+      this.roles.ROLE_ADMIN,
+      this.roles.ROLE_LIBRARIAN,
+    ];
+    return adminLibrarianRoles.some((role) => this.hasRole(role));
+  }
+
+  hasRole(role: UserRole): boolean {
+    return this.keycloakService.getUserRoles().includes(role);
   }
 
   getPhoto(imageId: number): Observable<SafeUrl> {

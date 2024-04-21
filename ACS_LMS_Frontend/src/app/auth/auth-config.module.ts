@@ -5,7 +5,7 @@ import { AuthModule } from 'angular-auth-oidc-client';
 @NgModule({
     imports: [AuthModule.forRoot({
         config: {
-              authority: 'http://localhost:8080/realms/ACS_TEST',
+              authority: 'http://keycloak:8090/realms/ACS_TEST',
               redirectUrl: window.location.origin,
               postLogoutRedirectUri: window.location.origin,
               clientId: 'frontend_client',

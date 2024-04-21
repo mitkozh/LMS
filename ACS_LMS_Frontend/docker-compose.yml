@@ -1,0 +1,19 @@
+version: "3.8"
+services:
+  server:
+    build:
+      context: .
+    ports:
+      - "80:80"
+    tty: true
+    expose:
+      - "80"
+    stdin_open: true
+    environment:
+      - MODE=dev
+    networks:
+      - common_network
+
+networks:
+  common_network:
+    external: true

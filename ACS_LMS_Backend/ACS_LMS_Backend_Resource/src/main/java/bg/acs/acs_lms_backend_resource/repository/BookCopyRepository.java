@@ -12,6 +12,7 @@ import java.awt.print.Pageable;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 public interface BookCopyRepository extends JpaRepository<BookCopy, Long> {
@@ -51,4 +52,6 @@ public interface BookCopyRepository extends JpaRepository<BookCopy, Long> {
     List<BookCopy> findAllByBookTitleAndBookId(String title, Long id);
 
     boolean existsByInventoryNumber(String inventoryNumber);
+
+    Set<BookCopy> findByBookId(Long id);
 }

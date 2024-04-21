@@ -22,6 +22,8 @@ public class ResourceServerConfig {
     @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
     private String issuerUri;
 
+
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.cors(Customizer.withDefaults());
@@ -31,6 +33,7 @@ public class ResourceServerConfig {
                         .requestMatchers(HttpMethod.POST, "/books/authors").permitAll()
                         .requestMatchers("/books/bestsellers", "/books/**").permitAll()
                         .requestMatchers("/authors/**").permitAll()
+                        .requestMatchers("/categories/**").permitAll()
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwt ->

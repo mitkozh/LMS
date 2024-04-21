@@ -1,6 +1,8 @@
 package bg.acs.acs_lms_backend_resource.controller;
 
 import bg.acs.acs_lms_backend_resource.model.dto.AuthorShortDto;
+import bg.acs.acs_lms_backend_resource.model.dto.BookShortDto;
+import bg.acs.acs_lms_backend_resource.model.dto.BookUpdateDto;
 import bg.acs.acs_lms_backend_resource.model.entity.Author;
 import bg.acs.acs_lms_backend_resource.model.entity.Language;
 import bg.acs.acs_lms_backend_resource.repository.AuthorRepository;
@@ -18,7 +20,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Set;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = {"${frontend_url}"})
 @RequestMapping("/authors")
 @RequiredArgsConstructor
 public class AuthorController {
@@ -46,6 +48,16 @@ public class AuthorController {
         return ResponseEntity.ok(authors);
       }
 
+
+    @PatchMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_LIBRARIAN')")
+    public ResponseEntity<AuthorShortDto> updateAuthor(@PathVariable Long id, @RequestBody AuthorShortDto authorShortDto) {
+        AuthorShortDto authorShortDtoReturned = authorService.updateAuthor(id, authorShortDto);
+        if (authorShortDtoReturned != null) {
+            return ResponseEntity.ok(authorShortDtoReturned);
+        }
+        return ResponseEntity.noContent().build();
+    }
     @GetMapping("/name/{name}")
     public ResponseEntity<AuthorShortDto> getAuthorByName(@PathVariable String name) throws IOException {
         name = URLDecoder.decode(name, StandardCharsets.UTF_8);

@@ -48,8 +48,8 @@ import { PublisherService } from 'app/core/publisher.service';
 import { AcquisitionDocumentEnum } from 'app/shared/acquasition-document-enum';
 import { BookBindingEnum } from 'app/shared/book-binding-enum';
 import { LanguageService } from 'app/core/language.service';
-import { inventoryNumberExists } from '../book-add/inventory-number-exists';
-import { callNumberExistsValidator } from '../book-add/call-number-exists-validator';
+import { inventoryNumberExists } from '../../../../validators/inventory-number-exists';
+import { callNumberExistsValidator } from '../../../../validators/call-number-exists-validator';
 
 @Component({
   selector: 'app-add-book-copy',

@@ -3,9 +3,11 @@ import {
   ElementRef,
   EventEmitter,
   Input,
+  OnChanges,
   OnDestroy,
   OnInit,
   Output,
+  SimpleChanges,
   TemplateRef,
   ViewChild,
   forwardRef,
@@ -38,10 +40,13 @@ import {
   ],
 })
 export class SearchInputComponent
-  implements OnInit, ControlValueAccessor, OnDestroy
+  implements OnInit, ControlValueAccessor, OnDestroy, OnChanges
 {
   @Input()
-  public inputControl = new FormControl();
+  public disabled = false;
+
+  @Input()
+  public inputControl = new FormControl({value: null as any, disabled: this.disabled});
 
   @ViewChild(AutoComplete, { static: false })
   autoComplete!: AutoComplete;
@@ -50,8 +55,7 @@ export class SearchInputComponent
   public label?: string;
   @Input()
   public required = false;
-  @Input()
-  public disabled = false;
+
   @Input()
   public value: any[] = [];
 
@@ -78,6 +82,13 @@ export class SearchInputComponent
   ngOnDestroy(): void {
     this.destroy.ngOnDestroy();
   }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['disabled']) {
+      this.setDisabledState(changes['disabled'].currentValue);
+    }
+  }
+  
 
   public onChange = (_: any) => {};
   public onTouched = () => {};

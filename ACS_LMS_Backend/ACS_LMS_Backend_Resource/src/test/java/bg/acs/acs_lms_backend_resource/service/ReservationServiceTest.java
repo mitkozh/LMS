@@ -56,7 +56,7 @@ public class ReservationServiceTest {
         when(reservationRepository.getByUserAndBookCopy(user, bookCopy)).thenReturn(reservation);
         when(modelMapper.map(reservation, ReservationDto.class)).thenReturn(reservationDto);
 
-        Optional<ReservationDto> result = reservationService.getReservationByUserAndBookCopy(bookCopy, user);
+        Optional<ReservationDto> result = reservationService.getActiveReservationByUserAndBookCopy(bookCopy, user);
 
         assertTrue(result.isPresent(), "Expected non-empty Optional, but was empty");
         assertEquals("user@example.com", result.get().getUserEmail());

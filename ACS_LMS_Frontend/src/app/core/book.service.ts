@@ -112,6 +112,13 @@ export class BookService extends GenericService<
     );
   }
 
+
+  getFreeBookCopiesById(id: number) {
+    return this.httpClient.get<Number[]>(
+      `${this.baseUrl}${this.resourceEndpoint}/book/free-copy/${id}`
+    );
+  }
+
   addBookCopy(bookCopy: BookCopyAddDto) {
     return this.httpClient.post<BookFullDto>(
       `${this.baseUrl}${this.resourceEndpoint}/bookCopy`,

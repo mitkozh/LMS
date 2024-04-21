@@ -10,7 +10,7 @@ import { FileUploadHandlerEvent } from 'primeng/fileupload';
 })
 export class UtilService {
 
-  coverPhotoName: string | undefined;
+  imageId: number | undefined;
   coverPhoto: SafeUrl | undefined;
 
   constructor(private imageService: ImageService, private sanitizer: DomSanitizer) { }
@@ -20,10 +20,10 @@ export class UtilService {
       let responseType: any;
       let file: File = fileEvent.files[0]; // Always take the first file
       this.imageService.uploadImage(file).subscribe((res) => {
-        this.coverPhotoName = res.name;
+        this.imageId = res.id;
         responseType = res.type;
         this.imageService
-          .getImage(this.coverPhotoName as string)
+          .getImage(this.imageId as number)
           .subscribe((profilePic) => {
             this.coverPhoto = this.sanitizer.bypassSecurityTrustUrl(
               URL.createObjectURL(profilePic)
@@ -35,10 +35,9 @@ export class UtilService {
     }
   }
   
-  getPhoto(profilePicName: string): Observable<SafeUrl> {
-    console.log(profilePicName);
-    if (profilePicName) {
-      return this.imageService.getImage(profilePicName).pipe(
+  getPhoto(imageId: number): Observable<SafeUrl> {
+    if (imageId) {
+      return this.imageService.getImage(imageId).pipe(
         map((res) => {
           console.log(res);
           return this.sanitizer.bypassSecurityTrustUrl(

@@ -1,0 +1,21 @@
+input {
+  margin-bottom: 20px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.reservation-content {
+  height: 300px;
+}
+
+.bottom-reservation {
+  display: flex;
+  gap: 15px;
+  justify-content: space-around;
+}
+

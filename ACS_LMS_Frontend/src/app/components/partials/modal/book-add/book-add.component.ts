@@ -54,9 +54,9 @@ import { LanguageService } from 'app/core/language.service';
 import { AuthorService } from 'app/core/author.service';
 import { CategoryService } from 'app/core/category.service';
 import { PublisherService } from 'app/core/publisher.service';
-import { callNumberExistsValidator } from './call-number-exists-validator';
-import { isbnExistsValidator } from './isbn-exists-validator';
-import { inventoryNumberExists } from './inventory-number-exists';
+import { callNumberExistsValidator } from '../../../../validators/call-number-exists-validator';
+import { isbnExistsValidator } from '../../../../validators/isbn-exists-validator';
+import { inventoryNumberExists } from '../../../../validators/inventory-number-exists';
 import { BookFullDto } from 'app/shared/book-full-dto';
 
 interface AutoCompleteCompleteEvent {
@@ -213,6 +213,7 @@ export class BookAddComponent implements OnInit {
         this.bookService
           .findBookWithGoogleApiWithISBN(isbn)
           .subscribe((book) => {
+            console.log(JSON.stringify(book, null, 3));
             this.patchForm(book);
           });
       });

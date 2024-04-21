@@ -3,6 +3,8 @@ import { Component, OnInit, TemplateRef } from '@angular/core';
 import ModalData from './shared/modal-data';
 import { KeycloakService } from 'keycloak-angular';
 import { HttpClient } from '@angular/common/http';
+import { environment } from 'environments/environment';
+import { API_URL } from './core/constants';
 
 interface SideNavToggle {
   screenWidth: number;
@@ -50,7 +52,7 @@ export class AppComponent implements OnInit {
   }
 
   async sendRequestToServer() {
-    const url = `http://127.0.0.1:8082/users/save`;
+    const url = API_URL+`users/save`;
 
     await this.http.post(url, {}).toPromise();
   }

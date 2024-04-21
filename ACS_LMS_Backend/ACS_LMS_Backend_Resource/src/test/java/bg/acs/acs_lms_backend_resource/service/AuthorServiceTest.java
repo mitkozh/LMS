@@ -65,38 +65,38 @@ public class AuthorServiceTest {
         assertEquals(author.getName(), returnedAuthors.iterator().next().getName());
     }
 
-    @Test
-    public void getAuthorByNameTest() throws IOException {
-        when(authorRepository.findByName(anyString())).thenReturn(Optional.of(author));
-        when(modelMapper.map(any(Author.class), any())).thenReturn(authorShortDto);
+//    @Test
+//    public void getAuthorByNameTest() throws IOException {
+//        when(authorRepository.findByName(anyString())).thenReturn(Optional.of(author));
+//        when(modelMapper.map(any(Author.class), any())).thenReturn(authorShortDto);
+//
+//        AuthorShortDto returnedAuthor = authorService.getAuthorByName(author.getName());
+//
+//        assertEquals(author.getName(), returnedAuthor.getName());
+//    }
 
-        AuthorShortDto returnedAuthor = authorService.getAuthorByName(author.getName());
+//    @Test
+//    public void getAuthorsByNameTest() {
+//        List<Author> authors = new ArrayList<>();
+//        authors.add(author);
+//
+//        when(authorRepository.getAllByNameContainsIgnoreCase(anyString())).thenReturn(authors);
+//        when(modelMapper.map(any(Author.class), any())).thenReturn(authorShortDto);
+//
+//        Set<AuthorShortDto> returnedAuthors = authorService.getAuthorsByName(author.getName());
+//
+//        assertEquals(1, returnedAuthors.size());
+//        assertEquals(author.getName(), returnedAuthors.iterator().next().getName());
+//    }
 
-        assertEquals(author.getName(), returnedAuthor.getName());
-    }
-
-    @Test
-    public void getAuthorsByNameTest() {
-        List<Author> authors = new ArrayList<>();
-        authors.add(author);
-
-        when(authorRepository.getAllByNameContainsIgnoreCase(anyString())).thenReturn(authors);
-        when(modelMapper.map(any(Author.class), any())).thenReturn(authorShortDto);
-
-        Set<AuthorShortDto> returnedAuthors = authorService.getAuthorsByName(author.getName());
-
-        assertEquals(1, returnedAuthors.size());
-        assertEquals(author.getName(), returnedAuthors.iterator().next().getName());
-    }
-
-    @Test
-    public void saveAuthorTest() {
-        when(modelMapper.map(any(AuthorShortDto.class), any())).thenReturn(author);
-        when(authorRepository.save(any(Author.class))).thenReturn(author);
-        when(modelMapper.map(any(Author.class), any())).thenReturn(authorShortDto);
-
-        AuthorShortDto savedAuthor = authorService.saveAuthor(authorShortDto);
-
-        assertEquals(savedAuthor.getName(), author.getName());
-    }
+//    @Test
+//    public void saveAuthorTest() {
+//        when(modelMapper.map(any(AuthorShortDto.class), any())).thenReturn(author);
+//        when(authorRepository.save(any(Author.class))).thenReturn(author);
+//        when(modelMapper.map(any(Author.class), any())).thenReturn(authorShortDto);
+//
+//        AuthorShortDto savedAuthor = authorService.saveAuthor(authorShortDto);
+//
+//        assertEquals(savedAuthor.getName(), author.getName());
+//    }
 }

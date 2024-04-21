@@ -30,4 +30,11 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 
     Optional<Book> findByTitleAndId(String title, Long id);
 
-}
+    Set<Book> findAllByDeletedIsFalse();
+
+    Set<Book> findAllByCategoriesContainingAndDeletedIsFalse(Category category);
+
+    Set<Book> getAllByTitleContainsIgnoreCaseAndDeletedIsFalse(String title);
+
+    @Query("SELECT b FROM Book b JOIN b.authors a WHERE a.id IN :ids AND b.deleted = false")
+    Set<Book> findAllByAuthorIdsAndDeletedIsFalse(@Param("ids") List<Long> ids);}

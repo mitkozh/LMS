@@ -21,7 +21,6 @@ public class Author extends BaseEntity{
     private String name;
 
     @Column(name = "description", length = 100)
-
     private String description;
 
     @OneToOne(cascade = CascadeType.MERGE)

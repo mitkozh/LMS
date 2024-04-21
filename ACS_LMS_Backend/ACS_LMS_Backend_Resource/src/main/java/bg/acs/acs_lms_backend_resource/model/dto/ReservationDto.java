@@ -22,6 +22,12 @@ public class ReservationDto {
 
     private Long bookCopyId;
 
+    private String bookName;
+
+    private Long bookId;
 
     private LocalDateTime reservationDate;
+
+    private LocalDateTime dueDate;
+
 }
