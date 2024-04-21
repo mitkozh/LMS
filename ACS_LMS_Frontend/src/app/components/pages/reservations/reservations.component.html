@@ -1,0 +1,39 @@
+<div *ngIf="reservations.length > 0; else noReservations">
+  <input
+    pInputText
+    [(ngModel)]="searchTerm"
+    placeholder="Search reservations..."
+  />
+  <div class="grid" *ngIf="paginatedReservations.length > 0">
+    <p-card
+      *ngFor="let reservation of paginatedReservations"
+      header="Reservation"
+      (click)="selectReservation(reservation)"
+    >
+      <div class="reservation-content">
+        <p>Reservation ID: {{ reservation.id }}</p>
+        <p>Email: {{ reservation.userEmail }}</p>
+        <p>Book Copy ID: {{ reservation.bookCopyId }}</p>
+        <p>Book Name: {{ reservation.bookName }}</p>
+        <p>Reservation Date: {{ reservation.reservationDate | date }}</p>
+        <p>Reservation Due: {{ reservation.dueDate | date }}</p>
+      </div>
+      <div class="bottom-reservation">
+        <p-button>Cancel</p-button>
+        <p-button (onClick)="rentOut(reservation)">Rent out</p-button>
+      </div>
+    </p-card>
+  </div>
+
+  <p-paginator
+    [rows]="10"
+    [totalRecords]="filteredReservations.length"
+    (onPageChange)="paginate($event)"
+  ></p-paginator>
+</div>
+
+<ng-template #noReservations>
+  <div class="no-reservations-message">
+    <h2>No reservations available</h2>
+  </div>
+</ng-template>

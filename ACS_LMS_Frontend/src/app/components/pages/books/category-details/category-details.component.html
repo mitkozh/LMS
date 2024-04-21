@@ -1,4 +1,13 @@
-<div class="book-library" *ngIf="books">
-
-  <app-book-row *ngIf="books.books.length>0" [books]="books.books"></app-book-row>
+<div
+  class="book-library"
+  *ngIf="books && books.books.length > 0; else noBooksInCategory"
+>
+  <app-book-row [books]="books.books"></app-book-row>
 </div>
+
+<ng-template #noBooksInCategory>
+  <div class="no-books-in-category">
+    <h2>No books are available in this category.</h2>
+  </div>
+</ng-template>
+

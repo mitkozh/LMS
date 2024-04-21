@@ -1,0 +1,68 @@
+<form [formGroup]="rentOutForm" (ngSubmit)="onSubmit()">
+  <app-labeled-input
+    [label]="'User email'"
+    [fieldId]="'user'"
+    [inputType]="'input'"
+    [validationMessages]="rentOutValidationMessages['user']"
+    [inputControl]="getFormControlByName('user')!"
+    [multiple]="false"
+    [disabled]="isUserDisabled"
+    [field]="'name'"
+  ></app-labeled-input>
+
+  <app-labeled-input
+    [label]="'Book'"
+    [fieldId]="'book'"
+    [inputType]="'app-search-input'"
+    [validationMessages]="rentOutValidationMessages['book']"
+    [inputControl]="getFormControlByName('book')!"
+    [suggestionsDynamic]="booksSearchResults"
+    [optionTemplate]="optionTemplate"
+    (completeMethod)="onBooksTextChange($event)"
+    [multiple]="false"
+    [disabled]="isBookDisabled"
+    [field]="'title'"
+  ></app-labeled-input>
+  <ng-template #optionTemplate let-book>
+    <div class="book">
+      <app-book-card-mini [book]="book"></app-book-card-mini>
+    </div>
+  </ng-template>
+  <div *ngIf="noBooksResultMessage.length > 0" #noAuthor>
+    <p>
+      {{ noBooksResultMessage }}
+    </p>
+  </div>
+
+  <app-labeled-input
+    [label]="'Book Copy ID'"
+    [fieldId]="'bookCopyId'"
+    [inputType]="'autocomplete'"
+    [validationMessages]="rentOutValidationMessages['bookCopyId']"
+    [inputControl]="getFormControlByName('bookCopyId')!"
+    [disabled]="isBookCopyIdDisabled"
+    [multiple]="false"
+    (completeMethod)="filterBookCopies($event)"
+    [suggestions]="filteredBookCopies"
+    [dropdown]="true"
+    [required]="false"
+  ></app-labeled-input>
+
+  <app-labeled-input
+    [label]="'Start Date'"
+    [fieldId]="'startDate'"
+    [inputType]="'calendar'"
+    [validationMessages]="rentOutValidationMessages['startDate']"
+    [inputControl]="getFormControlByName('startDate')!"
+  ></app-labeled-input>
+
+  <app-labeled-input
+    [label]="'End Date'"
+    [fieldId]="'endDate'"
+    [inputType]="'calendar'"
+    [validationMessages]="rentOutValidationMessages['holdEndDate']"
+    [inputControl]="getFormControlByName('holdEndDate')!"
+  ></app-labeled-input>
+
+  <p-button type="submit" label="Rent Out"></p-button>
+</form>
