@@ -23,6 +23,7 @@ public class ImageController {
     private final ImageService imageService;
 
     @PostMapping("/upload")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_LIBRARIAN', 'ROLE_STUDENT', 'ROLE_TEACHER', 'ROLE_ASSISTANT')")
     public ResponseEntity<ImageDto> uploadImage(@RequestParam("image") MultipartFile file)
             throws IOException {
         ImageDto image = imageService.uploadImage(file);

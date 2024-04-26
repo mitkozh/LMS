@@ -8,83 +8,72 @@ export const navbarData: INavbarData[] = [
     routeLink: 'books',
     icon: 'fal fa-book',
     label: 'Books',
-    expanded: true,
+    expanded: false,
     items: [
       {
-        routeLink: 'advanced-search',
-        label: 'Find Book',
+        routeLink: 'books',
+        label: 'Books Overview',
+      },
+      {
+        routeLink: 'books/advanced-search',
+        label: 'Find Books',
       },
       {
         routeLink: 'books/categories',
         label: 'Book Categories',
       },
-      {
-        routeLink: 'reservations',
-        label: 'Reservations',
-        requiredRoles: [roles.ROLE_ADMIN, roles.ROLE_LIBRARIAN],
-      },
     ],
   },
   {
-    routeLink: 'dashboard',
-    icon: 'fal fa-chart-line',
-    label: 'Dashboard',
+    routeLink: 'reservations',
+    icon: 'fal fa-tag',
+    label: 'Reservations',
     requiredRoles: [roles.ROLE_ADMIN, roles.ROLE_LIBRARIAN],
   },
   {
-    routeLink: 'my-books',
-    icon: 'fal fa-bookmark',
-    label: 'My Books',
+    routeLink: 'checkout',
+    icon: 'fal fa-exchange',
+    label: 'Checkout',
+    requiredRoles: [roles.ROLE_ADMIN, roles.ROLE_LIBRARIAN],
   },
   {
-    routeLink: 'borrowed-books',
+    routeLink: 'borrowed',
     icon: 'fal fa-handshake',
-    label: 'Borrowed Books',
+    label: 'Borrowed',
   },
   {
     routeLink: 'members',
     icon: 'fal fa-users',
     label: 'Members',
     requiredRoles: [roles.ROLE_ADMIN, roles.ROLE_LIBRARIAN],
-    expanded: true,
-    items: [
-      {
-        routeLink: 'members/all',
-        label: 'All Members',
-      },
-      {
-        routeLink: 'members/add',
-        label: 'Add Member',
-      },
-    ],
   },
+  // {
+  //   routeLink: 'statistics',
+  //   icon: 'fal fa-chart-bar',
+  //   label: 'Statistics',
+  //   requiredRoles: [roles.ROLE_ADMIN, roles.ROLE_LIBRARIAN],
+  // },
   {
-    routeLink: 'statistics',
-    icon: 'fal fa-chart-bar',
-    label: 'Statistics',
-    requiredRoles: [roles.ROLE_ADMIN, roles.ROLE_LIBRARIAN],
-  },
-  {
-    routeLink: 'transactions',
-    icon: 'fal fa-exchange',
+    routeLink: 'transactions/check-outs',
+    icon: 'fal fa-table',
     label: 'Transactions',
     requiredRoles: [roles.ROLE_ADMIN, roles.ROLE_LIBRARIAN],
     items: [
       {
-        routeLink: 'transactions/history',
+        routeLink: 'transactions/check-outs',
         label: 'Transaction History',
       },
       {
-        routeLink: 'transactions/borrow',
+        routeLink: 'transactions/fines',
         label: 'Borrow Book',
       },
     ],
   },
   {
-    routeLink: 'settings',
+    routeLink: 'settings/profile',
     icon: 'fal fa-cog',
     label: 'Settings',
-    expanded: true,
+    expanded: false,
     items: [
       {
         routeLink: 'settings/profile',

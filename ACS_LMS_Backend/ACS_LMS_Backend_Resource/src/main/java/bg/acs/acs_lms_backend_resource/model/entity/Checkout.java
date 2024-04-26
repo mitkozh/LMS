@@ -29,10 +29,11 @@ public class Checkout extends BaseEntity{
     @JoinColumn(name = "borrower_id")
     private User borrower;
 
-
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reservation_id")
-
     private Reservation reservation;
+
+
+
 
 }

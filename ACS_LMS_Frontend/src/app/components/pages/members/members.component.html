@@ -1,0 +1,98 @@
+<p-table
+  [value]="users"
+  dataKey="id"
+  editMode="row"
+  [rows]="10"
+  [totalRecords]="totalRecords"
+  [loading]="loading"
+  [lazy]="true"
+  (onLazyLoad)="loadUsers($event)"
+>
+  <ng-template pTemplate="header">
+    <tr>
+      <th>ID</th>
+      <th>Email</th>
+      <th>Gender</th>
+      <th>Name</th>
+      <th>Role</th>
+      <th>Action</th>
+    </tr>
+  </ng-template>
+  <ng-template
+    pTemplate="body"
+    let-user
+    let-editing="editing"
+    let-ri="rowIndex"
+  >
+    <tr [pEditableRow]="user">
+      <td>
+        {{ user.id }}
+      </td>
+      <td>
+        {{ user.email }}
+      </td>
+      <td>
+       {{user.gender!==null?user.gender:"—"}}
+      </td>
+      <td>
+        <p-cellEditor>
+          <ng-template pTemplate="input">
+            <input pInputText type="text" [(ngModel)]="user.name" />
+          </ng-template>
+          <ng-template pTemplate="output">
+            {{user.name!==null?user.name:"—"}}
+          </ng-template>
+        </p-cellEditor>
+      </td>
+      <td>
+        <p-cellEditor>
+          <ng-template pTemplate="input">
+            <p-dropdown
+              [options]="userRoles"
+              appendTo="body"
+              [(ngModel)]="user.role"
+              [style]="{ width: '100%' }"
+            ></p-dropdown>
+          </ng-template>
+          <ng-template pTemplate="output">
+            {{ user.role }}
+          </ng-template>
+        </p-cellEditor>
+      </td>
+      <td>
+        <div class="flex align-items-center justify-content-center gap-2">
+          <button
+            *ngIf="!editing"
+            pButton
+            pRipple
+            type="button"
+            pInitEditableRow
+            icon="pi pi-pencil"
+            (click)="onRowEditInit(user)"
+            class="p-button-rounded p-button-text"
+          ></button>
+          <button
+            *ngIf="editing"
+            pButton
+            pRipple
+            type="button"
+            pSaveEditableRow
+            icon="pi pi-check"
+            (click)="onRowEditSave(user)"
+            class="p-button-rounded p-button-text p-button-success mr-2"
+          ></button>
+          <button
+            *ngIf="editing"
+            pButton
+            pRipple
+            type="button"
+            pCancelEditableRow
+            icon="pi pi-times"
+            (click)="onRowEditCancel(user, ri)"
+            class="p-button-rounded p-button-text p-button-danger"
+          ></button>
+        </div>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>

@@ -13,7 +13,7 @@ export const createBooksHits = (
     templates: {
       item(hit) {
         const bookTitle = hit['book_title'];
-        const bookLink = `/books/${encodeURIComponent(bookTitle)}`;
+        const bookLink = `/books/${encodeURIComponent(bookTitle)}/${hit['id']}`;
         const imageId = hit['image_id'] ? hit['image_id'] : '';
         return `
         <article class="hit">

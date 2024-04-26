@@ -1,6 +1,6 @@
- version: "3.8"
-services:
 
+version: "3.8"
+services:
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.9.3
     container_name: sem_elasticsearch
@@ -8,7 +8,7 @@ services:
       - discovery.type=single-node
       - bootstrap.memory_lock=true
       - http.cors.enabled=true
-      - http.cors.allow-origin=http://localhost
+      - http.cors.allow-origin=${HTTP_CORS_ALLOW_ORIGIN}
       - "ES_JAVA_OPTS=-Xms256m -Xmx256m"
     ulimits:
       memlock:

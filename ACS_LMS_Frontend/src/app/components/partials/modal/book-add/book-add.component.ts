@@ -120,7 +120,11 @@ export class BookAddComponent implements OnInit {
       volume: [
         null,
         {
-          validators: [Validators.required, Validators.min(1)],
+          validators: [
+            Validators.required,
+            Validators.min(1),
+            Validators.pattern('^[0-9]*$'),
+          ],
           updateOn: 'blur',
         },
       ],

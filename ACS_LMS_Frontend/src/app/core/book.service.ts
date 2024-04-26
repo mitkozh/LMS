@@ -112,10 +112,15 @@ export class BookService extends GenericService<
     );
   }
 
-
   getFreeBookCopiesById(id: number) {
     return this.httpClient.get<Number[]>(
       `${this.baseUrl}${this.resourceEndpoint}/book/free-copy/${id}`
+    );
+  }
+
+  getActiveCheckoutsForUser() {
+    return this.httpClient.get<BookShortDto[]>(
+      `${this.baseUrl}${this.resourceEndpoint}/active-checkouts`
     );
   }
 
@@ -174,5 +179,17 @@ export class BookService extends GenericService<
     ];
 
     return of(statBoxData);
+  }
+
+  getBooksReturnedLastWeek(): Observable<number> {
+    return this.httpClient.get<number>(
+      `${this.baseUrl}${this.resourceEndpoint}/book/books-returned-last-week`
+    );
+  }
+
+  getBooksCount(): Observable<number> {
+    return this.httpClient.get<number>(
+      `${this.baseUrl}${this.resourceEndpoint}/book/books-count`
+    );
   }
 }

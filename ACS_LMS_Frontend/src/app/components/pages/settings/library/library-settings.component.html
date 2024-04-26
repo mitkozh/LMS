@@ -1,0 +1,70 @@
+<h2>Library Global Settings</h2>
+<form [formGroup]="environmentForm" (ngSubmit)="onSubmit()">
+    <div class="form-row">
+    <label>Fine Rate Per Day</label>
+    <p-inputNumber
+      id="fineRatePerDay"
+      formControlName="fineRatePerDay"
+      [min]="0.01"
+      [maxFractionDigits]="2"
+      [minFractionDigits]="2"
+      [max]="10"
+      [mode]="'currency'"
+      [currency]="currentCurrency"
+    ></p-inputNumber>
+  </div>
+
+  <!-- Currency Code -->
+  <div class="form-row">
+    <label>Currency Code</label>
+    <p-dropdown
+      id="currencyCode"
+      formControlName="currencyCode"
+      [options]="currencyCodes"
+      placeholder="Select a Currency Code"
+    ></p-dropdown>
+  </div>
+
+  <!-- Backup Options -->
+  <div class="form-row">
+    <label>Backup Options</label>
+    <p-dropdown
+      id="backupsOptions"
+      formControlName="backupsOptions"
+      [options]="backupsOptions"
+      placeholder="Select a Backup Option"
+    ></p-dropdown>
+  </div>
+
+  <!-- Max Checkout Duration (Days) -->
+  <div class="form-row">
+    <label >Max Checkout Duration (Days)</label>
+    <p-inputNumber
+      id="maxCheckoutDurationDays"
+      formControlName="maxCheckoutDurationDays"
+      [min]="1"
+      [maxFractionDigits]="0"
+      [minFractionDigits]="0"
+      [max]="60"
+    ></p-inputNumber>
+  </div>
+
+  <div class="form-row">
+    <label>Max Books Per User</label>
+    <p-inputNumber
+      id="maxBooksPerUser"
+      [min]="1"
+      [maxFractionDigits]="0"
+      [minFractionDigits]="0"
+      [max]="10"
+      formControlName="maxBooksPerUser"
+    ></p-inputNumber>
+  </div>
+
+  <button
+    [disabled]="checkIfInitialEnvIsTheSameAsCurrent()"
+    pButton
+    type="submit"
+    label="Submit"
+  ></button>
+</form>

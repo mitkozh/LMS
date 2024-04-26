@@ -89,6 +89,7 @@ export class RentOutComponent implements OnInit {
     this.bookCopyId = this.rentOutConfig.data.bookCopyId;
     this.user = this.rentOutConfig.data.user;
     this.reservationId = this.rentOutConfig.data.reservationId;
+    this.onSubmitEntity$ = this.rentOutConfig.data.onSubmitEntity$;
 
     if (this.bookId) {
       this.bookService.getByIdAndRecieveDto(this.bookId).subscribe((book) => {

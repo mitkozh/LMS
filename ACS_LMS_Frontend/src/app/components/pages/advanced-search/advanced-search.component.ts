@@ -79,6 +79,7 @@ export class AdvancedSearchComponent implements OnInit {
             'authors.name.keyword',
           ],
           result_attributes: [
+            'id',
             'book_title',
             'authors',
             'coverPhoto',

@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { BookService } from 'app/core/book.service';
+import { CheckoutService } from 'app/core/checkout.service';
 import { BookFullDto } from 'app/shared/book-full-dto';
 import { ReservationDto } from 'app/shared/reservation-dto';
 import { of, switchMap, tap } from 'rxjs';
@@ -22,9 +23,19 @@ export class BorrowABookComponent implements OnInit {
   reservation: ReservationDto | null = null;
   hasActiveCheckout: boolean = false;
 
-  constructor(private bookService: BookService, private router: Router) {}
+  constructor(
+    private bookService: BookService,
+    private router: Router,
+    private checkoutService: CheckoutService
+  ) {}
   ngOnInit() {
     if (this.id) {
+      this.checkoutService
+        .checkActiveCheckout(this.id)
+        .subscribe((response: boolean) => {
+          this.hasActiveCheckout = response;
+        });
+
       this.bookService
         .hasReservationForBook(this.id)
         .pipe(

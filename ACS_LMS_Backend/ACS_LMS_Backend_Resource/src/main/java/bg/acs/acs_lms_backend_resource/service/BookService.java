@@ -8,10 +8,15 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -29,8 +34,8 @@ public class BookService {
 
     private final CategoryRepository categoryRepository;
 
-    private final ImageRepository imageRepository;
-    
+    private final ImageService imageService;
+
     private final PublisherService publisherService;
 
     private final LanguageService languageService;
@@ -40,6 +45,7 @@ public class BookService {
     private final ReservationService reservationService;
     private final ReservationRepository reservationRepository;
 
+    @CacheEvict(value = {"booksShort", "booksByCategory"}, allEntries = true)
     @Transactional
     public BookShortDto saveBook(BookAddDto bookAddDto){
         Book book = bookRepository.findByTitle(bookAddDto.getTitle())
@@ -52,12 +58,14 @@ public class BookService {
     }
 
 
+    @Cacheable(value = "booksShort")
     public Set<BookShortDto> getBooksShort() {
         return bookRepository.findAllByDeletedIsFalse().stream()
                 .map(this::mapBookToBookShortDto)
                 .collect(Collectors.toSet());
     }
 
+    @Cacheable(value = "booksByCategory")
     public Set<BookShortDto> getBooksByCategory(Category category) {
         Set<BookShortDto> books =  bookRepository.findAllByCategoriesContainingAndDeletedIsFalse(category)
                 .stream()
@@ -99,11 +107,25 @@ public class BookService {
         return getBook(bookAddDto);
     }
 
-    private Book getBook(BookAddDto bookAddDto) {
+    private Book getBook(BookAddDto bookAddDto)  {
         Book book = modelMapper.map(bookAddDto, Book.class);
         book.setAuthors(authorService.getAuthorsByIds(bookAddDto.getAuthors()));
         book.setCategories(mapCategoryNamesToCategories(bookAddDto.getCategories()));
-        book.setCoverPhoto(imageRepository.findById(bookAddDto.getImageId()).orElseThrow(EntityNotFoundException::new));
+        if (bookAddDto.getImageId()!=null){
+            book.setCoverPhoto(imageService.findById(bookAddDto.getImageId()).orElseThrow(EntityNotFoundException::new));
+        }
+        else{
+            try{
+                ImageDto imageDto = imageService.uploadLocalImage("src/main/resources/static/cover_photo.jpg");
+                Image image = imageService.getImage(imageDto.getId());
+                book.setCoverPhoto(image);
+            }
+            catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+        }
+
         return book;
     }
 
@@ -189,6 +211,7 @@ public class BookService {
         }
     }
 
+    @CacheEvict(value = {"booksShort", "booksByCategory"}, allEntries = true)
     @Transactional
     public BookFullDto saveBookCopy(BookCopyAddDto bookCopyAddDto) {
         BookCopy bookCopy = mapBookCopyAddDtoToBookCopy(bookCopyAddDto);
@@ -276,6 +299,7 @@ public class BookService {
         return bookCopyRepository.existsByIsbn(isbn);
     }
 
+    @CacheEvict(value = {"booksShort", "booksByCategory"}, allEntries = true)
     @Transactional
     public BookShortDto updateBook(Long id, BookUpdateDto bookUpdateDto) {
         Book book = mapBookUpdateDtoToBook(bookUpdateDto);
@@ -292,6 +316,7 @@ public class BookService {
         return bookCopyRepository.existsByInventoryNumber(inventoryNumber);
     }
 
+    @CacheEvict(value = {"booksShort", "booksByCategory"}, allEntries = true)
     @Transactional
     public Boolean deleteBookByBookIdAndBookCopyId(Long bookId, Long bookCopyId) {
         BookCopy bookCopy = bookCopyRepository.findById(bookCopyId)
@@ -345,4 +370,31 @@ public class BookService {
     public Optional<Book> findBookById(Long bookId) {
         return bookRepository.findById(bookId);
     }
+
+    public List<BookShortDto> getAllActiveCheckoutBooksForCurrentUser() {
+        User user = userService.getCurrentUser();
+        List<Checkout> checkouts = checkoutRepository.findAllByBorrowerAndReturnedFalseAndEndTimeNull(user);
+        return checkouts.stream()
+                .map(checkout -> mapBookToBookShortDto(checkout.getBookCopy().getBook()))
+                .collect(Collectors.toList());
+    }
+
+
+    public long booksReturnedLastWeek() {
+        LocalDateTime lastWeek = LocalDateTime.now().minus(1, ChronoUnit.WEEKS);
+        return checkoutRepository.countByEndTimeAfterAndReturnedTrue(lastWeek);
+    }
+
+
+    public long booksOverdueCount() {
+        return checkoutRepository.countByEndTimeBeforeAndReturnedFalse(LocalDateTime.now());
+    }
+    public long booksCount() {
+        return bookRepository.count();
+    }
+
+
+
+
+
 }

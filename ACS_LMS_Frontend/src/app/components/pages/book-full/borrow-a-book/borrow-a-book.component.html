@@ -12,4 +12,5 @@
     <p>Reservation Due: {{ reservation.dueDate | date }}</p>
   </div>
 </p-card>
-<p-button label="Join Waitlist" *ngIf="!canReserve && !reservation"></p-button>
+<p-button label="Join Waitlist" *ngIf="!canReserve && !reservation && !hasActiveCheckout"></p-button>
+<h2 *ngIf="hasActiveCheckout">You have already checked out this book!</h2>

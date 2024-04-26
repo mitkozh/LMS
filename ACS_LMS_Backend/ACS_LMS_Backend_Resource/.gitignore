@@ -39,3 +39,5 @@ out/
 env/secrets-docker.yaml
 
 env/.docker-sensitive.env
+
+src/env/.env.prod

@@ -11,6 +11,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -61,5 +62,11 @@ public class ReservationService {
         return reservationRepository.findAllByDueDateAfterAndCancelledIsFalseAndActivatedIsFalse(now).stream()
                 .map(this::mapReservationToReservationDto)
                 .collect(Collectors.toList());
+    }
+
+
+    public long booksReservedLastWeek() {
+        LocalDateTime lastWeek = LocalDateTime.now().minus(1, ChronoUnit.WEEKS);
+        return reservationRepository.countByReservationDateAfter(lastWeek);
     }
 }

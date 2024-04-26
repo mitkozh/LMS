@@ -1,0 +1,51 @@
+<p-table
+  [value]="checkouts"
+  [lazy]="true"
+  (onLazyLoad)="loadCheckouts($event)"
+  [paginator]="true"
+  [rows]="10"
+  [totalRecords]="totalRecords"
+  [loading]="loading"
+  [globalFilterFields]="[
+    'bookName',
+    'bookCopyId',
+    'userEmail',
+    'fineAmount',
+    'startTime',
+    'holdEndTime',
+    'late'
+  ]"
+>
+  <ng-template pTemplate="header">
+    <tr>
+      <th>Book Name</th>
+      <th>Book Copy ID</th>
+      <th>User Email</th>
+      <th>Fine Amount</th>
+      <th>Start Time</th>
+      <th>Hold End Time</th>
+      <th>Action</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-checkout>
+    <tr>
+      <td>{{ checkout.bookName }}</td>
+      <td>{{ checkout.bookCopyId }}</td>
+      <td>{{ checkout.userEmail }}</td>
+      <td [ngStyle]="{ color: checkout.late ? 'red' : 'inherit' }">
+        {{ checkout.fineAmount }}
+      </td>
+      <td>{{ checkout.startTime }}</td>
+      <td>{{ checkout.holdEndTime }}</td>
+      <td>
+        <button
+          pButton
+          type="button"
+          label="Return"
+          (click)="returnBook(checkout.id)"
+          [disabled]="checkout.late"
+        ></button>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>

@@ -6,6 +6,7 @@ import bg.acs.acs_lms_backend_resource.model.dto.ReservationDto;
 import bg.acs.acs_lms_backend_resource.model.entity.Reservation;
 import bg.acs.acs_lms_backend_resource.service.ReservationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -29,6 +30,12 @@ public class ReservationController {
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_LIBRARIAN')")
     public ResponseEntity<List<ReservationDto>> getReservations() {
         return ResponseEntity.ok(reservationService.getAllActiveReservations());
+    }
+
+    @GetMapping("/books-reserved-last-week")
+    public ResponseEntity<Long> getBooksReservedLastWeek() {
+        long reservedLastWeek = reservationService.booksReservedLastWeek();
+        return new ResponseEntity<>(reservedLastWeek, HttpStatus.OK);
     }
 
 }
