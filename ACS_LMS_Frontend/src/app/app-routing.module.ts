@@ -13,15 +13,20 @@ import { AuthorFullComponent } from './components/pages/author-full/author-full.
 import { ReservationsComponent } from './components/pages/reservations/reservations.component';
 import { HasRolesDirective } from './directive/HasRoleDirective';
 import { UserRole } from './shared/user-role';
+import { BorrowedBooksComponent } from './components/pages/borrowed-books/borrowed-books.component';
+import { CheckoutComponent } from './components/pages/checkout/checkout.component';
+import { LibrarySettingsComponent } from './components/pages/settings/library/library-settings.component';
+import { ProfileComponent } from './components/pages/settings/profile/profile.component';
+import { MembersComponent } from './components/pages/members/members.component';
 
 const routes: Routes = [
   { path: 'books', component: BookLibraryComponent },
   { path: '', redirectTo: 'books', pathMatch: 'full' },
-  {
-    path: 'dashboard',
-    component: DashboardComponent,
-    canActivate: [AppAuthGuard],
-  },
+  // {
+  //   path: 'dashboard',
+  //   component: DashboardComponent,
+  //   canActivate: [AppAuthGuard],
+  // },
   { path: 'books/categories', component: BookCategoriesComponent },
   { path: 'sign-in', redirectTo: 'login', pathMatch: 'full' },
   { path: 'categories/:category', component: CategoryDetailsComponent },
@@ -36,14 +41,40 @@ const routes: Routes = [
     data: { roles: [UserRole.ROLE_ADMIN, UserRole.ROLE_LIBRARIAN] },
   },
   {
-    path: 'advanced-search',
-    component: AdvancedSearchComponent,
+    path: 'settings/library',
+    component: LibrarySettingsComponent,
     canActivate: [AppAuthGuard],
+    data: { roles: [UserRole.ROLE_ADMIN] },
+  },
+  {
+    path: 'settings/profile',
+    component: ProfileComponent,
+    canActivate: [AppAuthGuard],
+  },
+  {
+    path: 'books/advanced-search',
+    component: AdvancedSearchComponent,
+  },
+  {
+    path: 'borrowed',
+    component: BorrowedBooksComponent,
+    canActivate: [AppAuthGuard],
+  },
+  {
+    path: 'checkout',
+    component: CheckoutComponent,
+    canActivate: [AppAuthGuard],
+    data: { roles: [UserRole.ROLE_ADMIN, UserRole.ROLE_LIBRARIAN] },
   },
   {
     path: 'transactions',
     component: TranscationsComponent,
-    canActivate: [AppAuthGuard],
+    data: { roles: [UserRole.ROLE_ADMIN, UserRole.ROLE_LIBRARIAN] },
+  },
+  {
+    path: 'members',
+    component: MembersComponent,
+    data: { roles: [UserRole.ROLE_ADMIN, UserRole.ROLE_LIBRARIAN] },
   },
   { path: '**', redirectTo: 'not-found' },
 ];

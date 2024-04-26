@@ -1,82 +1,109 @@
-import {
-  Component,
-  Inject,
-  Input,
-  OnDestroy,
-  OnInit,
-  TemplateRef,
-  ViewChild,
-} from '@angular/core';
-import { HttpParams, HttpClient } from '@angular/common/http';
-
-import { Observable } from 'rxjs';
-import { environment } from 'environments/environment.development';
-import { BookService, IStatBoxData } from 'app/core/book.service';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { KeycloakService } from 'keycloak-angular';
-import { KeycloakProfile } from 'keycloak-js';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { BookService } from 'app/core/book.service';
 import { ReservationService } from 'app/core/reservation.service';
-import { ReservationDto } from 'app/shared/reservation-dto';
+import { IStatBoxData } from 'app/core/book.service';
+import { CheckoutService } from 'app/core/checkout.service';
+import { FineService } from 'app/core/fine.service';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
-  providers: [DialogService],
 })
 export class DashboardComponent implements OnInit, OnDestroy {
-  public isLoggedIn = false;
-  public userProfile: KeycloakProfile | null = null;
-
   statBoxData: IStatBoxData[] = [];
+  fineCollected: number = 0;
+  booksRentingVsCheckingOutData: any;
+  booksOverdueCountData: any;
+  startDate: Date = new Date();
+  endDate: Date = new Date();
+
   constructor(
     private bookService: BookService,
-    public dialogService: DialogService,
-    private readonly keycloak: KeycloakService,
-    private http: HttpClient,
-    private reservationService: ReservationService
+    private reservationService: ReservationService,
+    private fineService: FineService,
+    private checkoutService: CheckoutService
   ) {}
-  ngOnDestroy(): void {
-    if (this.ref) {
-      this.ref.close();
-    }
-  }
 
-  ref: DynamicDialogRef | undefined;
-  reservations: any[] = [];
-
-  public async ngOnInit() {
+  ngOnInit(): void {
     this.fetchData();
-    this.isLoggedIn = await this.keycloak.isLoggedIn();
-
-    if (this.isLoggedIn) {
-      this.userProfile = await this.keycloak.loadUserProfile();
-    }
+    this.fetchReservations();
+    this.fetchFineCollected();
   }
 
-  public login() {
-    this.keycloak.login();
-  }
-
-  public logout() {
-    this.keycloak.logout();
-  }
-
-  showLoginModal: boolean = false;
+  ngOnDestroy(): void {}
 
   fetchData(): void {
-    this.bookService.fetchStatBoxData().subscribe((data: IStatBoxData[]) => {
-      this.statBoxData = data;
-    });
+    // const formattedStartDate = this.formatDate(this.startDate);
+    // const formattedEndDate = this.formatDate(this.endDate);
+    // this.checkoutService
+    // .getBooksRentingVsBookCheckingOutDiagram(
+    //   formattedStartDate,
+    //   formattedEndDate
+    // )
+    // .subscribe((data: any) => {
+    //   console.log(JSON.stringify(data));
+    //   this.booksRentingVsCheckingOutData = {
+    //     labels: Object.keys(data.Checkouts),
+    //     datasets: [
+    //       {
+    //         label: 'Checkouts',
+    //         data: Object.values(data.Checkouts),
+    //         fill: false,
+    //         borderColor: '#4bc0c0',
+    //       },
+    //       {
+    //         label: 'Reservations',
+    //         data: Object.values(data.Reservations),
+    //         fill: false,
+    //         borderColor: '#565656',
+    //       },
+    //     ],
+    //   };
+    // });
+    // this.checkoutService
+    //   .getBooksOverdueCount(formattedStartDate, formattedEndDate)
+    //   .subscribe((data: any) => {
+    //     this.booksOverdueCountData = {
+    //       labels: Object.keys(data),
+    //       datasets: [
+    //         {
+    //           data: Object.values(data),
+    //           fill: false,
+    //           borderColor: '#565656',
+    //         },
+    //       ],
+    //     };
+    //   });
   }
-
 
   fetchReservations(): void {
     this.reservationService
-      .getList()
-      .subscribe((reservations: ReservationDto[]) => {
-        this.reservations = reservations;
+      .getBooksReservedLastWeek()
+      .subscribe((data: number) => {
+        this.statBoxData.push({
+          label: 'Books Reserved Last Week',
+          stat: data,
+          change: 0,
+          bgColor: '#f8f9fa',
+          iconColor: '#dc3545',
+          iconBgColor: '#ffffff',
+        });
       });
+  }
+
+  fetchFineCollected(): void {
+    this.fineService
+      .getFineCollectedThroughoutTheYear()
+      .subscribe((data: number) => {
+        this.fineCollected = data;
+      });
+  }
+
+  formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 }

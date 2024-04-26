@@ -28,6 +28,7 @@ public class CategoryController {
     }
 
     @PostMapping()
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_LIBRARIAN')")
     public ResponseEntity<CategoryWithBooksDto> addCategory(@RequestBody CategoryWithBooksDto categoryDto) {
         return ResponseEntity.ok(categoryService.save(categoryDto));
     }

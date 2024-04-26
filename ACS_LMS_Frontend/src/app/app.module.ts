@@ -11,7 +11,7 @@ import { VisitorsComponent } from './components/pages/visitors/visitors.componen
 import { BookReservationsComponent } from './components/pages/book-reservations/book-reservations.component';
 import { BorrowedBooksComponent } from './components/pages/borrowed-books/borrowed-books.component';
 import { SupportComponent } from './components/pages/support/support.component';
-import { SettingsComponent } from './components/pages/settings/settings.component';
+import { LibrarySettingsComponent } from './components/pages/settings/library/library-settings.component';
 import { SublevelMenuComponent } from './components/partials/sidenav/sublevel-menu.component';
 import { DashboardComponent } from './components/pages/dashboard/dashboard.component';
 import { StatBoxComponent } from './components/partials/stat-box/stat-box.component';
@@ -54,6 +54,7 @@ import { CdkMenuModule } from '@angular/cdk/menu';
 import { TabMenuModule } from 'primeng/tabmenu';
 import { CardModule } from 'primeng/card';
 import { TableModule } from 'primeng/table';
+import { ChartModule } from 'primeng/chart';
 import {
   HTTP_INTERCEPTORS,
   HttpClient,
@@ -114,6 +115,15 @@ import {
   CHECKOUT_SERVICE_CONFIG,
   CheckoutService,
 } from './core/checkout.service';
+import { CheckoutComponent } from './components/pages/checkout/checkout.component';
+import { ProfileComponent } from './components/pages/settings/profile/profile.component';
+import {
+  ENVIRONMENT_SERVICE_CONFIG,
+  EnvironmentService,
+} from './core/environment.service';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { MembersComponent } from './components/pages/members/members.component';
+import { FINE_SERVICE_CONFIG, FineService } from './core/fine.service';
 
 export function initializeKeycloak(
   keycloak: KeycloakService,
@@ -146,7 +156,7 @@ export function initializeKeycloak(
     BookReservationsComponent,
     BorrowedBooksComponent,
     SupportComponent,
-    SettingsComponent,
+    LibrarySettingsComponent,
     SublevelMenuComponent,
     DashboardComponent,
     StatBoxComponent,
@@ -183,6 +193,9 @@ export function initializeKeycloak(
     EditAuthorComponent,
     ReservationsComponent,
     RentOutComponent,
+    CheckoutComponent,
+    ProfileComponent,
+    MembersComponent,
   ],
 
   imports: [
@@ -201,11 +214,13 @@ export function initializeKeycloak(
     ReactiveFormsModule,
     AuthConfigModule,
     InputTextModule,
+    InputNumberModule,
     NgbModule,
     DynamicDialogModule,
     KeycloakAngularModule,
     AutoCompleteModule,
     CalendarModule,
+    ChartModule,
     ListboxModule,
     ChipsModule,
     FileUploadModule,
@@ -284,6 +299,15 @@ export function initializeKeycloak(
       deps: [HttpClient, AUTHOR_SERVICE_CONFIG],
     },
     {
+      provide: ENVIRONMENT_SERVICE_CONFIG,
+      useValue: { resourceEndpoint: 'environment' },
+    },
+    {
+      provide: EnvironmentService,
+      useClass: EnvironmentService,
+      deps: [HttpClient, ENVIRONMENT_SERVICE_CONFIG],
+    },
+    {
       provide: USER_SERVICE_CONFIG,
       useValue: { resourceEndpoint: 'users' },
     },
@@ -300,6 +324,15 @@ export function initializeKeycloak(
       provide: CheckoutService,
       useClass: CheckoutService,
       deps: [HttpClient, CHECKOUT_SERVICE_CONFIG],
+    },
+    {
+      provide: FINE_SERVICE_CONFIG,
+      useValue: { resourceEndpoint: 'fines' },
+    },
+    {
+      provide: FineService,
+      useClass: FineService,
+      deps: [HttpClient, FINE_SERVICE_CONFIG],
     },
     DialogService,
     AppAuthGuard,

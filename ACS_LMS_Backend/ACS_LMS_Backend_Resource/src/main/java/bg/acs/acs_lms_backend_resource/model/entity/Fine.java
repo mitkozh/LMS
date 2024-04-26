@@ -19,5 +19,9 @@ public class Fine extends BaseEntity {
     @JoinColumn(name = "book_copy_id")
     private BookCopy bookCopy;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "checkout_id")
+    private Checkout checkout;
+
 }
 

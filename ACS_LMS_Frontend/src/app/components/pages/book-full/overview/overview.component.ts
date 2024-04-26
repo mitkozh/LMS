@@ -52,7 +52,7 @@ export class OverviewComponent implements OnInit {
     this.book = book;
     this.bookInfo = [
       { property: 'ISBN', value: book.isbn },
-      { property: 'Page count', value: book.size },
+      { property: 'Book size', value: book.size },
       { property: 'Published', value: book.publicationDate },
       { property: 'Format', value: book.binding },
       { property: 'Publisher', value: book.publisherId },

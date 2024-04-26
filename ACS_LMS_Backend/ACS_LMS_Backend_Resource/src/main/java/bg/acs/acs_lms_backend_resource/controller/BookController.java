@@ -4,6 +4,7 @@ import bg.acs.acs_lms_backend_resource.model.dto.*;
 import bg.acs.acs_lms_backend_resource.service.BookAPIService;
 import bg.acs.acs_lms_backend_resource.service.BookService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -192,6 +193,29 @@ public class BookController {
             return ResponseEntity.ok(bookFullDto);
         }
         return ResponseEntity.noContent().build();
+    }
+
+
+    @GetMapping("/active-checkouts")
+    public ResponseEntity<List<BookShortDto>> getActiveCheckoutBooks() {
+        List<BookShortDto> allActiveCheckoutBooksForCurrentUser = bookService.getAllActiveCheckoutBooksForCurrentUser();
+        if (!allActiveCheckoutBooksForCurrentUser.isEmpty()){
+            return ResponseEntity.ok(allActiveCheckoutBooksForCurrentUser);
+        }
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/books-returned-last-week")
+    public ResponseEntity<Long> getBooksReturnedLastWeek() {
+        long returnedLastWeek = bookService.booksReturnedLastWeek();
+        return new ResponseEntity<>(returnedLastWeek, HttpStatus.OK);
+    }
+
+
+    @GetMapping("/books-count")
+    public ResponseEntity<Long> getBooksCount() {
+        long booksCount = bookService.booksCount();
+        return new ResponseEntity<>(booksCount, HttpStatus.OK);
     }
 
 

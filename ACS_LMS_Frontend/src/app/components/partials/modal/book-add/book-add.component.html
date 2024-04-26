@@ -29,9 +29,9 @@
       ></app-labeled-input>
 
       <app-labeled-input
-      [photo]="bookCover"
+        [photo]="bookCover"
         inputType="file-upload"
-        [required]="true"
+        [required]="false"
         fieldId="coverPhoto"
         label="Cover Photo"
         (coverPhotoNameChange)="handleCoverPhotoNameChange($event)"

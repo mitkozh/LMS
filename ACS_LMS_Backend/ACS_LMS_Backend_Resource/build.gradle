@@ -46,7 +46,8 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test:6.1.5'
 	implementation 'io.github.openfeign:feign-core:11.7'
 	implementation 'io.github.openfeign:feign-gson:11.7'
-//	implementation 'io.github.openfeign:feign-spring:11.7'
+	implementation 'org.keycloak:keycloak-admin-client:21.1.2'
+	//	implementation 'io.github.openfeign:feign-spring:11.7'
 	testImplementation 'org.springframework:spring-test:6.0.11'
 
 

@@ -15,7 +15,7 @@ export class HeaderComponent implements OnInit {
     this.keycloakService.logout();
   }
   onProfileClick() {
-    throw new Error('Method not implemented.');
+    this.router.navigate(['settings/profile']);
   }
   @Input() collapsed = false;
   @Input() screenWidth = 0;
@@ -32,15 +32,14 @@ export class HeaderComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     this.checkCanShowSearchAsOverlay(window.innerWidth);
     this.isLoggedIn = await this.keycloakService.isLoggedIn();
-    
+
     this.route.queryParams.subscribe((params) => {
       const searchQuery = params['search'];
       if (searchQuery) {
         if (searchQuery) {
           this.searchValue = searchQuery;
         }
-      }
-      else{
+      } else {
         this.searchValue = '';
       }
     });
@@ -74,7 +73,7 @@ export class HeaderComponent implements OnInit {
   }
   async onSearch(event: any) {
     const query = event.target.value;
-    this.router.navigate(['/advanced-search'], {
+    this.router.navigate(['books/advanced-search'], {
       queryParams: { search: query },
     });
     await this.ngOnInit();

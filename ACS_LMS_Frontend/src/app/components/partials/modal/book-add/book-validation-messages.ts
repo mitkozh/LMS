@@ -17,6 +17,7 @@ export const bookValidationMessages: ValidationMessages = {
   volume: [
     { type: 'required', message: 'Volume is required' },
     { type: 'min', message: 'Volume must be a positive integer' },
+    { type: 'pattern', message: 'Volume must be a positive integer' },
   ],
   callNumber: [
     { type: 'required', message: 'Call number is required' },

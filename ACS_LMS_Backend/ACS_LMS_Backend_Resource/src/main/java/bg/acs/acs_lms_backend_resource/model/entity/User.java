@@ -1,5 +1,6 @@
 package bg.acs.acs_lms_backend_resource.model.entity;
 
+import bg.acs.acs_lms_backend_resource.model.enums.Gender;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,13 +20,17 @@ public class User {
 
     private String email;
 
-//    @ManyToMany
-//    @JoinTable(
-//            name = "user_roles",
-//            joinColumns = @JoinColumn(name = "user_id"),
-//            inverseJoinColumns = @JoinColumn(name = "user_role_id")
-//    )
-//    private Set<UserRole> roles;
     @Id
     private UUID id;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "profile_pic_id", referencedColumnName = "id")
+    private Image profilePic;
+
+    private String name;
+
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
 }
+
+

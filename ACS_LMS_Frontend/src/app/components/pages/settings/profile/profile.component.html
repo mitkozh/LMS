@@ -1,0 +1,50 @@
+<h2>User Settings</h2>
+<form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+  <div class="form-row">
+    <label>Email</label>
+    <input id="email" formControlName="email" pInputText />
+  </div>
+
+  <div class="form-row">
+    <label>Name</label>
+    <input id="name" formControlName="name" pInputText />
+  </div>
+
+  <div class="form-row">
+    <label>Gender</label>
+    <p-dropdown
+      [required]="true"
+      id="gender"
+      formControlName="gender"
+      [options]="genders"
+      placeholder="Select a Gender"
+    ></p-dropdown>
+  </div>
+
+  <div class="form-row">
+    <label class="profile-label">Profile Picture</label>
+    <div class="profile-upload">
+      <p-fileUpload
+        [ngClass]="photo ? 'imageUploaded' : 'notUploaded'"
+        [auto]="true"
+        name="image"
+        [url]="imageService.getUploadImageUrl()"
+        id="image"
+        accept="image/*"
+        (onUpload)="onUpload($event)"
+        method="post"
+        [multiple]="false"
+      ></p-fileUpload>
+      <div *ngIf="photo" class="photo-container">
+        <img class="photo" [src]="photo" alt="Profile photo" />
+      </div>
+    </div>
+  </div>
+
+  <button
+    [disabled]="checkIfInitialUserIsTheSameAsCurrent()"
+    pButton
+    type="submit"
+    label="Submit"
+  ></button>
+</form>
